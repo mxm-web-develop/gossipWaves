@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+/* * {
+  @apply text-theme-white;
+} */
+.adm-tab-bar-item-active {
+  @apply !text-theme-primary;
+}
+
+.adm-nav-bar {
+  @apply !text-theme-white;
+}
+
+.adm-popup-body {
+  @apply !bg-theme-black text-theme-white;
+}
