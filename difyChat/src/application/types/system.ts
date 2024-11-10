@@ -4,23 +4,27 @@ export enum StatusType {
   Done,
   Error,
 }
-export interface ListItemType {
-  label: string;
-  sessionId: string;
-  gmtModified: number;
-  assistant?: any;
-  [key: string]: any;
+export enum Modules {
+  Home,
+  Chat,
+  Flow,
+  Setting,
 }
 
-export interface IAppData {
-  conversations_list: ListItemType[];
-  retriever_info: any;
-  // assist_list: IAssistant[];
-  activedConversation: string | undefined;
-  status: any;
-  sortRules: { label: string; dayPeriod: number }[];
-  conversations_list_pagging: {
-    pageNo: number;
-    totalPages: number;
-  };
+export enum States {
+  Loading,
+  Waiting,
+  Processing,
+  Errorec,
+}
+
+export interface SortRules {
+  label: string;
+  dayPeriod: number;
+}
+
+export interface AppState {
+  current_module: Modules;
+  initial_ready: boolean;
+  app_state: States;
 }

@@ -55,5 +55,5 @@ export const api_getConversations = (
     url: queryUrl,
     method,
     params: requestData,
-  }).then((res) => res.data as GetConversationsResponse);
+  }).then((res) => res as unknown as GetConversationsResponse);
 };
