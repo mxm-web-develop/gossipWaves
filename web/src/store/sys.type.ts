@@ -1,9 +1,3 @@
-export enum StatusType {
-  Pending = 0,
-  Process,
-  Done,
-  Error,
-}
 export enum Modules {
   Home,
   Chat,
@@ -17,14 +11,11 @@ export enum States {
   Processing,
   Error,
 }
-
-export interface SortRules {
-  label: string;
-  dayPeriod: number;
-}
-
 export interface AppState {
   current_module: Modules;
-  initial_ready: boolean;
+  //module_Ready: boolean;
+  app_ready: boolean;
   app_state: States;
+  is_moblie: boolean;
+  orientation: "landscape" | "portrait" | undefined;
 }

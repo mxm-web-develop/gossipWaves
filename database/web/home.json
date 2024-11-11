@@ -1,0 +1,25 @@
+{
+  "brands": [
+    {
+      "_id": "1",
+      "url": "/image1.png"
+    },
+    {
+      "_id": "2",
+      "url": "/image2.png"
+    },
+    {
+      "_id": "3",
+      "url": "/image3.png"
+    }
+  ],
+  "vedios": [
+    {
+      "_id": "uid121113",
+      "title": "xxx",
+      "description": "mfneknfe",
+      "youtube": "www.youtube.com/gossipwaves/121113.com",
+      "bilibili": "www.bilibili.com/gossipwaves/121113.com"
+    }
+  ]
+}
