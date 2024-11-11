@@ -97,12 +97,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "file": "GossipWaves/工程化设计/工程结构.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "difyChat"
+              "title": "工程结构"
             }
           }
         ],
@@ -178,7 +178,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "file": "GossipWaves/工程化设计/工程结构.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,7 +188,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "difyChat 的反向链接列表"
+              "title": "工程结构 的反向链接列表"
             }
           },
           {
@@ -197,12 +197,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "file": "GossipWaves/工程化设计/工程结构.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "difyChat 的出链列表"
+              "title": "工程结构 的出链列表"
             }
           },
           {
@@ -224,10 +224,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GossipWaves/工程化设计/applications/difyChat.md"
+                "file": "GossipWaves/工程化设计/工程结构.md"
               },
               "icon": "lucide-list",
-              "title": "difyChat 的大纲"
+              "title": "工程结构 的大纲"
             }
           }
         ]
@@ -249,14 +249,20 @@
   },
   "active": "e5741709ac9f2494",
   "lastOpenFiles": [
-    "GossipWaves/工程化设计/web.md",
     "GossipWaves/工程化设计/applications/difyChat.md",
-    "GossipWaves/工程化设计/applications",
-    "GossipWaves/工程化设计/工程结构.md",
-    "GossipWaves/工程化设计/ReportorLLM.md",
-    "GossipWaves/工程化设计/DataWizard.md",
-    "GossipWaves/工程化设计/DataLLM.md",
     "GossipWaves/工程化设计/DataAnalysis.md",
+    "GossipWaves/工程化设计/DataLLM.md",
+    "GossipWaves/工程化设计/web.md",
+    "GossipWaves/工程化设计/工程结构.md",
+    "GossipWaves/工程化设计/DataWizard.md",
+    "GossipWaves/工程化设计/ReportorLLM.md",
+    "GossipWaves/产品化设计/数据文档化和新文化.md",
+    "GossipWaves/产品化设计/数据预测和推演.md",
+    "GossipWaves/产品化设计/数据计算和输出.md",
+    "GossipWaves/产品化设计/数据更新和获取.md",
+    "GossipWaves/产品化设计/数据更新和获取",
+    "GossipWaves/产品化设计",
+    "GossipWaves/工程化设计/applications",
     "GossipWaves/工程化设计/工程开发流程.md",
     "GossipWaves/工程化设计/工程流程图.md",
     "GossipWaves/计划表.md"
