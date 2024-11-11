@@ -1,0 +1,264 @@
+{
+  "main": {
+    "id": "fb3eb448b077fe16",
+    "type": "split",
+    "children": [
+      {
+        "id": "268650a0d1141f29",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "598ed18ce97a42ed",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/工程结构.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "工程结构"
+            }
+          },
+          {
+            "id": "9b159bffd4d6633c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/工程结构.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "工程结构"
+            }
+          },
+          {
+            "id": "56e906afab6232e0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/DataLLM.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "DataLLM"
+            }
+          },
+          {
+            "id": "fdb97314a40aa8cf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/DataWizard.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "DataWizard"
+            }
+          },
+          {
+            "id": "544dde9133b64e96",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/工程结构.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "工程结构"
+            }
+          },
+          {
+            "id": "60388280eb8cf84b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/web.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "web"
+            }
+          },
+          {
+            "id": "e5741709ac9f2494",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "difyChat"
+            }
+          }
+        ],
+        "currentTab": 6
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fc6df6a26e909d2a",
+    "type": "split",
+    "children": [
+      {
+        "id": "5411c78d38d851c6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9e65d4eafd756337",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "271b1b3fab119ad2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "d68ebb8c7f8996c6",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4660101845fec33c",
+    "type": "split",
+    "children": [
+      {
+        "id": "62367a6bf2467020",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5e722947a0696c1a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "difyChat 的反向链接列表"
+            }
+          },
+          {
+            "id": "8a80b900480daf28",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "GossipWaves/工程化设计/applications/difyChat.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "difyChat 的出链列表"
+            }
+          },
+          {
+            "id": "d6d8aee1d9b8ea6a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "42167820bb9d5079",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "GossipWaves/工程化设计/applications/difyChat.md"
+              },
+              "icon": "lucide-list",
+              "title": "difyChat 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "e5741709ac9f2494",
+  "lastOpenFiles": [
+    "GossipWaves/工程化设计/web.md",
+    "GossipWaves/工程化设计/applications/difyChat.md",
+    "GossipWaves/工程化设计/applications",
+    "GossipWaves/工程化设计/工程结构.md",
+    "GossipWaves/工程化设计/ReportorLLM.md",
+    "GossipWaves/工程化设计/DataWizard.md",
+    "GossipWaves/工程化设计/DataLLM.md",
+    "GossipWaves/工程化设计/DataAnalysis.md",
+    "GossipWaves/工程化设计/工程开发流程.md",
+    "GossipWaves/工程化设计/工程流程图.md",
+    "GossipWaves/计划表.md"
+  ]
+}
