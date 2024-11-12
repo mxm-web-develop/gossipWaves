@@ -101,6 +101,6 @@ body {
 }
 @layer components {
   .chat-container {
-    @apply px-3 sm:px-28  min-w-[300px] sm:pt-[60px] box-border;
+    @apply px-3 md:px-28  min-w-[300px] sm:pt-[60px] box-border;
   }
 }

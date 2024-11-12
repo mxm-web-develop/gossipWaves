@@ -75,7 +75,7 @@ export default ({ mode }: { mode: string }) => {
     ],
     resolve: {
       alias: {
-        '@':  path.resolve(__dirname, "./src"),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     esbuild: {
@@ -110,6 +110,13 @@ export default ({ mode }: { mode: string }) => {
       cors: true,
       host: '0.0.0.0',
       port: 8888,
+      proxy: {
+        '/myproxy': {
+          target: 'https://api.dify.ai/v1', // 替换为你的目标服务器地址
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/myproxy/, ''),
+        },
+      },
     },
   });
 };

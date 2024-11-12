@@ -33,19 +33,19 @@ export interface Conversations {
 }
 
 export interface IMessageData {
-  agent_thoughts: any;
-  answer: string;
-  conversation_id: string;
-  created_at: number;
-  error: any;
-  feedback: any;
-  id: string;
-  inputs: Record<string, any>;
-  message_files: any[];
-  parent_message_id: string;
-  query: string;
-  retriever_resources: any[];
-  status: string;
+  agent_thoughts?: any;
+  answer?: string;
+  conversation_id?: string;
+  created_at?: number;
+  error?: any;
+  feedback?: any;
+  id?: string;
+  inputs?: Record<string, any>;
+  message_files?: any[];
+  parent_message_id?: string;
+  query?: string;
+  retriever_resources?: any[];
+  status?: string;
 }
 export interface IMessages {
   has_more: boolean;
