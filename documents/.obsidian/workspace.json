@@ -83,12 +83,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GossipWaves/工程化设计/web.md",
+                "file": "GossipWaves/计划表.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "web"
+              "title": "计划表"
             }
           },
           {
@@ -178,7 +178,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GossipWaves/工程化设计/web.md",
+                "file": "GossipWaves/计划表.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,7 +188,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "web 的反向链接列表"
+              "title": "计划表 的反向链接列表"
             }
           },
           {
@@ -197,12 +197,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GossipWaves/工程化设计/web.md",
+                "file": "GossipWaves/计划表.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "web 的出链列表"
+              "title": "计划表 的出链列表"
             }
           },
           {
@@ -224,10 +224,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GossipWaves/工程化设计/web.md"
+                "file": "GossipWaves/计划表.md"
               },
               "icon": "lucide-list",
-              "title": "web 的大纲"
+              "title": "计划表 的大纲"
             }
           }
         ]
@@ -249,11 +249,11 @@
   },
   "active": "60388280eb8cf84b",
   "lastOpenFiles": [
+    "GossipWaves/工程化设计/web.md",
     "GossipWaves/工程化设计/DataAnalysis.md",
     "GossipWaves/工程化设计/工程结构.md",
     "GossipWaves/工程化设计/DataWizard.md",
     "GossipWaves/工程化设计/ReportorLLM.md",
-    "GossipWaves/工程化设计/web.md",
     "GossipWaves/工程化设计/applications/difyChat.md",
     "GossipWaves/工程化设计/DataLLM.md",
     "GossipWaves/产品化设计/数据文档化和新文化.md",

@@ -4,19 +4,41 @@ import { cn } from "@udecode/cn"
 import MInput from "./components/MInputer"
 import ReactMarkdown from 'react-markdown';
 import useAppStore from "../store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ModuleState } from "../types/chat.types";
 import { api_getConversations, api_getMessages } from "../services";
 import dayjs from "dayjs";
 import NavBar from './components/Navbar'
+import { api_sendMessage } from "../services/apis/send_message";
 const Chat = () => {
   const { isPortrait } = useMobileOrientation()
   const chat_data = useAppStore(state => state.chat_data)
   const setChatData = useAppStore(state => state.setChatData)
   const config = useAppStore(state => state.config_data)
   const app_data = useAppStore(state => state.app_data)
+  const [streamMessage, setStreamMessage] = useState<IM>()
   const handleSendData = (v: string) => {
-    console.log(v)
+    console.log(v, 'kdfkdkfkdfkdfkdfkdfkdfk')
+    api_sendMessage({
+      data: {
+        query: v,
+        user: 'mxm',
+        conversation_id: chat_data.actived_conversation,
+      },
+      config
+    }).then(data => {
+      // 假设 data 是一个流
+      // 直接处理 data
+
+      console.log(typeof data)
+      const messages = data.split('\n\n').filter(Boolean).map(chunk => JSON.parse(chunk.slice(5)));
+      messages.forEach(message => {
+        // 处理每个 message
+        console.log("Message:", message.answer);
+        // 更新 streamMessage 状态
+        setStreamMessage(message);
+      });
+    })
   }
   //初始化聊天历史数据
   useEffect(() => {
@@ -77,7 +99,9 @@ const Chat = () => {
   ])
   return (
 
-    <div className={cn(' w-full relative box-border')} style={{
+    <div className={cn(' w-full  relative box-border', {
+      'pt-12': !isPortrait
+    })} style={{
       height: isPortrait ? 'calc(100% - 46px)' : '100%'
     }}>
       {/* <NavBar chat_list={chat_data.conversations.data} /> */}

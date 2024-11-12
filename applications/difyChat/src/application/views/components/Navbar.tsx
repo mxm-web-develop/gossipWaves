@@ -1,17 +1,16 @@
 import { NavBar, Popup, SideBar } from "antd-mobile"
 import { AddSquareOutline, AppstoreOutline, UnorderedListOutline } from "antd-mobile-icons"
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import { useMobileOrientation } from "react-device-detect"
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import MouseWheel from '@better-scroll/mouse-wheel'
 import ObserveDOM from '@better-scroll/observe-dom'
 import ScrollBar from '@better-scroll/scroll-bar'
-import { BScrollConstructor } from "@better-scroll/core/dist/types/BScroll"
 import DataSortedConversationList from "./DataSortedConversationList"
 import { IChatSortRule } from "../../types/chat.types"
 import useAppStore from "../../store"
-
+import { AlignJustify } from 'lucide-react'
 interface IHSideBar {
   children?: ReactNode
   chat_list: any[]
@@ -36,11 +35,12 @@ const NvaBar = (props: IHSideBar) => {
   BScroll.use(ScrollBar)
   const { chat_list } = props
   const { isPortrait } = useMobileOrientation()
+  const chat_data = useAppStore(state => state.chat_data)
   const [open, setOpen] = useState(false)
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
   const setChatData = useAppStore(state => state.setChatData)
-
+  console.log(chat_data)
   const createNewConversation = () => {
     setChatData(pre => ({
       ...pre,
@@ -52,6 +52,16 @@ const NvaBar = (props: IHSideBar) => {
       }
     }))
   }
+  const title = useMemo(() => {
+    // 检查 chat_data 和 conversations 是否存在
+    if (chat_data && chat_data.conversations && chat_data.conversations.data.length > 0) {
+      // 获取第一个对话的标题
+      const activeConversation = chat_data.conversations.data[0];
+      return activeConversation.name;
+    }
+    return ''; // 如果没有对话数据，返回默认标题
+  }, [chat_data]); // 依赖于 chat_data，只有当 chat_data 改变时才重新计算
+
   // const scrollInstance = useRef<BScroll>(null) // Add this line to hold the scroll instance
   useEffect(() => {
     if (!isPortrait && scrollBarH.current) { // Check if scrollBar.current exists
@@ -111,11 +121,11 @@ const NvaBar = (props: IHSideBar) => {
         </Popup>
 
         <NavBar
-          left={<UnorderedListOutline onClick={() => setOpen(true)} fontSize={24} />} backIcon={null}
+          left={<AlignJustify onClick={() => setOpen(true)} fontSize={24} />} backIcon={null}
           right={<div className="flex justify-end gap-x-2">
             <AppstoreOutline fontSize={24} />
             <AddSquareOutline fontSize={24} /></div>}>
-          <div className=" text-sm">标题</div>
+          <div className=" text-sm">{title}</div>
         </NavBar>
       </div>
     )
