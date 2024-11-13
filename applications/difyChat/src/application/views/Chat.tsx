@@ -18,6 +18,7 @@ import BScroll from "@better-scroll/core";
 import { createAxiosInstance } from "../services/axios_instant";
 import { ServerBase } from "../services/services.type";
 import ChatListItem from "./components/ChatListItem";
+import { api_getParameters } from "../services/apis/get_paramets";
 const Chat = () => {
   BScroll.use(PullDown)
   BScroll.use(MouseWheel)
@@ -25,6 +26,7 @@ const Chat = () => {
   BScroll.use(ScrollBar)
   const { isPortrait } = useMobileOrientation()
   const chat_data = useAppStore(state => state.chat_data)
+  const setMessegesData = useAppStore(state => state.setMessegesData)
   const setChatData = useAppStore(state => state.setChatData)
   const config = useAppStore(state => state.config_data)
   const app_data = useAppStore(state => state.app_data)
@@ -34,6 +36,16 @@ const Chat = () => {
   const pullingDownHandler = async () => {
     //这里来做所有下拉之后的操作
   }
+  useEffect(() => {
+    api_getParameters({
+      data: {
+        user: 'mxm'
+      },
+      config
+    }).then(data => {
+      console.log(data, 'zzhzhzhzhzhzhzh')
+    })
+  }, [])
   useEffect(() => {
     if (chatScroll.current) {
       const bs = new BScroll(chatScroll.current, {
@@ -47,8 +59,6 @@ const Chat = () => {
       })
       bs.on('pullingDown', pullingDownHandler)
       setBs(bs)
-
-
       return () => {
         bs && bs.destroy()
       }
@@ -72,7 +82,6 @@ const Chat = () => {
     };
 
     try {
-      console.log(config.url + url)
       const response = await fetch(config.url + url, {
         method: method,
         headers: {
@@ -145,7 +154,6 @@ const Chat = () => {
         ...pre,
         status: 'done',
       }))
-      console.log('流结束');
     } catch (err) {
       console.error(err);
       setStreamMessage(pre => ({
@@ -155,8 +163,11 @@ const Chat = () => {
     }
   }
   useEffect(() => {
-    console.log('状态变化了', streamMessage)
     //process,done,error
+    if (streamMessage?.status === 'done') {
+      setMessegesData(streamMessage)
+      setStreamMessage(undefined)
+    }
   }, [streamMessage?.status])
   //初始化聊天历史数据
   useEffect(() => {
@@ -234,7 +245,7 @@ const Chat = () => {
             chat_data.current_conversation_messages.data.map((i, index) => <ChatListItem key={i.id} i={i} is_current_stream={false} chat_data={chat_data} />)
           }
           {
-            streamMessage && <ChatListItem i={streamMessage} is_current_stream={true} chat_data={chat_data} />
+            streamMessage && streamMessage.id && <ChatListItem i={streamMessage} is_current_stream={true} chat_data={chat_data} />
           }
         </div>
 

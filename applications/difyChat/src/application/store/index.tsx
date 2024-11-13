@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { produce } from 'immer';
 import { Configs } from '../types/config.types';
 import { AppState, Modules, States } from '../types/system';
-import { ChatData, ModuleState } from '../types/chat.types';
+import { ChatData, IMessageData, ModuleState } from '../types/chat.types';
 
 
 interface State {
@@ -14,6 +14,7 @@ interface State {
   config_data: Configs;
   setConfigData: (data: (preData: Configs) => Partial<Configs>) => void;
   initializeApp: (configs: Configs) => States;
+  setMessegesData: (data: IMessageData) => void
 }
 
 // 创建一个 zustand store
@@ -42,20 +43,15 @@ const useAppStore = create<State>((set) => ({
     },
     sortRules: [{ label: '当天', dayPeriod: 1 }, { label: '七天', dayPeriod: 7 }]
   },
-  flow_data: {
-    flows: [],
-  },
-  home_data: {
-    brandings: [],
-  },
-  setting_data: {
-    userInfo: {},
-  },
+
   setAppData: (state) => set(produce((draft: State) => {
     Object.assign(draft.app_data, state(draft.app_data));
   })),
   setChatData: (data) => set(produce((draft: State) => {
     Object.assign(draft.chat_data, data(draft.chat_data));
+  })),
+  setMessegesData: (data: IMessageData) => set(produce((draft: State) => {
+    draft.chat_data.current_conversation_messages.data.push(data);
   })),
   setConfigData: (data) => set(produce((draft: State) => {
     Object.assign(draft.config_data, data(draft.config_data));
