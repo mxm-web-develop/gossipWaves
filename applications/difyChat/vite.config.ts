@@ -109,10 +109,10 @@ export default ({ mode }: { mode: string }) => {
     server: {
       cors: true,
       host: true,
-      port: 8882,
+      port: 8080,
       proxy: {
         '/myproxy': {
-          target: 'https://api.dify.ai/v1/', // 替换为你的目标服务器地址
+          target: 'https://api.dify.ai/v1', // 替换为你的目标服务器地址
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/myproxy/, ''),
         },

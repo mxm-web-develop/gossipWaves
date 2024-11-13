@@ -19,6 +19,7 @@ import { createAxiosInstance } from "../services/axios_instant";
 import { ServerBase } from "../services/services.type";
 import ChatListItem from "./components/ChatListItem";
 import { api_getParameters } from "../services/apis/get_paramets";
+import { uid } from 'uid'
 const Chat = () => {
   BScroll.use(PullDown)
   BScroll.use(MouseWheel)
@@ -33,6 +34,7 @@ const Chat = () => {
   const [bs, setBs] = useState<BScroll>()
   const chatScroll = useRef<any>(null)
   const [streamMessage, setStreamMessage] = useState<IMessageData | undefined>(undefined)
+  const [streamMessageList, setStremMessageList] = useState<IMessageData[]>([])
   const pullingDownHandler = async () => {
     //这里来做所有下拉之后的操作
   }
@@ -108,7 +110,6 @@ const Chat = () => {
           processStreamedData(chunk, (data: any) => {
             switch (data['event']) {
               case 'message':
-
                 setStreamMessage(pre => ({
                   ...pre,
                   answer: (pre?.answer || '') + data['answer'],
@@ -165,8 +166,9 @@ const Chat = () => {
   useEffect(() => {
     //process,done,error
     if (streamMessage?.status === 'done') {
-      setMessegesData(streamMessage)
-      setStreamMessage(undefined)
+      setMessegesData(streamMessage);
+      setStreamMessage(undefined);
+
     }
   }, [streamMessage?.status])
   //初始化聊天历史数据
@@ -242,7 +244,7 @@ const Chat = () => {
             </div>
           }
           {
-            chat_data.current_conversation_messages.data.map((i, index) => <ChatListItem key={i.id} i={i} is_current_stream={false} chat_data={chat_data} />)
+            chat_data.current_conversation_messages.data.map((i, index) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
           }
           {
             streamMessage && streamMessage.id && <ChatListItem i={streamMessage} is_current_stream={true} chat_data={chat_data} />

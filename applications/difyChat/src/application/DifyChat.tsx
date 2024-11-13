@@ -17,7 +17,6 @@ import { cn } from '@udecode/cn'
 import { useEffect } from 'react'
 import { api_getConversations, api_getMessages } from './services'
 import useAppStore from './store' // 导入 store
-import { ModuleState } from './types/chat.types'
 
 const tabs = [
   {

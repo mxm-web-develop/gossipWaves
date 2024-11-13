@@ -7,7 +7,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import './markdownStyle.css'
 export default function ChatListItem({ i, chat_data, is_current_stream }: { i: any, chat_data: any, is_current_stream: boolean }) {
-
+  console.log(i, '还在？')
   return (
     <div key={i.id}>
       <Divider

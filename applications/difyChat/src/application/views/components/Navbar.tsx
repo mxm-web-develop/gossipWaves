@@ -124,7 +124,7 @@ const NvaBar = (props: IHSideBar) => {
           left={<AlignJustify onClick={() => setOpen(true)} fontSize={24} />} backIcon={null}
           right={<div className="flex justify-end gap-x-2">
             <AppstoreOutline fontSize={24} />
-            <AddSquareOutline fontSize={24} /></div>}>
+            <AddSquareOutline fontSize={24} onPointerDown={createNewConversation} /></div>}>
           <div className=" text-sm">{title}</div>
         </NavBar>
       </div>
@@ -136,7 +136,7 @@ const NvaBar = (props: IHSideBar) => {
           <div className="flex gap-x-3">
             <AppstoreOutline fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
             <AddSquareOutline
-              onClick={createNewConversation}
+              onPointerDown={createNewConversation}
               fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
           </div>
 
