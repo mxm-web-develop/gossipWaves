@@ -10,7 +10,7 @@ import ScrollBar from '@better-scroll/scroll-bar'
 import DataSortedConversationList from "./DataSortedConversationList"
 import { IChatSortRule } from "../../types/chat.types"
 import useAppStore from "../../store"
-import { AlignJustify } from 'lucide-react'
+import { AlignJustify, LayoutList } from 'lucide-react'
 interface IHSideBar {
   children?: ReactNode
   chat_list: any[]
@@ -40,8 +40,9 @@ const NvaBar = (props: IHSideBar) => {
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
   const setChatData = useAppStore(state => state.setChatData)
-  console.log(chat_data)
+
   const createNewConversation = () => {
+    console.log(chat_data)
     setChatData(pre => ({
       ...pre,
       actived_conversation: '',
@@ -53,14 +54,15 @@ const NvaBar = (props: IHSideBar) => {
     }))
   }
   const title = useMemo(() => {
+    console.log(chat_data.conversations)
     // 检查 chat_data 和 conversations 是否存在
-    if (chat_data && chat_data.conversations && chat_data.conversations.data.length > 0) {
+    if (chat_data && chat_data.actived_conversation && chat_data.conversations && chat_data.conversations.data.length > 0) {
       // 获取第一个对话的标题
       const activeConversation = chat_data.conversations.data[0];
       return activeConversation.name;
     }
-    return ''; // 如果没有对话数据，返回默认标题
-  }, [chat_data]); // 依赖于 chat_data，只有当 chat_data 改变时才重新计算
+    return '新的聊天wefwefwejhfjw;ejklhjfklwjf;lkwje;lkfjwekl;j'; // 如果没有对话数据，返回默认标题
+  }, [chat_data.actived_conversation]); // 依赖于 chat_data，只有当 chat_data 改变时才重新计算
 
   // const scrollInstance = useRef<BScroll>(null) // Add this line to hold the scroll instance
   useEffect(() => {
@@ -115,17 +117,19 @@ const NvaBar = (props: IHSideBar) => {
               <div>
                 <DataSortedConversationList data={chat_list} />
               </div>
-
             </div>
           </div>
         </Popup>
 
         <NavBar
-          left={<AlignJustify onClick={() => setOpen(true)} fontSize={24} />} backIcon={null}
+          left={<AppstoreOutline fontSize={24} />} backIcon={null}
           right={<div className="flex justify-end gap-x-2">
-            <AppstoreOutline fontSize={24} />
+            <LayoutList size={24} onClick={() => setOpen(true)} />
+            {/* <AlignJustify  fontSize={24} /> */}
             <AddSquareOutline fontSize={24} onPointerDown={createNewConversation} /></div>}>
-          <div className=" text-sm">{title}</div>
+          <div className=" text-sm flex items-center justify-center w-full px-5">
+            <span className="whitespace-nowrap truncate ">{title}</span>
+          </div>
         </NavBar>
       </div>
     )
