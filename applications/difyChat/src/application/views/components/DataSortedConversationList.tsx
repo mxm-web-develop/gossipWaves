@@ -7,18 +7,26 @@ import { useChatHooks } from "../../hooks/useChatHooks";
 interface IDataSortedConversationList {
   data: IConversationItem[]
   sortRule?: IChatSortRule
+  setOpen?: any
 }
 
 const DataSortedConversationList = (props: IDataSortedConversationList) => {
   const chat_data = useAppStore(state => state.chat_data)
+  const setChatData = useAppStore(state => state.setChatData)
   const { chunkDataByTimeStamp } = useChatHooks()
-
-
-  const handleEvent = (type: string) => {
-    console.log('123123', type)
+  const handleEvent = (type: string, data?: any) => {
+    switch (type) {
+      case 'change':
+        setChatData((pre) => ({
+          ...pre,
+          actived_conversation: data
+        }))
+        props.setOpen && props.setOpen(false)
+        break;
+    }
   }
   if (!props.data) {
-    return <div className=" flex justify-center items-center">no Data</div>;
+    return <div className=" flex justify-center h-full w-full items-center">no Data</div>;
   } else {
     // 排序列表
     const rules = chat_data.sortRules ? chat_data.sortRules : [{ label: '当天', dayPeriod: 1 }];

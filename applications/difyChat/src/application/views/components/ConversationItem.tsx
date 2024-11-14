@@ -34,20 +34,20 @@ const ConversationItem = (props: ITopicListItem) => {
     // { [hoveredClass]: isHovered && !isDisabled && !isActive } // 仅在非禁用状态下应用悬停样式
   );
 
-  const handleItemEvents = (e: any) => {
-    console.log('12312312')
-    setChatData((pre) => ({
-      ...pre,
-      actived_conversation: data.id
-    }))
-  };
+  // const handleItemEvents = (e: any) => {
+  //   console.log('12312312')
+  //   setChatData((pre) => ({
+  //     ...pre,
+  //     actived_conversation: data.id
+  //   }))
+  // };
 
 
 
   return (
     <div
       key={data.id}
-      onPointerDown={handleItemEvents}
+      onPointerDown={() => props.handleEvent && props.handleEvent('change', data.id)}
       ref={ref}
       className={ItemStyles}
     >
@@ -60,6 +60,7 @@ const ConversationItem = (props: ITopicListItem) => {
             e.preventDefault();
             e.stopPropagation();
             Dialog.show({
+              className: 'custom-dialog',
               title: "提示",
               content: '确认删除该对话记录？',
               actions: [
@@ -75,7 +76,6 @@ const ConversationItem = (props: ITopicListItem) => {
                   bold: true,
                   onClick: async () => {
                     try {
-                      console.log(chat_data.actived_conversation)
                       if (!chat_data.actived_conversation) return
                       await api_deleteConversation({
                         data: {
@@ -90,7 +90,6 @@ const ConversationItem = (props: ITopicListItem) => {
                         },
                         config: config
                       }).then(data => {
-                        console.log(data, 'dfdfdf')
                         const activeId = data.data && data.data.length > 0 ? data.data[0].id : ''
                         setChatData(pre => ({
                           ...pre,
@@ -98,9 +97,6 @@ const ConversationItem = (props: ITopicListItem) => {
                           actived_conversation: activeId
                         }))
                       })
-
-
-
                       Dialog.clear(); // 成功后关闭对话框
                       // 这里可以添加删除成功后的逻辑，比如刷新列表
                     } catch (error) {

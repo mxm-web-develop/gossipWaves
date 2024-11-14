@@ -1,5 +1,5 @@
-import { NavBar, Popup, SideBar } from "antd-mobile"
-import { AddSquareOutline, AppstoreOutline, UnorderedListOutline } from "antd-mobile-icons"
+import { NavBar, Popup } from "antd-mobile"
+import { AddSquareOutline, AppstoreOutline } from "antd-mobile-icons"
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import { useMobileOrientation } from "react-device-detect"
 import BScroll from '@better-scroll/core'
@@ -10,7 +10,7 @@ import ScrollBar from '@better-scroll/scroll-bar'
 import DataSortedConversationList from "./DataSortedConversationList"
 import { IChatSortRule } from "../../types/chat.types"
 import useAppStore from "../../store"
-import { AlignJustify, LayoutList } from 'lucide-react'
+import { LayoutList } from 'lucide-react'
 interface IHSideBar {
   children?: ReactNode
   chat_list: any[]
@@ -40,7 +40,9 @@ const NvaBar = (props: IHSideBar) => {
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
   const setChatData = useAppStore(state => state.setChatData)
-
+  const toggleSystem = () => {
+    console.log('toggleSystem')
+  }
   const createNewConversation = () => {
     console.log(chat_data)
     setChatData(pre => ({
@@ -54,27 +56,24 @@ const NvaBar = (props: IHSideBar) => {
     }))
   }
   const title = useMemo(() => {
-    console.log(chat_data.conversations)
     // 检查 chat_data 和 conversations 是否存在
     if (chat_data && chat_data.actived_conversation && chat_data.conversations && chat_data.conversations.data.length > 0) {
-      // 获取第一个对话的标题
-      const activeConversation = chat_data.conversations.data[0];
-      return activeConversation.name;
+      // 获取 id 和 chat_data.actived_conversation 一致的对话
+      const activeConversation = chat_data.conversations.data.find(conversation => conversation.id === chat_data.actived_conversation);
+      // 如果找到了对话，返回对话的名称，否则返回默认标题
+      return activeConversation ? activeConversation.name : '新的聊天';
     }
-    return '新的聊天wefwefwejhfjw;ejklhjfklwjf;lkwje;lkfjwekl;j'; // 如果没有对话数据，返回默认标题
-  }, [chat_data.actived_conversation]); // 依赖于 chat_data，只有当 chat_data 改变时才重新计算
-
+    return '新的聊天'; // 如果没有对话数据，返回默认标题
+  }, [chat_data.actived_conversation, chat_data.conversations]);
   // const scrollInstance = useRef<BScroll>(null) // Add this line to hold the scroll instance
   useEffect(() => {
     if (!isPortrait && scrollBarH.current) { // Check if scrollBar.current exists
-
       const vs = new BScroll(scrollBarH.current, {
         pullDownRefresh: true,
         mouseWheel: true,
         observeDOM: true,
         scrollbar: true,
       })
-
       // Destroy the BetterScroll instance when the component unmounts
       return () => {
         vs && vs.destroy()
@@ -89,16 +88,12 @@ const NvaBar = (props: IHSideBar) => {
             observeDOM: true,
             scrollbar: true,
           })
-
-          console.log(pv)
           return () => {
             pv && pv.destroy()
           }
         }
       }, 0);
-
     }
-
   }, [isPortrait, open])
   if (isPortrait) {
     return (
@@ -108,19 +103,18 @@ const NvaBar = (props: IHSideBar) => {
           onMaskClick={() => {
             setOpen(false)
           }}
-          position='left'
+          position='right'
           bodyStyle={{ width: '60vw', height: '100vh' }} // Set the height to 100vh
         >
           <div className='sidebar bg-theme-black w-full h-full' >
             <div className="chat-list-container flex-col overflow-y-hidden h-full" ref={scrollBarP}>
               {/* <ConversationList chat_list={chat_list} /> */}
               <div>
-                <DataSortedConversationList data={chat_list} />
+                <DataSortedConversationList setOpen={setOpen} data={chat_list} />
               </div>
             </div>
           </div>
         </Popup>
-
         <NavBar
           left={<AppstoreOutline fontSize={24} />} backIcon={null}
           right={<div className="flex justify-end gap-x-2">
@@ -138,12 +132,11 @@ const NvaBar = (props: IHSideBar) => {
       <>
         <div className="absolute right-0 top-0 py-5 px-5 text-theme-white z-50">
           <div className="flex gap-x-3">
-            <AppstoreOutline fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
+            <AppstoreOutline onPointerDown={toggleSystem} fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
             <AddSquareOutline
               onPointerDown={createNewConversation}
               fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
           </div>
-
         </div>
         <div className='sidebar bg-theme-black w-[210px] h-full' >
           <div className="chat-list-container flex-col overflow-y-hidden h-full" ref={scrollBarH}>

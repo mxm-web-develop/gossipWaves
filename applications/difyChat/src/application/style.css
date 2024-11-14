@@ -103,4 +103,7 @@ body {
   .chat-container {
     @apply px-3 md:px-28  min-w-[300px] sm:pt-[60px] box-border;
   }
+  .custom-dialog {
+    @apply !bg-theme-dark text-theme-white;
+  }
 }
