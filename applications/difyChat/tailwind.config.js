@@ -5,6 +5,9 @@ export default {
   mode: 'jit',
   theme: {
     extend: {
+      fontFamily: {
+        cRoboto: ['Roboto'],
+      },
       screens: {
         xs: '390px',
       },

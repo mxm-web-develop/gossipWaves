@@ -1,0 +1,15 @@
+{
+	"nodes":[
+		{"id":"4aeabb88e7b24a60","type":"text","text":"history","x":-64,"y":122,"width":250,"height":78},
+		{"id":"03a17054d6495892","type":"text","text":"history_data_list:IMESSAGE[]","x":-326,"y":-174,"width":250,"height":60},
+		{"id":"dc21d628858bbea1","type":"text","text":"conversation_id","x":-314,"y":-760,"width":250,"height":60},
+		{"id":"7199461c4129a796","type":"text","text":" react query fetch","x":-326,"y":-382,"width":250,"height":60},
+		{"id":"db7c2b5b5b90b04a","type":"text","text":"sse","x":186,"y":-382,"width":250,"height":60}
+	],
+	"edges":[
+		{"id":"3311f9650a67b045","fromNode":"7199461c4129a796","fromSide":"bottom","toNode":"03a17054d6495892","toSide":"top"},
+		{"id":"c0529de2f9422720","fromNode":"03a17054d6495892","fromSide":"bottom","toNode":"4aeabb88e7b24a60","toSide":"top"},
+		{"id":"7d6134be391ab2f3","fromNode":"dc21d628858bbea1","fromSide":"bottom","toNode":"7199461c4129a796","toSide":"top","label":"message data"},
+		{"id":"35481494aed7b8db","fromNode":"db7c2b5b5b90b04a","fromSide":"bottom","toNode":"03a17054d6495892","toSide":"right"}
+	]
+}

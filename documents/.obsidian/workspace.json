@@ -92,6 +92,23 @@
             }
           },
           {
+            "id": "12eb0028166f4522",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "未命名.canvas",
+                "viewState": {
+                  "x": 186.80386329866272,
+                  "y": -344.332838038633,
+                  "zoom": -0.6499314247481364
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "未命名"
+            }
+          },
+          {
             "id": "e5741709ac9f2494",
             "type": "leaf",
             "state": {
@@ -106,7 +123,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 6
       }
     ],
     "direction": "vertical"
@@ -247,11 +264,15 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "60388280eb8cf84b",
+  "active": "12eb0028166f4522",
   "lastOpenFiles": [
-    "GossipWaves/工程化设计/web.md",
+    "GossipWaves/计划表.md",
+    "未命名.canvas",
     "GossipWaves/工程化设计/DataAnalysis.md",
+    "GossipWaves/工程化设计/工程Tasks.md",
+    "未命名.md",
     "GossipWaves/工程化设计/工程结构.md",
+    "GossipWaves/工程化设计/web.md",
     "GossipWaves/工程化设计/DataWizard.md",
     "GossipWaves/工程化设计/ReportorLLM.md",
     "GossipWaves/工程化设计/applications/difyChat.md",
@@ -264,7 +285,6 @@
     "GossipWaves/产品化设计",
     "GossipWaves/工程化设计/applications",
     "GossipWaves/工程化设计/工程开发流程.md",
-    "GossipWaves/工程化设计/工程流程图.md",
-    "GossipWaves/计划表.md"
+    "GossipWaves/工程化设计/工程流程图.md"
   ]
 }
