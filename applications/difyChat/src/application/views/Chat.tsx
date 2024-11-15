@@ -16,6 +16,10 @@ import ChatListItem from "./components/ChatListItem";
 import { api_getParameters } from "../services/apis/get_paramets";
 import { uid } from 'uid'
 import Loading from "./components/Loading";
+import { QueryCache, useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GetMessagesResponse } from "../services/apis/get_messages";
+
 const Chat = () => {
   BScroll.use(PullDown)
   BScroll.use(MouseWheel)
@@ -29,12 +33,50 @@ const Chat = () => {
   const app_data = useAppStore(state => state.app_data)
   const [bs, setBs] = useState<BScroll>()
   const chatScroll = useRef<any>(null)
+  const queryClient = new QueryClient();
   // const [streamMessage, setStreamMessage] = useState<IMessageData | undefined>(undefined)
   const [streamMessageList, setStremMessageList] = useState<IMessageData[]>([])
-  const pullingDownHandler = async () => {
-    //这里来做所有下拉之后的操作
-    console.log('下拉了')
-  }
+  const fetchMessages = async (conversationId: string | undefined) => {
+    if (!conversationId) return
+    const response = await api_getMessages({
+      data: {
+        user: 'mxm',
+        conversation_id: conversationId
+      },
+      config: config
+    });
+    return response;
+  };
+  const { data, isLoading, error, isRefetching, refetch, isSuccess } = useQuery({
+    queryKey: ['API_GETCHATHISTORY', chat_data.actived_conversation],
+    enabled: !!chat_data.actived_conversation, // 只有在 activedConversation 存在时才启用查询
+    retry: false, // 禁用重试
+
+    staleTime: 1000 * 60 * 5, // 数据在5分钟内被视为新鲜
+    queryFn: () =>
+      fetchMessages(chat_data.actived_conversation)
+  });
+  //初始化聊天历史数据
+  useEffect(() => {
+    if (app_data.initial_ready) {
+      api_getConversations({
+        data: {
+          user: 'mxm'
+        },
+        config: {
+          url: config.url,
+          token: config.token
+        }
+      }).then(data => {
+        const activeId = data.data && data.data.length > 0 ? data.data[0].id : ''
+        setChatData(pre => ({
+          ...pre,
+          conversations: data as any,
+          actived_conversation: activeId
+        }))
+      })
+    }
+  }, [app_data.initial_ready, config])
   useEffect(() => {
     api_getParameters({
       data: {
@@ -45,8 +87,14 @@ const Chat = () => {
       console.log(data, 'zzhzhzhzhzhzhzh')
     })
   }, [])
+  const pullingDownHandler = async () => {
+    //这里来做所有下拉之后的操作
+    console.log('下拉了')
+  }
+
   useEffect(() => {
     //只要聊天项变化就需要清空streamMessageList
+
     setStremMessageList([])
   }, [
     chat_data.actived_conversation
@@ -74,8 +122,10 @@ const Chat = () => {
       bs.refresh();
       bs.scrollTo(0, bs.maxScrollY, 800);
     }
-  }, [bs, chat_data.current_conversation_messages.data, streamMessageList])
+  }, [bs, data, streamMessageList])
+
   const handleSendData = async (v: string) => {
+
     const { url, method } = sendMessageConfig;
     const requestData = {
       query: v,
@@ -121,7 +171,20 @@ const Chat = () => {
                   created_at: data['created_at'],
                   id: data['id']
                 };
+                const queryCache = new QueryCache({
+                  onError: (error) => {
+                    console.log(error)
+                  },
+                  onSuccess: (data) => {
+                    console.log(data)
+                  },
+                  onSettled: (data, error) => {
+                    console.log(data, error)
+                  },
+                })
 
+                // const cachedData = queryClient.getQueryData(['API_GETCHATHISTORY', data['conversation_id']]);
+                // console.log('Cached Data:', cachedData);
                 setStremMessageList(prevList => {
                   const index = prevList.findIndex(item => item.id === newMessage.id);
                   if (index !== -1) {
@@ -150,6 +213,8 @@ const Chat = () => {
                 break;
 
               case 'message_end':
+                // console.log(queryClient.getQueryData(['API_GETCHATHISTORY', chat_data.actived_conversation]))
+
                 api_getConversations({
                   data: {
                     user: 'mxm'
@@ -197,27 +262,7 @@ const Chat = () => {
     }
   }
 
-  //初始化聊天历史数据
-  useEffect(() => {
-    if (app_data.initial_ready) {
-      api_getConversations({
-        data: {
-          user: 'mxm'
-        },
-        config: {
-          url: config.url,
-          token: config.token
-        }
-      }).then(data => {
-        const activeId = data.data && data.data.length > 0 ? data.data[0].id : ''
-        setChatData(pre => ({
-          ...pre,
-          conversations: data as any,
-          actived_conversation: activeId
-        }))
-      })
-    }
-  }, [app_data.initial_ready, config])
+
   //聊天数据message
   useEffect(() => {
     if (chat_data.actived_conversation) {
@@ -229,25 +274,27 @@ const Chat = () => {
           limit: pre.current_conversation_messages.limit,
           data: []
         }
+
       }))
       console.log('获取聊天数据')
-      api_getMessages({
-        data: {
-          user: 'mxm',
-          conversation_id: chat_data.actived_conversation
-        },
-        config: config
-      }).then(data => {
-        setChatData(pre => ({
-          ...pre,
-          current_conversation_messages: {
-            has_more: data.has_more,
-            limit: data.limit,
-            data: data.data as any
-          },
-          state: ModuleState.Waiting
-        }))
-      })
+      refetch()
+      // api_getMessages({
+      //   data: {
+      //     user: 'mxm',
+      //     conversation_id: chat_data.actived_conversation
+      //   },
+      //   config: config
+      // }).then(data => {
+      //   setChatData(pre => ({
+      //     ...pre,
+      //     current_conversation_messages: {
+      //       has_more: data.has_more,
+      //       limit: data.limit,
+      //       data: data.data as any
+      //     },
+      //     state: ModuleState.Waiting
+      //   }))
+      // })
     }
   }, [
     chat_data.actived_conversation
@@ -262,10 +309,11 @@ const Chat = () => {
       <div className='chat-container mx-auto py-3 h-full w-full ' ref={chatScroll}>
         <div>
           {
-            chat_data.state === ModuleState.Loading && <Loading />
+            isLoading && <Loading />
           }
+
           {
-            chat_data.current_conversation_messages.data.map((i, index) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
+            data && data.data.map((i, index) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
           }
           {
             streamMessageList && streamMessageList.length > 0 && streamMessageList.map((i, index) => {
