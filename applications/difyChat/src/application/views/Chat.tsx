@@ -16,9 +16,9 @@ import ChatListItem from "./components/ChatListItem";
 import { api_getParameters } from "../services/apis/get_paramets";
 import { uid } from 'uid'
 import Loading from "./components/Loading";
-import { QueryCache, useMutation, useQuery } from "@tanstack/react-query";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { GetMessagesResponse } from "../services/apis/get_messages";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+// import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// import { GetMessagesResponse } from "../services/apis/get_messages";
 
 const Chat = () => {
   BScroll.use(PullDown)
@@ -33,9 +33,12 @@ const Chat = () => {
   const app_data = useAppStore(state => state.app_data)
   const [bs, setBs] = useState<BScroll>()
   const chatScroll = useRef<any>(null)
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
+
+
+
   // const [streamMessage, setStreamMessage] = useState<IMessageData | undefined>(undefined)
-  const [streamMessageList, setStremMessageList] = useState<IMessageData[]>([])
+  // const [streamMessageList, setStremMessageList] = useState<IMessageData[]>([])
   const fetchMessages = async (conversationId: string | undefined) => {
     if (!conversationId) return
     const response = await api_getMessages({
@@ -47,15 +50,42 @@ const Chat = () => {
     });
     return response;
   };
-  const { data, isLoading, error, isRefetching, refetch, isSuccess } = useQuery({
+  const { data, isLoading, error, isFetching, isError, isRefetching, refetch, isSuccess } = useQuery({
     queryKey: ['API_GETCHATHISTORY', chat_data.actived_conversation],
     enabled: !!chat_data.actived_conversation, // 只有在 activedConversation 存在时才启用查询
-    retry: false, // 禁用重试
-
+    retry: false, // 禁用重
     staleTime: 1000 * 60 * 5, // 数据在5分钟内被视为新鲜
     queryFn: () =>
       fetchMessages(chat_data.actived_conversation)
   });
+  useEffect(() => {
+
+    if (isLoading) {
+      setChatData(pre => ({
+        ...pre,
+        state: ModuleState.Loading
+      }))
+    }
+    if (isSuccess) {
+      setChatData(pre => ({
+        ...pre,
+        state: ModuleState.Waiting
+      }))
+    }
+    if (isError) {
+      setChatData(pre => ({
+        ...pre,
+        state: ModuleState.Error
+      }))
+    }
+    // if (isFetching) {
+    //   setChatData(pre => ({
+    //     ...pre,
+    //     state: ModuleState.Process
+    //   }))
+    // }
+    // console.log(isLoading, isSuccess, isError)
+  }, [isLoading, isSuccess, isError])
   //初始化聊天历史数据
   useEffect(() => {
     if (app_data.initial_ready) {
@@ -84,7 +114,7 @@ const Chat = () => {
       },
       config
     }).then(data => {
-      console.log(data, 'zzhzhzhzhzhzhzh')
+      console.log(data, 'api_getParameters')
     })
   }, [])
   const pullingDownHandler = async () => {
@@ -92,13 +122,7 @@ const Chat = () => {
     console.log('下拉了')
   }
 
-  useEffect(() => {
-    //只要聊天项变化就需要清空streamMessageList
 
-    setStremMessageList([])
-  }, [
-    chat_data.actived_conversation
-  ])
   useEffect(() => {
     if (chatScroll.current) {
       const bs = new BScroll(chatScroll.current, {
@@ -122,7 +146,7 @@ const Chat = () => {
       bs.refresh();
       bs.scrollTo(0, bs.maxScrollY, 800);
     }
-  }, [bs, data, streamMessageList])
+  }, [bs, data])
 
   const handleSendData = async (v: string) => {
 
@@ -135,7 +159,10 @@ const Chat = () => {
       conversation_id: chat_data.actived_conversation,
       auto_generate_name: true,
     };
-
+    setChatData(pre => ({
+      ...pre,
+      state: ModuleState.Process
+    }))
     try {
       const response = await fetch(config.url + url, {
         method: method,
@@ -145,10 +172,10 @@ const Chat = () => {
         },
         body: JSON.stringify(requestData),
       });
-      setChatData(pre => ({
-        ...pre,
-        state: ModuleState.Process
-      }))
+      // setChatData(pre => ({
+      //   ...pre,
+      //   state: ModuleState.Process
+      // }))
 
       if (!response.body) {
         throw new Error('ReadableStream not supported in this browser.');
@@ -171,36 +198,50 @@ const Chat = () => {
                   created_at: data['created_at'],
                   id: data['id']
                 };
-                const queryCache = new QueryCache({
-                  onError: (error) => {
-                    console.log(error)
-                  },
-                  onSuccess: (data) => {
-                    console.log(data)
-                  },
-                  onSettled: (data, error) => {
-                    console.log(data, error)
-                  },
-                })
 
+                // console.log(data, 'zhelizheli')
+                setChatData(pre => ({
+                  ...pre,
+                  current_taskId: data['task_id']
+                }))
                 // const cachedData = queryClient.getQueryData(['API_GETCHATHISTORY', data['conversation_id']]);
                 // console.log('Cached Data:', cachedData);
-                setStremMessageList(prevList => {
-                  const index = prevList.findIndex(item => item.id === newMessage.id);
+                queryClient.setQueryData(['API_GETCHATHISTORY', data['conversation_id']], (oldData: any) => {
+                  if (!oldData) {
+                    return { data: [newMessage] };
+                  }
+
+                  const index = oldData.data.findIndex((item: any) => item.id === newMessage.id);
                   if (index !== -1) {
                     // 如果找到相同id的消息，合并answer并更新该消息
                     const updatedMessage = {
-                      ...prevList[index],
-                      answer: prevList[index].answer + newMessage.answer  // 累加answer
+                      ...oldData.data[index],
+                      answer: oldData.data[index].answer + newMessage.answer  // 累加answer
                     };
-                    const newList = [...prevList];
-                    newList[index] = updatedMessage;
-                    return newList;
+                    const newData = [...oldData.data];
+                    newData[index] = updatedMessage;
+                    return { ...oldData, data: newData };
                   } else {
                     // 如果没有找到相同id的消息，添加新消息
-                    return [...prevList, newMessage];
+                    return { ...oldData, data: [...oldData.data, newMessage] };
                   }
                 });
+                // setStremMessageList(prevList => {
+                //   const index = prevList.findIndex(item => item.id === newMessage.id);
+                //   if (index !== -1) {
+                //     // 如果找到相同id的消息，合并answer并更新该消息
+                //     const updatedMessage = {
+                //       ...prevList[index],
+                //       answer: prevList[index].answer + newMessage.answer  // 累加answer
+                //     };
+                //     const newList = [...prevList];
+                //     newList[index] = updatedMessage;
+                //     return newList;
+                //   } else {
+                //     // 如果没有找到相同id的消息，添加新消息
+                //     return [...prevList, newMessage];
+                //   }
+                // });
                 break;
               }
               case 'error':
@@ -225,7 +266,8 @@ const Chat = () => {
                   setChatData(pre => ({
                     ...pre,
                     conversations: d as any,
-                    actived_conversation: data['conversation_id'] as unknown as string
+                    actived_conversation: data['conversation_id'] as unknown as string,
+                    current_taskId: undefined
                   }))
                 })
                 setChatData(pre => ({
@@ -268,7 +310,7 @@ const Chat = () => {
     if (chat_data.actived_conversation) {
       setChatData(pre => ({
         ...pre,
-        state: !pre.actived_conversation ? ModuleState.Waiting : ModuleState.Loading,
+        // state: !pre.actived_conversation ? ModuleState.Waiting : ModuleState.Loading,
         current_conversation_messages: {
           has_more: pre.current_conversation_messages.has_more,
           limit: pre.current_conversation_messages.limit,
@@ -313,15 +355,15 @@ const Chat = () => {
           }
 
           {
-            data && data.data.map((i, index) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
+            data && data.data.map((i) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
           }
-          {
+          {/* {
             streamMessageList && streamMessageList.length > 0 && streamMessageList.map((i, index) => {
               // Determine if the current item is the last item in the streamMessageList array
               const isCurrentStream = index === streamMessageList.length - 1;
               return <ChatListItem key={uid(16)} i={i} is_current_stream={isCurrentStream} chat_data={chat_data} />
             })
-          }
+          } */}
         </div>
       </div>
       <div className={

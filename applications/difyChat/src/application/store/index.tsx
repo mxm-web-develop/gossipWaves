@@ -20,7 +20,7 @@ interface State {
 // 创建一个 zustand store
 const useAppStore = create<State>((set) => ({
   app_data: {
-    current_module: Modules.Chat,
+    //current_module: Modules.Chat,
     initial_ready: false,
     app_state: States.Loading,
   },
@@ -41,7 +41,7 @@ const useAppStore = create<State>((set) => ({
       limit: 30,
       data: []
     },
-    sortRules: [{ label: '当天', dayPeriod: 1 }, { label: '七天', dayPeriod: 7 }]
+    sortRules: [{ label: '当天', dayPeriod: 1 }, { label: '本周', dayPeriod: 7 }]
   },
 
   setAppData: (state) => set(produce((draft: State) => {

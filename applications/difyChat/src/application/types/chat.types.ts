@@ -14,6 +14,7 @@ export interface ChatData {
   sortRules?: IChatSortRule[];
   state: ModuleState;
   current_conversation_messages: IMessages;
+  current_taskId?: string | undefined;
 }
 
 export interface IConversationItem {

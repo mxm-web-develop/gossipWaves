@@ -49,9 +49,9 @@ const useAppStore = create<State>((set) => ({
   // setting_data: {
   //   userInfo: {},
   // },
-  setAppData: (state) => set(produce((draft: State) => {
-    Object.assign(draft.app_data, state(draft.app_data));
-  })),
+  // setAppData: (state) => set(produce((draft: State) => {
+  //   Object.assign(draft.app_data, state(draft.app_data));
+  // })),
 
 
 }));

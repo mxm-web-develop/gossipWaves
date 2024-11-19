@@ -107,3 +107,22 @@ body {
     @apply !bg-theme-dark text-theme-white;
   }
 }
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.adm-toast-mask .adm-toast-main-icon .adm-toast-icon {
+  display: flex !important;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+}

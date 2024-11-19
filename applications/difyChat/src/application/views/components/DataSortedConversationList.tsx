@@ -34,7 +34,7 @@ const DataSortedConversationList = (props: IDataSortedConversationList) => {
     const hasOtherOnly = rules.every(
       (rule) => !sortedList[rule.label] || sortedList[rule.label].length === 0
     );
-    console.log(rules, 'dfdfd')
+    console.log(rules, sortedList, hasOtherOnly)
     return (
       <>
         {rules.map(

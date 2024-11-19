@@ -13,7 +13,7 @@ const useChatHooks = () => {
     };
 
     data.forEach((item) => {
-      const itemDate = new Date(item.updated_at);
+      const itemDate = new Date(item.updated_at * 1000); // 如果时间戳是秒级，需要乘以1000
       const daysDifference = differenceInDays(now, itemDate);
       let found = false;
 
@@ -24,14 +24,14 @@ const useChatHooks = () => {
           }
           sortedList[rule.label].push(item);
           found = true;
-          // console.log('Matched Rule:', rule.label); // 调试输出
-          break; // 确保每个数据项只分类到一个时间段
+          break;
         }
       }
-
       if (!found) {
-        sortedList.other.push(item);
-        // console.log('Placed in "other" category:', item.label); // 调试输出
+        if (!sortedList['others']) {
+          sortedList['others'] = [];
+        }
+        sortedList['others'].push(item);
       }
     });
 

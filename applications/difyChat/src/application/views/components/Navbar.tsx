@@ -8,25 +8,16 @@ import MouseWheel from '@better-scroll/mouse-wheel'
 import ObserveDOM from '@better-scroll/observe-dom'
 import ScrollBar from '@better-scroll/scroll-bar'
 import DataSortedConversationList from "./DataSortedConversationList"
-import { IChatSortRule } from "../../types/chat.types"
+import { IChatSortRule, ModuleState } from "../../types/chat.types"
 import useAppStore from "../../store"
 import { LayoutList } from 'lucide-react'
+import { api_stopChatMessages } from "@/application/services/apis/stop_chatmessage"
 interface IHSideBar {
   children?: ReactNode
   chat_list: any[]
   sortRule?: IChatSortRule
 }
 
-const ConversationList = ({ chat_list }: any) => (
-  <div> {/* Add this div as the inner container */}
-    {chat_list.map((item: any) => (
-      <div
-        className="chat-item cursor-pointer text-theme-white px-5 box-border py-5 "
-        key={item.id}
-      >{item.title}</div>
-    ))}
-  </div>
-)
 
 const NvaBar = (props: IHSideBar) => {
   BScroll.use(PullDown)
@@ -36,6 +27,7 @@ const NvaBar = (props: IHSideBar) => {
   const { chat_list } = props
   const { isPortrait } = useMobileOrientation()
   const chat_data = useAppStore(state => state.chat_data)
+  const config = useAppStore(state => state.config_data)
   const [open, setOpen] = useState(false)
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
@@ -43,8 +35,39 @@ const NvaBar = (props: IHSideBar) => {
   const toggleSystem = () => {
     console.log('toggleSystem')
   }
-  const createNewConversation = () => {
-    console.log(chat_data)
+  const createNewConversation = async () => {
+    // if (chat_data.current_taskId && chat_data.state === ModuleState.Process) {
+    //   const stop = await api_stopChatMessages({
+    //     data: {
+    //       user: 'mxm',
+    //       task_id: chat_data.current_taskId
+    //     },
+    //     config: config
+    //   })
+    //   if (stop && stop.result && stop.result === 'success') {
+    //     setChatData(pre => ({
+    //       ...pre,
+    //       actived_conversation: '',
+    //       current_conversation_messages: {
+    //         has_more: false,
+    //         limit: 20,
+    //         data: []
+    //       }
+    //     }))
+    //   }
+
+    // } else {
+    //   setChatData(pre => ({
+    //     ...pre,
+    //     actived_conversation: '',
+    //     current_conversation_messages: {
+    //       has_more: false,
+    //       limit: 20,
+    //       data: []
+    //     }
+    //   }))
+    // }
+
     setChatData(pre => ({
       ...pre,
       actived_conversation: '',
@@ -54,6 +77,8 @@ const NvaBar = (props: IHSideBar) => {
         data: []
       }
     }))
+    console.log(chat_data)
+
   }
   const title = useMemo(() => {
     // 检查 chat_data 和 conversations 是否存在
@@ -109,7 +134,7 @@ const NvaBar = (props: IHSideBar) => {
           <div className='sidebar bg-theme-black w-full h-full' >
             <div className="chat-list-container flex-col overflow-y-hidden h-full" ref={scrollBarP}>
               {/* <ConversationList chat_list={chat_list} /> */}
-              <div>
+              <div className="px-5">
                 <DataSortedConversationList setOpen={setOpen} data={chat_list} />
               </div>
             </div>
@@ -132,15 +157,15 @@ const NvaBar = (props: IHSideBar) => {
       <>
         <div className="absolute right-0 top-0 py-5 px-5 text-theme-white z-50">
           <div className="flex gap-x-3">
-            <AppstoreOutline onPointerDown={toggleSystem} fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
+            <AppstoreOutline onPointerDown={toggleSystem} fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />
             <AddSquareOutline
               onPointerDown={createNewConversation}
-              fontSize={32} className="cursor-pointer text-theme-white hover:text-white" />
+              fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />
           </div>
         </div>
         <div className='sidebar bg-theme-black w-[210px] h-full' >
           <div className="chat-list-container flex-col overflow-y-hidden h-full" ref={scrollBarH}>
-            <div> <DataSortedConversationList data={chat_list} /></div>
+            <div className="px-5"> <DataSortedConversationList data={chat_list} /></div>
           </div>
         </div>
       </>

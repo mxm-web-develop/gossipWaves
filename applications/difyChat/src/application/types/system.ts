@@ -24,7 +24,7 @@ export interface SortRules {
 }
 
 export interface AppState {
-  current_module: Modules;
+  // 单独的chat应用不需要切换 current_module: Modules;
   initial_ready: boolean;
   app_state: States;
 }

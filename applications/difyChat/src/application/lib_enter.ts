@@ -1,3 +1,4 @@
 import './style.css';
-import MxMweb from './DifyChat';
-export { MxMweb };
+import MxMChat from './DifyChat';
+import ChatClientProvider from './ChatClientProvider';
+export { MxMChat, ChatClientProvider };
