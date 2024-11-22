@@ -5,8 +5,8 @@ import path from 'path';
 
 export const revalidate = 60
 export const dynamicParams = true // or false, to 404 on unknown paths
-
-export async function generateStaticProps() {
+export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+export async function getServerSideProps() {
   // 读取 JSON 文件
   const filePath = path.join(process.cwd(), 'database', 'web', 'home.json');
   console.log('拿不到')
@@ -19,7 +19,9 @@ export async function generateStaticProps() {
   };
 }
 
-export default function HomePage() {
+export default function HomePage({ data }) {
+
+  console.log(data, '123123123')
   return (
     <div>
       <h1>首页</h1>
