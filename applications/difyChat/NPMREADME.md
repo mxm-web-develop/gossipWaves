@@ -2,11 +2,20 @@
 
 ## 安装
 
-npm i @mxmweb/somelib
+npm i @mxmweb/difychat
 
 ## 使用
 
-```
-import { MxMweb } from '@mxmweb/somelib';
-import '@mxmweb/somelib/styles.css'
+```ts
+import { MxMChat, ChatClientProvider } from './application/lib_enter';
+import '@mxmweb/difychat/styles.css';
+function Preview() {
+  return (
+    <ChatClientProvider>
+      <MxMChat url="/myproxy" token="app-jRRwbSXPpFdDUahm7QmPdyFq" mock={false} />
+    </ChatClientProvider>
+  );
+}
+
+export default App;
 ```
