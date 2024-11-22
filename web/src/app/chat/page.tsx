@@ -1,12 +1,16 @@
 // src/app/chat/page.tsx
-import React from 'react';
+import DifyChat from '@/components/DifyChat';
+import React, { Suspense } from 'react';
 
 const ChatPage: React.FC = () => {
   return (
-    <div>
-      <h1>聊天界面</h1>
-
-    </div>
+    <Suspense fallback={<div>loading lalalal</div>}>
+      <DifyChat
+        url={process.env.NEXT_PUBLIC_CHAT_URL || '/myproxy'}
+        token={process.env.NEXT_PUBLIC_CHAT_TOKEN || 'app-jRRwbSXPpFdDUahm7QmPdyFq'}
+        mock={process.env.NEXT_PUBLIC_CHAT_MOCK === 'flase'}
+      />
+    </Suspense>
   );
 };
 

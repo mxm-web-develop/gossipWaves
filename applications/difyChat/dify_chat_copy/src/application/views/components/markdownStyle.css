@@ -1,5 +1,0 @@
-.markdown-container pre {
-  white-space: pre-wrap; /* 允许换行 */
-  word-wrap: break-word; /* 强制长单词换行 */
-  overflow-x: auto; /* 允许水平滚动 */
-}

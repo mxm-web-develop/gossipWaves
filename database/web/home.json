@@ -2,15 +2,19 @@
   "brands": [
     {
       "_id": "1",
-      "url": "/image1.png"
+      "url": "/images/1.jpg"
     },
     {
       "_id": "2",
-      "url": "/image2.png"
+      "url": "/images/2.jpg"
     },
     {
       "_id": "3",
-      "url": "/image3.png"
+      "url": "/images/3.jpg"
+    },
+    {
+      "_id": "4",
+      "url": "/images/2.jpg"
     }
   ],
   "vedios": [
