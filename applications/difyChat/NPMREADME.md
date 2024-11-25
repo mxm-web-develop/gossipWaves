@@ -19,3 +19,7 @@ function Preview() {
 
 export default App;
 ```
+
+## 更新说明
+
+1. 升级 react + react dom 到 19 版本，方便 nextjs 引入
