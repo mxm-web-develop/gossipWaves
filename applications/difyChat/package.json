@@ -2,7 +2,7 @@
   "name": "@mxmweb/difychat",
   "private": true,
   "author": "hanfeng_Zhang",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "type": "module",
   "scripts": {
     "dev": "vite",
