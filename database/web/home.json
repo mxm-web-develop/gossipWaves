@@ -1,4 +1,48 @@
 {
+  "navs": [
+    {
+      "_id": "98f223hj9f29",
+      "categories": "system",
+      "name": "home",
+      "path": "/home",
+      "icon": "home"
+    },
+    {
+      "_id": "98f223h43329",
+      "categories": "system",
+      "name": "docs",
+      "path": "/docs",
+      "icon": "docs"
+    },
+    {
+      "_id": "f3f3f3f2f32f332",
+      "categories": "system",
+      "name": "videos",
+      "path": "/videos",
+      "icon": "videos"
+    },
+    {
+      "_id": "fo293jk20pfoik23",
+      "categories": "system",
+      "name": "broadcast",
+      "path": "/broadcast",
+      "icon": "broadcast"
+    },
+    {
+      "_id": "fo23f32f2322f23",
+      "categories": "chat",
+      "name": "trade_helper",
+      "path": "/trading",
+      "icon": "trading"
+    },
+    {
+      "_id": "f3i2jfi32opoo33",
+      "categories": "chat",
+      "name": "bitcoin_noob",
+      "path": "/knowladge",
+      "icon": "knowladge"
+    }
+  ],
   "brands": [
     {
       "_id": "1",

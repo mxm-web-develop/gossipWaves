@@ -20,6 +20,8 @@
   回复默认统一使用中文
 ```
 
+`yarn info @mxmweb/difychat version` `yarn add @mxmweb/difychat@1.0.16`
+
 ## 注意事项
 
 - npm 镜像下载依赖时： `npm config set registry https://registry.npmmirror.com` 发布包时：

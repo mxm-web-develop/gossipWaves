@@ -8,7 +8,7 @@ export async function readJSONFile(filePath: string) {
     const fileContent = await fs.readFile(fullPath, "utf8");
     return JSON.parse(fileContent);
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
-    throw new Error(`Unable to read file ${filePath}`);
+    // console.error(`Error reading file ${filePath}:`, error);
+    throw new Error(`Unable to read file ${filePath} ${error}`);
   }
 }
