@@ -7,7 +7,7 @@
 export default async function Home() {
   return (
     <div>
-      视频获取列表
+      <h3 className=" text-lg">视频列表模块</h3>
     </div>
   )
 }
