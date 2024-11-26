@@ -1,17 +1,17 @@
-// src/app/chat/page.tsx
-import DifyChat from '@/components/DifyChat';
-import React, { Suspense } from 'react';
+'use client'
+import dynamic from 'next/dynamic';
+import React from 'react'
+//import * as dify from '@mxmweb/difychat'
+// import '@mxmweb/difychat/style.css'
+
+const DynamicHeader = dynamic(() => import('@mxmweb/difychat'), {
+  ssr: false
+})
 
 const ChatPage: React.FC = () => {
-  return (
-    <Suspense fallback={<div>loading lalalal</div>}>
-      <DifyChat
-        url={process.env.NEXT_PUBLIC_CHAT_URL || '/myproxy'}
-        token={process.env.NEXT_PUBLIC_CHAT_TOKEN || 'app-jRRwbSXPpFdDUahm7QmPdyFq'}
-        mock={process.env.NEXT_PUBLIC_CHAT_MOCK === 'flase'}
-      />
-    </Suspense>
-  );
-};
+  // console.log(dify)
+  return <DynamicHeader />
+}
 
-export default ChatPage;
+export default ChatPage
+
