@@ -14,8 +14,10 @@ import { LayoutList } from 'lucide-react'
 import { api_stopChatMessages } from "@/application/services/apis/stop_chatmessage"
 interface IHSideBar {
   children?: ReactNode
+  user?: string
   chat_list: any[]
-  sortRule?: IChatSortRule
+  sortRule?: IChatSortRule,
+  onActionEmmiter?: (type: string, data?: any) => any
 }
 
 
@@ -27,13 +29,17 @@ const NvaBar = (props: IHSideBar) => {
   const { chat_list } = props
   const { isPortrait } = useMobileOrientation()
   const chat_data = useAppStore(state => state.chat_data)
-  const config = useAppStore(state => state.config_data)
+  const app_data = useAppStore(state => state.app_data)
   const [open, setOpen] = useState(false)
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
   const setChatData = useAppStore(state => state.setChatData)
   const toggleSystem = () => {
-    console.log('toggleSystem')
+    console.log('app_toggle')
+    props.onActionEmmiter && props.onActionEmmiter('app_toggle', {
+      user: props.user,
+      app_data: app_data
+    })
   }
   const createNewConversation = async () => {
     // if (chat_data.current_taskId && chat_data.state === ModuleState.Process) {
@@ -157,10 +163,11 @@ const NvaBar = (props: IHSideBar) => {
       <>
         <div className="absolute right-0 top-0 py-5 px-5 text-theme-white z-50">
           <div className="flex gap-x-3">
-            <AppstoreOutline onPointerDown={toggleSystem} fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />
+
             <AddSquareOutline
               onPointerDown={createNewConversation}
               fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />
+            <AppstoreOutline onPointerDown={toggleSystem} fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />
           </div>
         </div>
         <div className='sidebar bg-theme-black w-[210px] h-full' >

@@ -20,7 +20,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 // import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { GetMessagesResponse } from "../services/apis/get_messages";
 
-const Chat = () => {
+const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type: string, data?: any) => any }) => {
   BScroll.use(PullDown)
   BScroll.use(MouseWheel)
   BScroll.use(ObserveDOM)
@@ -43,7 +43,7 @@ const Chat = () => {
     if (!conversationId) return
     const response = await api_getMessages({
       data: {
-        user: 'mxm',
+        user: user,
         conversation_id: conversationId
       },
       config: config
@@ -91,7 +91,7 @@ const Chat = () => {
     if (app_data.initial_ready) {
       api_getConversations({
         data: {
-          user: 'mxm'
+          user: user
         },
         config: {
           url: config.url,
@@ -110,7 +110,7 @@ const Chat = () => {
   useEffect(() => {
     api_getParameters({
       data: {
-        user: 'mxm'
+        user: user
       },
       config
     }).then(data => {
@@ -155,7 +155,7 @@ const Chat = () => {
       query: v,
       inputs: {},
       response_mode: 'streaming',
-      user: 'mxm',
+      user: user,
       conversation_id: chat_data.actived_conversation,
       auto_generate_name: true,
     };
@@ -258,7 +258,7 @@ const Chat = () => {
 
                 api_getConversations({
                   data: {
-                    user: 'mxm'
+                    user: user
                   },
                   config: config
                 }).then(d => {
@@ -353,7 +353,6 @@ const Chat = () => {
           {
             isLoading && <Loading />
           }
-
           {
             data && data.data.map((i) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
           }

@@ -43,6 +43,7 @@ const DifyChat = (props: {
   token?: string
   mock?: boolean
   username?: string
+  onActionEmmiter?: (type: string, data?: any) => any
 }) => {
   const { isPortrait } = useMobileOrientation()
   const app_data = useAppStore(state => state.app_data)
@@ -75,8 +76,8 @@ const DifyChat = (props: {
             <div className={cn('w-full h-full relative', {
               'flex': !isPortrait
             })} >
-              <NavBar chat_list={chat_data.conversations.data} />
-              <Chat />
+              <NavBar user={props.username || 'mxm'} onActionEmmiter={props.onActionEmmiter} chat_list={chat_data.conversations.data} />
+              <Chat user={props.username || 'mxm'} />
             </div>
           </div>
       }
