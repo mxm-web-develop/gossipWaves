@@ -14,13 +14,35 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useEffect } from "react";
 import { DoorClosed } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { Separator } from "@/components/ui/separator"
 interface DialogNavigationProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  data: any
+  data: NavItem[];
+}
+// 定义导航项类型
+interface NavItem {
+  _id: string;
+  categories: string;
+  name: string;
+  path: string;
+  icon: string;
 }
 
+// 定义组件属性类型
+interface NavRendererProps {
+  navs: NavItem[];
+}
+
+// 定义图标组件映射表
+const IconMap: Record<string, React.FC<{ size?: number; strokeWidth?: number }>> = {
+  home: (props) => <DoorClosed {...props} />,
+  docs: (props) => <DoorClosed {...props} />, // 替换为实际的图标
+  videos: (props) => <DoorClosed {...props} />,
+  broadcast: (props) => <DoorClosed {...props} />,
+  trading: (props) => <DoorClosed {...props} />,
+  knowladge: (props) => <DoorClosed {...props} />,
+};
 export function DialogNavigation({ open, setOpen, data }: DialogNavigationProps) {
   const router = useRouter()
 
@@ -31,6 +53,12 @@ export function DialogNavigation({ open, setOpen, data }: DialogNavigationProps)
   useEffect(() => {
     console.log(data, 'ewfokljfi4j4o2j3oijf32ioj32io0jf32iojoif324jioio')
   }, [])
+  const groupedNavs = data.reduce<Record<string, NavItem[]>>((acc, nav) => {
+    if (!acc[nav.categories]) acc[nav.categories] = [];
+    acc[nav.categories].push(nav);
+    return acc;
+  }, {});
+
   const handleNavitemClick = (path: string) => {
     setOpen(false)
     router.push(path)
@@ -46,18 +74,32 @@ export function DialogNavigation({ open, setOpen, data }: DialogNavigationProps)
           </DialogHeader>
         </VisuallyHidden>
         <div className="navs-container p-2 lg:p-8">
-          <div className=" flex flex-col">
-            <div>System</div>
-            <div className=" px-3  lg:px-5 grid items-center justify-start gap-4 py-4">
-              <div onPointerDown={() => handleNavitemClick('/home')} className="relative grid-item w-[75px] h-[75px] p-5 box-border border border-solid 
-                 flex items-center justify-center rounded-lg border-theme-white/80 hover:border-white cursor-pointer">
-                <div className=" w-full h-full flex-col mb-3 items-center justify-center" >
-                  <DoorClosed size={32} strokeWidth={1.25} />
-                  <div className=" text-center text-xs">Home</div>
+          {
+            Object.entries(groupedNavs).map(([category, items]) =>
+              <div className=" flex flex-col" key={items['_id']}>
+                <div>{category}</div>
+                <Separator className=" text-theme-white my-3" />
+                <div className=" px-3  lg:px-5 grid grid-cols-3 xl:grid-cols-5 items-center justify-start gap-4 py-4">
+                  {items && items.map((item) => (
+                    <div
+                      key={item._id}
+                      onPointerDown={() => handleNavitemClick(item.path)}
+                      className="relative grid-item w-[75px] h-[75px] p-5 box-border border border-solid 
+                       flex items-center justify-center rounded-lg border-theme-white/80 hover:border-white cursor-pointer"
+                    >
+                      <div className="w-full h-full flex-col mb-3 items-center justify-center">
+                        {/* {IconMap[item.icon]?.({ size: 32, strokeWidth: 1.25 })} */}
+                        <div className="text-center text-xs">{item.name}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          </div>
+            )
+          }
+
+
+
         </div>
 
 

@@ -20,9 +20,9 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-  experimental: {
-    esmExternals: "loose",
-  },
+  // experimental: {
+  //   esmExternals: "loose",
+  // },
   // async rewrites() {
   //   return [
   //     {
