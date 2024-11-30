@@ -4,81 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "268650a0d1141f29",
+        "id": "b57e5e1ee4f0d584",
         "type": "tabs",
         "children": [
           {
-            "id": "598ed18ce97a42ed",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GossipWaves/工程化设计/工程结构.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "工程结构"
-            }
-          },
-          {
-            "id": "9b159bffd4d6633c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GossipWaves/工程化设计/工程结构.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "工程结构"
-            }
-          },
-          {
-            "id": "56e906afab6232e0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GossipWaves/工程化设计/DataLLM.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "DataLLM"
-            }
-          },
-          {
-            "id": "fdb97314a40aa8cf",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GossipWaves/工程化设计/DataWizard.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "DataWizard"
-            }
-          },
-          {
-            "id": "544dde9133b64e96",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GossipWaves/工程化设计/工程结构.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "工程结构"
-            }
-          },
-          {
-            "id": "60388280eb8cf84b",
+            "id": "5e4112510b9c7131",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -92,35 +22,35 @@
             }
           },
           {
-            "id": "12eb0028166f4522",
+            "id": "2fb4ab85662c350f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GossipWaves/工程化设计/工程结构.md",
+                "file": "演讲稿材料/演讲稿草稿.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "工程结构"
+              "title": "演讲稿草稿"
             }
           },
           {
-            "id": "e5741709ac9f2494",
+            "id": "233c33dd7ff17ad2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GossipWaves/工程化设计/web.md",
+                "file": "我的文档/服务器Linux/本地到docker_nginx发布流程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "web"
+              "title": "本地到docker_nginx发布流程"
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -261,18 +191,22 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "12eb0028166f4522",
+  "active": "9e65d4eafd756337",
   "lastOpenFiles": [
-    "GossipWaves/工程化设计/工程Tasks.md",
+    "我的文档/服务器Linux",
+    "演讲稿材料/演讲稿草稿.md",
+    "我的文档/服务器Linux/本地到docker_nginx发布流程.md",
+    "GossipWaves/计划表.md",
+    "演讲稿材料",
+    "我的文档",
+    "未命名.canvas",
     "GossipWaves/工程化设计/工程结构.md",
+    "GossipWaves/工程化设计/工程Tasks.md",
     "GossipWaves/产品化设计/数据更新和获取.md",
     "GossipWaves/产品化设计/数据预测和推演.md",
     "GossipWaves/产品化设计/数据文档化和新文化.md",
     "GossipWaves/产品化设计/数据计算和输出.md",
-    "GossipWaves/计划表.md",
-    "未命名.canvas",
     "GossipWaves/工程化设计/DataAnalysis.md",
-    "未命名.md",
     "GossipWaves/工程化设计/web.md",
     "GossipWaves/工程化设计/DataWizard.md",
     "GossipWaves/工程化设计/ReportorLLM.md",
