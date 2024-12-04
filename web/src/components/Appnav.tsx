@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useEffect } from "react";
-import { DoorClosed } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator"
+import { uid } from 'uid';
 interface DialogNavigationProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -30,19 +31,9 @@ interface NavItem {
 }
 
 // 定义组件属性类型
-interface NavRendererProps {
-  navs: NavItem[];
-}
 
-// 定义图标组件映射表
-const IconMap: Record<string, React.FC<{ size?: number; strokeWidth?: number }>> = {
-  home: (props) => <DoorClosed {...props} />,
-  docs: (props) => <DoorClosed {...props} />, // 替换为实际的图标
-  videos: (props) => <DoorClosed {...props} />,
-  broadcast: (props) => <DoorClosed {...props} />,
-  trading: (props) => <DoorClosed {...props} />,
-  knowladge: (props) => <DoorClosed {...props} />,
-};
+
+
 export function DialogNavigation({ open, setOpen, data }: DialogNavigationProps) {
   const router = useRouter()
 
@@ -76,7 +67,7 @@ export function DialogNavigation({ open, setOpen, data }: DialogNavigationProps)
         <div className="navs-container p-2 lg:p-8">
           {
             Object.entries(groupedNavs).map(([category, items]) =>
-              <div className=" flex flex-col" key={items['_id']}>
+              <div className=" flex flex-col" key={uid(8)}>
                 <div>{category}</div>
                 <Separator className=" text-theme-white my-3" />
                 <div className=" px-3  lg:px-5 grid grid-cols-3 xl:grid-cols-5 items-center justify-start gap-4 py-4">
