@@ -204,8 +204,7 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
                   ...pre,
                   current_taskId: data['task_id']
                 }))
-                // const cachedData = queryClient.getQueryData(['API_GETCHATHISTORY', data['conversation_id']]);
-                // console.log('Cached Data:', cachedData);
+
                 queryClient.setQueryData(['API_GETCHATHISTORY', data['conversation_id']], (oldData: any) => {
                   if (!oldData) {
                     return { data: [newMessage] };
@@ -226,22 +225,6 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
                     return { ...oldData, data: [...oldData.data, newMessage] };
                   }
                 });
-                // setStremMessageList(prevList => {
-                //   const index = prevList.findIndex(item => item.id === newMessage.id);
-                //   if (index !== -1) {
-                //     // 如果找到相同id的消息，合并answer并更新该消息
-                //     const updatedMessage = {
-                //       ...prevList[index],
-                //       answer: prevList[index].answer + newMessage.answer  // 累加answer
-                //     };
-                //     const newList = [...prevList];
-                //     newList[index] = updatedMessage;
-                //     return newList;
-                //   } else {
-                //     // 如果没有找到相同id的消息，添加新消息
-                //     return [...prevList, newMessage];
-                //   }
-                // });
                 break;
               }
               case 'error':
