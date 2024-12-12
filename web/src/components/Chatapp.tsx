@@ -18,7 +18,6 @@ const ChatEs = dynamic(() =>
 const Chatapp = ({ data }: any) => {
   const [open, setOpen] = useState(false)
   const handleAppToggle = (type: string) => {
-    console.log(type, 'zhezhezhe')
     if (type === 'app_toggle') {
       setOpen(true);
     }
