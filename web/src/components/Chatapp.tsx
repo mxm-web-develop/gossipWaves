@@ -26,7 +26,7 @@ const Chatapp = ({ data }: any) => {
   return (
     <>
       <DialogNavigation open={open} setOpen={setOpen} data={data} />
-      <ChatEs url='https://api.dify.ai/v1' token='app-jRRwbSXPpFdDUahm7QmPdyFq' onActionEmmiter={(t) => handleAppToggle(t)} />
+      <ChatEs url='https://api.dify.ai/v1' token='app-VNDnXOOJfkUAz6gSorRXjbW4' onActionEmmiter={(t) => handleAppToggle(t)} />
     </>
   )
 }
