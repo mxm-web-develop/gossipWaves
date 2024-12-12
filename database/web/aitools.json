@@ -121,6 +121,17 @@
     "opensource": false
   },
   {
+    "_id": "550e8400-e29b-41d4-a716-446655440123",
+    "categories": "AI图像工作流",
+    "name": "goEnhance",
+    "description": "基于Flux模型提供的在线图片，短视频生成服务，提供API对接",
+    "url": "https://app.goenhance.ai/text-to-image",
+    "rate": 4,
+    "icon": "image",
+    "local": false,
+    "opensource": false
+  },
+  {
     "_id": "550e8400-e29b-41d4-a716-446655440005",
     "categories": "AI图像工作流",
     "name": "Midjourney",
