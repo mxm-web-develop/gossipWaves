@@ -88,7 +88,10 @@ export default async function Aitools({
                       ))}
                     </div>
                     <div className="flex justify-end">
-                      <a href={tool.url} className="text-blue-500  text-right hover:underline">查看详情</a>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={tool.url} className="text-blue-500  text-right hover:underline">去使用</a>
                     </div>
                   </div>
                 ))}

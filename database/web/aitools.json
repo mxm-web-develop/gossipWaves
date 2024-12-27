@@ -488,7 +488,7 @@
     "categories": "AI办公工具",
     "name": "Gamma",
     "description": "AI 驱动的演示文稿创作工具，支持一键生成精美幻灯片",
-    "url": "https://gamma.app",
+    "url": "https://gamma.app/signup?r=y3nefv9r969zt76",
     "rate": 4,
     "icon": "office",
     "local": false,
@@ -535,6 +535,72 @@
     "url": "https://www.canva.com",
     "rate": 5,
     "icon": "office",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c1a2b3c4-d5e6-7f8g-9h0i-1j2k3l4m5n6o",
+    "categories": "对话聊天",
+    "name": "ChatGPT",
+    "description": "OpenAI开发的大语言模型对话系统,支持多轮对话和各类任务",
+    "url": "https://chat.openai.com",
+    "rate": 5,
+    "icon": "chat",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c2b3c4d5-e6f7-8g9h-0i1j-2k3l4m5n6o7p",
+    "categories": "对话聊天",
+    "name": "通义千问",
+    "description": "阿里云开发的大语言模型,支持中文对话和知识问答",
+    "url": "https://qianwen.aliyun.com",
+    "rate": 4,
+    "icon": "chat",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c3c4d5e6-f7g8-9h0i-1j2k-3l4m5n6o7p8q",
+    "categories": "对话聊天",
+    "name": "豆包",
+    "description": "字节跳动推出的AI助手,支持对话和创作功能",
+    "url": "https://www.doubao.com",
+    "rate": 4,
+    "icon": "chat",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c4d5e6f7-g8h9-0i1j-2k3l-4m5n6o7p8q9r",
+    "categories": "对话聊天",
+    "name": "Claude",
+    "description": "Anthropic开发的AI助手,擅长写作和分析",
+    "url": "https://claude.ai",
+    "rate": 5,
+    "icon": "chat",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c5e6f7g8-h9i0-1j2k-3l4m-5n6o7p8q9r0s",
+    "categories": "对话聊天",
+    "name": "Gemini",
+    "description": "Google推出的多模态AI模型,支持图文对话",
+    "url": "https://gemini.google.com",
+    "rate": 4,
+    "icon": "chat",
+    "local": false,
+    "opensource": false
+  },
+  {
+    "_id": "c6f7g8h9-i0j1-2k3l-4m5n-6o7p8q9r0s1t",
+    "categories": "对话聊天",
+    "name": "flowith",
+    "description": "画布节点式AI对话系统，支持联网检索,节点式展示让用户可以更直观看到Agent的工作流程以及访问的资源",
+    "url": "https://flowith.io/invitation?code=QRGYMI",
+    "rate": 4,
+    "icon": "chat",
     "local": false,
     "opensource": false
   }
