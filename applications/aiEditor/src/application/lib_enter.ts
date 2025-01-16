@@ -1,3 +1,3 @@
 import "./style.css";
-import MxMweb from "./Somelib";
-export { MxMweb };
+import MxmEditor from "./MxmEditor";
+export { MxmEditor };
