@@ -34,6 +34,7 @@ export type GraphRefType = {
   delete_items: (ids: DataID) => void;
   clear_items: () => void;
   get_items: () => GraphData | any;
+  updateNodeById: (id: string, style: any) => void;
 };
 
 export enum AI_GRAPH_TYPE {
@@ -106,6 +107,12 @@ function GraphView(props: {
     graph.setElementState(selectedId, []);
   };
 
+  const updateNodeById = (id: string, style: any) => {
+    if (!graph) return message.warning('graph未初始化');
+    graph.updateNodeData([{ id, style: { ...style } }]);
+    graph.draw();
+  };
+
   const handleContextMenuEvent = (type: string, data?: any) => {
     if (!graph) return message.warning('graph未初始化');
     let id = '';
@@ -132,7 +139,13 @@ function GraphView(props: {
     }
   };
 
-  useImperativeHandle(graphRef, () => ({ add_items, delete_items, clear_items, get_items }));
+  useImperativeHandle(graphRef, () => ({
+    add_items,
+    delete_items,
+    clear_items,
+    get_items,
+    updateNodeById,
+  }));
 
   const handleGraphEvent = (type: string, data?: any) => {
     if (!graph) return message.warning('graph未初始化');

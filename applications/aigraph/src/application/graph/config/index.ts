@@ -10,17 +10,15 @@ export const nodeStyleConfig: any = {
       fillOpacity: 1,
       label: true,
       labelText: (d: any) => d.data?.name,
-      fill: (d: any) => d.data?.color || '#529BF8',
-      size: 80,
+      fill: (d: any) => d.style?.fill || '#529BF8',
+      size: (d: any) => d.style?.size || 80,
       cursor: 'pointer',
       zIndex: 1,
     },
     state: {
       selected: {
-        fill: (node: any) => {
-          return '#1890FF';
-        },
-        stroke: '#1890FF', // 描边色
+        fill: (d: any) => d.style?.fill || '#529BF8',
+        stroke: (d: any) => d.style?.fill || '#529BF8',
         lineWidth: 2, // 描边宽度
         opacity: 1, // 透明度
         // 阴影效果

@@ -36,7 +36,7 @@ function Preview() {
             const a = {
               nodes: [
                 {
-                  id: i + '',
+                  id: '123',
                   // type: '客户',
                   // properties: {
                   //   cert_type: '身份证',
@@ -65,7 +65,7 @@ function Preview() {
               edges: [
                 {
                   id: i + 2 + '',
-                  source: i + '',
+                  source: '123',
                   target: i + 1 + '',
                   properties: {
                     src_id: '2199036887040',
@@ -86,6 +86,15 @@ function Preview() {
         </button>
         <button>删除数据</button>
         <button>清空画布数据</button>
+        <button
+          onClick={() => {
+            const updateNodeById = graphRef.current?.updateNodeById;
+            if (!updateNodeById) return;
+            updateNodeById('123', { fill: 'red', size: 40 });
+          }}
+        >
+          修改数据颜色
+        </button>
       </div>
     </div>
   );
