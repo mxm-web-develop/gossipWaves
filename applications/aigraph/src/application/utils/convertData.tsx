@@ -1,7 +1,7 @@
 export function convertToG6Data(data) {
   const { nodes, edges } = data;
   return {
-    nodes: nodes.map(node => ({
+    nodes: nodes.map((node) => ({
       id: node.elementId,
       label: node.type,
       properties: node.properties,

@@ -1,16 +1,7 @@
-import React, { useEffect } from "react";
-import * as Menubar from "@radix-ui/react-menubar";
-import {
-  ChevronDown,
-  LayoutGrid,
-  Search,
-  View,
-
-} from "lucide-react";
-import { cn } from "../../../lib/utils";
-
-
-
+import React, { useEffect } from 'react';
+import * as Menubar from '@radix-ui/react-menubar';
+import { ChevronDown, View } from 'lucide-react';
+import { cn } from '../../../lib/utils';
 
 const DisplayMenu = () => {
   // 使用value作为状态值
@@ -42,23 +33,27 @@ const DisplayMenu = () => {
   //   return () => observer.disconnect();
   // }, []);
   return (
-    <Menubar.Root ref={menuTriggerRef}
+    <Menubar.Root
+      ref={menuTriggerRef}
       onValueChange={(value) => {
         // value为空字符串时表示关闭，否则表示打开
         handleOpenChange(value !== '');
-      }} className="flex rounded-md bg-white !text-[#555555]">
+      }}
+      className="flex rounded-md bg-white !text-[#555555]"
+    >
       <Menubar.Menu>
         <Menubar.Trigger
           // 添加ref
-          className="flex select-none cursor-pointer items-center justify-between gap-x-2 rounded px-[20px] py-2 text-sm !bg-white border border-none ">
+          className="flex select-none cursor-pointer items-center justify-between gap-x-2 rounded px-[20px] py-2 text-sm !bg-white border border-none "
+        >
           <View size={16} />
-          <span className='text-sm !text-[#555555]'>
-            显示
-          </span>
-          <ChevronDown className={cn(
-            "h-4 w-4 transition-transform duration-200",
-            "data-[state=open]:rotate-180" // 当菜单打开时旋转图标
-          )} />
+          <span className="text-sm !text-[#555555]">显示</span>
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 transition-transform duration-200',
+              'data-[state=open]:rotate-180' // 当菜单打开时旋转图标
+            )}
+          />
         </Menubar.Trigger>
         <Menubar.Portal>
           <Menubar.Content
@@ -68,12 +63,8 @@ const DisplayMenu = () => {
             alignOffset={0}
           >
             <div className="flex items-center text-sm font-normal text-[#555555] select-none justify-between">
-              <div>
-                显示设置
-              </div>
-              <div>
-
-              </div>
+              <div>显示设置</div>
+              <div></div>
             </div>
           </Menubar.Content>
         </Menubar.Portal>
@@ -82,4 +73,4 @@ const DisplayMenu = () => {
   );
 };
 
-export default DisplayMenu
+export default DisplayMenu;

@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
-import * as Menubar from "@radix-ui/react-menubar";
-import {
-  ChevronDown,
-  LayoutGrid,
-
-} from "lucide-react";
-import { useAppState } from "../../store";
-
-
+import React, { useEffect } from 'react';
+import * as Menubar from '@radix-ui/react-menubar';
+import CaretDown from '../../assets/img/CaretDown.png';
+import { useAppState } from '../../store';
+import LayoutOutlined from '../../assets/img/LayoutOutlined.png';
 const LAYOUT_OPTIONS = [
   { value: 'force', label: '力导布局' },
   { value: 'circular', label: '环形布局' },
   { value: 'radial', label: '辐射布局' },
-  { value: 'grid', label: '网格布局' }
+  { value: 'grid', label: '网格布局' },
 ];
 
 const LayoutMenu = () => {
@@ -22,27 +17,27 @@ const LayoutMenu = () => {
   const handleLayoutChange = (value: string) => setSelectedLayout(value);
 
   useEffect(() => {
-    if (graph) {
-      graph.setLayout({
-        type: selectedLayout,
-        preventOverlap: true, // 防止节点重叠
-        nodeSpacing: 50,     // 节点间距
-      });
-
-      graph.layout()
-    }
-
+    if (!graph) return;
+    graph.setLayout({
+      type: selectedLayout,
+      preventOverlap: true, // 防止节点重叠
+      nodeSpacing: 50, // 节点间距
+    });
+    graph.layout();
   }, [selectedLayout]);
+
   return (
     <Menubar.Root className="flex rounded-md bg-white !text-[#555555]">
       <Menubar.Menu>
-        <Menubar.Trigger className="flex select-none cursor-pointer
-         items-center justify-between gap-x-2 rounded px-[20px] py-2 text-sm !bg-white border border-none border-[#EEEEEE]">
-          <LayoutGrid size={16} />
-          <span className='text-sm !text-[#555555]'>
-            {LAYOUT_OPTIONS.find(option => option.value === selectedLayout)?.label}
+        <Menubar.Trigger
+          className="flex select-none cursor-pointer
+         items-center justify-between rounded px-[16px] py-[4px] text-sm !bg-white border border-none border-[#EEEEEE]"
+        >
+          <img src={LayoutOutlined} width={16} height={16} className="mr-[6px]" />
+          <span className="text-sm !text-[#555555] mr-[4px]">
+            {LAYOUT_OPTIONS.find((option) => option.value === selectedLayout)?.label}
           </span>
-          <ChevronDown size={10} />
+          <img src={CaretDown} width={10} height={10} />
         </Menubar.Trigger>
         <Menubar.Portal>
           <Menubar.Content
@@ -72,4 +67,4 @@ const LayoutMenu = () => {
   );
 };
 
-export default LayoutMenu
+export default LayoutMenu;

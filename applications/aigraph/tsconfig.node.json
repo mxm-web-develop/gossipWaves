@@ -16,7 +16,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedExpressions": false
   },
-  "include": ["vite.config.ts","/src/type.d.ts"]
+  "include": ["vite.config.ts", "/src/type.d.ts"]
 }
