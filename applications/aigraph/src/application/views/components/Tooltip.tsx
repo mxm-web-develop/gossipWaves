@@ -6,7 +6,15 @@ interface TooltipProps {
 export const CustomTooltip: React.FC<TooltipProps> = ({ data }) => {
   const d = data?.data ? data.data : {};
   return (
-    <div style={{ width: '326px', height: '50px', borderRadius: '4px', padding: '5px 8px 0 8px' }}>
+    <div
+      style={{
+        width: '326px',
+        height: '50px',
+        borderRadius: '4px',
+        padding: '5px 8px 0 8px',
+        display: 'flex',
+      }}
+    >
       <div
         style={{
           background: '#DBBDA0',
