@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import typography from '@tailwindcss/typography';
 export default {
   darkMode: ['class'],
   mode: 'jit',
@@ -7,7 +8,7 @@ export default {
     aspectRatio: true,
     divideStyle: true,
   },
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './index.html', './public/index.html'],
+  content: ['./src/**/*.{html,ts,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -165,5 +166,5 @@ export default {
   variants: {
     extend: {},
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [typography, require('tailwindcss-animate')],
 };

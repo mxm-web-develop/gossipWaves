@@ -4,7 +4,7 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Graph, GraphData } from '@antv/g6';
 import { useAppState } from '../store';
-import { registerDefaultGraph } from '../graph/default';
+import { cancelDefaultGraph, registerDefaultGraph } from '../graph/default';
 import MyContextMenu, { contextMenuType } from '../graph/MyContextMenu';
 import { ArrowLeft } from 'lucide-react';
 import * as Separator from '@radix-ui/react-separator';
@@ -18,6 +18,7 @@ import Fullscreen from '../assets/img/Fullscreen.png';
 import ScaleDown from '../assets/img/scaleDown.png';
 import ScaleUp from '../assets/img/scaleUp.png';
 import Refresh from '../assets/img/refresh.png';
+import './style.css';
 import {
   behaviorsConfig,
   edgeStyleConfig,
@@ -45,6 +46,9 @@ export enum AI_GRAPH_TYPE {
   CLEAR = 'clear',
   ADD_ITEMS = 'add_items',
   DELETE_ITEMS = 'delete_items',
+  CLICK_NODE = 'click_node',
+  CLICK_CANVAS = 'click_canvas',
+  CLICK_EDGE = 'click_edge',
 }
 
 function GraphView(props: {
@@ -157,7 +161,6 @@ function GraphView(props: {
         } else {
           fullscreen.request();
         }
-
         break;
       case 'scaleUp':
         graph.zoomBy(1 + ZOOM);
@@ -224,8 +227,13 @@ function GraphView(props: {
 
   useEffect(() => {
     if (graph) {
-      registerDefaultGraph(graph, setGraphData);
+      registerDefaultGraph(graph, setGraphData, handleEvent);
     }
+    return () => {
+      if (graph) {
+        cancelDefaultGraph(graph);
+      }
+    };
   }, [graph]);
 
   return (
@@ -236,7 +244,10 @@ function GraphView(props: {
         className="relative"
         style={{ width: '100%', height: '100%' }}
       >
-        <div className="absolute bottom-5 flex justify-start gap-x-3 items-center left-[15px] opacity-40 text-sm  h-10 bg-white">
+        <div
+          style={{ bottom: '20px', left: '16px' }}
+          className="absolute flex justify-start gap-x-3 items-center  opacity-40 text-sm "
+        >
           <div className=" flex justify-center items-center gap-x-1">
             <span>节点数:</span>
             <span>{graphData?.nodes?.length}</span>
@@ -256,7 +267,10 @@ function GraphView(props: {
             </>
           )}
         </div>
-        <div className="absolute right-[15px] top-[80px] w-[44px] border-[1px] border-solid border-[#EEEEEE] rounded-[4px] bg-white">
+        <div
+          style={{ top: '80px', width: '44px' }}
+          className="absolute right-[15px] border-[1px] border-solid border-[#EEEEEE] rounded-[4px] bg-white"
+        >
           {[
             { img: Fullscreen, type: 'fullScreen' },
             { img: ScaleUp, type: 'scaleUp' },
@@ -265,9 +279,8 @@ function GraphView(props: {
           ].map((item, index: number) => {
             return (
               <div
-                className={`w-full h-[44px] border-[0] flex justify-center items-center ${
-                  index === 0 ? 'border-[0]' : 'border-t-[1px]'
-                } border-solid border-[#EEEEEE] cursor-pointer hover:bg-[#f9f8f8]`}
+                style={{ borderTop: index !== 0 ? '1px solid #eeeeee' : 'none' }}
+                className={`graphBtns w-full h-[44px] flex justify-center items-center cursor-pointer`}
                 onClick={() => handleGraphEvent(item.type)}
               >
                 <img src={item.img} width={20} height={20} />
@@ -275,8 +288,11 @@ function GraphView(props: {
             );
           })}
         </div>
-        <div className=" absolute top-5 left-[15px]  ">
-          <div className="flex items-center justify-between py-[4px] px-[16px] hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-md">
+        <div className=" absolute top-5" style={{ left: '16px' }}>
+          <div
+            style={{ padding: '4px 16px' }}
+            className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-md"
+          >
             <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
             <div
               className="   text-sm"
@@ -287,15 +303,21 @@ function GraphView(props: {
           </div>
         </div>
         <div className="tool-bar absolute top-5 right-[15px]">
-          <div className="flex items-center justify-between gap-x-[16px] ">
-            <div className="flex items-center rounded-md border border-solid border-[#EEEEEE] justify-between  ">
+          <div className="flex items-center justify-between" style={{ columnGap: '16px' }}>
+            <div
+              style={{ borderRadius: '4px' }}
+              className="flex items-center border border-solid border-[#EEEEEE] justify-between bg-white"
+            >
               <LayoutMenu />
               <Separator.Root className="bg-[#EEEEEE]" style={{ height: '20px', width: '1px' }} />
               <SearchMenu handleEvent={handleEvent} />
               {/* <DisplayMenu /> */}
             </div>
 
-            <div className="flex items-center justify-between  py-[4px] px-[16px] hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]">
+            <div
+              style={{ padding: '4px 16px' }}
+              className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
+            >
               <img src={SaveOutlined} width={16} height={16} className="mr-[6px]" />
               <div
                 className="text-sm text-[#555555]"
@@ -304,7 +326,10 @@ function GraphView(props: {
                 保存
               </div>
             </div>
-            <div className="flex items-center justify-between  py-[4px] px-[16px] hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]">
+            <div
+              style={{ padding: '4px 16px' }}
+              className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
+            >
               <img src={Download} width={16} height={16} className="mr-[6px]" />
               <div
                 className="text-sm text-[#555555]"

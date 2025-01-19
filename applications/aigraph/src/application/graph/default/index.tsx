@@ -1,7 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Graph } from '@antv/g6';
+import { AI_GRAPH_TYPE } from '../../views/GraphView';
 
-export const registerDefaultGraph = (graph: Graph, setGraphData: (arg: any) => void) => {
+export const registerDefaultGraph = (
+  graph: Graph,
+  setGraphData: (arg: any) => void,
+  handleEvent?: (type: string, data?: any) => any
+) => {
   try {
+    graph.on('node:click', (e: any) => {
+      const id = e.target.id;
+      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_NODE, graph.getElementData(id));
+    });
+    graph.on('edge:click', (e: any) => {
+      const id = e.target.id;
+      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_EDGE, graph.getElementData(id));
+    });
+    graph.on('canvas:click', (e: any) => {
+      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_CANVAS, e);
+    });
     graph.on('node:contextmenu', (e: any) => {
       if (e?.target?.id) {
         graph.setElementState(e.target.id, 'selected');
@@ -38,6 +55,24 @@ export const registerDefaultGraph = (graph: Graph, setGraphData: (arg: any) => v
       console.log('框选开始', evt);
       // 处理框选开始的逻辑
     });
+  } catch (error) {
+    console.error('Graph update failed:', error);
+    throw error;
+  }
+};
+
+export const cancelDefaultGraph = (graph: Graph) => {
+  try {
+    graph.off('node:click', () => {});
+    graph.off('edge:click', () => {});
+    graph.off('canvas:click', () => {});
+    graph.off('node:contextmenu', (e: any) => {});
+    graph.off('keydown', (evt: any) => {});
+    graph.off('keyup', (evt: any) => {});
+    graph.off('afterdraw', function (event: any) {});
+    graph.off('beforelayout', function () {});
+    graph.off('afterlayout', function () {});
+    graph.off('brush-select', (evt: any) => {});
   } catch (error) {
     console.error('Graph update failed:', error);
     throw error;
