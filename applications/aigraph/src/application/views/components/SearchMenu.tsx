@@ -34,7 +34,10 @@ const SearchMenu = ({ handleEvent }: { handleEvent?: (type: string, data?: any) 
       className="flex rounded-md bg-white !text-[#555555] border-none"
     >
       <MenubarMenu>
-        <MenubarTrigger className="flex select-none cursor-pointer items-center justify-between rounded px-[16px] text-sm !bg-white border border-none ">
+        <MenubarTrigger
+          style={{ background: 'white' }}
+          className="flex select-none cursor-pointer items-center justify-between rounded px-[16px] text-sm border border-none "
+        >
           <img src={SearchPng} width={16} height={16} className="mr-[6px]" />
           <span className="text-sm !text-[#555555] mr-[4px]">查询</span>
           <img src={CaretDown} width={10} height={10} />
