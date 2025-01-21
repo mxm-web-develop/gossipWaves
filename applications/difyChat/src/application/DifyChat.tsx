@@ -1,4 +1,5 @@
 import './style.css'
+import { Modal } from 'antd'
 import { SafeArea } from 'antd-mobile'
 import './sidebar.style.css'
 import { useMobileOrientation } from 'react-device-detect';
@@ -51,6 +52,7 @@ const DifyChat = (props: {
   const chat_data = useAppStore(state => state.chat_data)
   //const setChatData = useAppStore(state => state.setChatData)
   const initializeApp = useAppStore((state) => state.initializeApp) // 获取 initializeApp 方法
+
   //const setAppData = useAppStore(state => state.setAppData)
   const { url, token, mock } = props
 
@@ -63,7 +65,9 @@ const DifyChat = (props: {
     }
     initializeApp(configs) // 调用 initializeApp 方法
   }, [])
-
+  const handleClose = () => {
+    console.log('关闭')
+  }
   return (
     // <ChatClientProvider>
     <div className=' h-[100dvh] w-[100dvw] absolute top-0 left-0 '>
@@ -81,6 +85,14 @@ const DifyChat = (props: {
             </div>
           </div>
       }
+      <Modal
+        open={app_data.setting_open}
+        onClose={handleClose}
+        footer={null}
+      >
+        <div>这里是Info</div>
+        <div>这里是Input</div>
+      </Modal>
       <div style={{ background: '#ace0ff' }}>
         <SafeArea position='bottom' />
       </div>

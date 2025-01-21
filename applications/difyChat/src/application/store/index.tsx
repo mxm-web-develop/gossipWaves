@@ -14,7 +14,9 @@ interface State {
   config_data: Configs;
   setConfigData: (data: (preData: Configs) => Partial<Configs>) => void;
   initializeApp: (configs: Configs) => States;
-  setMessegesData: (data: IMessageData) => void
+  setMessegesData: (data: IMessageData) => void;
+  setAppState: (state: States) => void;
+  toggleSettingOpen: () => void;
 }
 
 // 创建一个 zustand store
@@ -23,6 +25,9 @@ const useAppStore = create<State>((set) => ({
     //current_module: Modules.Chat,
     initial_ready: false,
     app_state: States.Loading,
+    setting_open: false,
+    setting_info: {},
+    setting_input: {}
   },
   config_data: {
     url: '',
@@ -60,10 +65,16 @@ const useAppStore = create<State>((set) => ({
     set(produce((draft: State) => {
       draft.config_data = configs; // 使用传入的配置数据
       draft.app_data.initial_ready = true
-      draft.app_data.app_state = States.Waiting;
+      draft.app_data.app_state = States.Loading;
     }));
-    return States.Waiting; // 返回更新后的状态
+    return States.Loading; // 返回更新后的状态
   },
+  setAppState: (state: States) => set(produce((draft: State) => {
+    draft.app_data.app_state = state;
+  })),
+  toggleSettingOpen: () => set(produce((draft: State) => {
+    draft.app_data.setting_open = !draft.app_data.setting_open;
+  })),
 }));
 
 export default useAppStore;

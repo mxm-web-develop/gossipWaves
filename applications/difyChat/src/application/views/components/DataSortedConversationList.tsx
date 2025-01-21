@@ -25,8 +25,8 @@ const DataSortedConversationList = (props: IDataSortedConversationList) => {
         break;
     }
   }
-  if (!props.data) {
-    return <div className=" flex justify-center h-full w-full items-center">no Data</div>;
+  if (!props.data || props.data.length <= 0) {
+    return <div className=" flex justify-center h-full w-full items-center py-5">无历史对话</div>;
   } else {
     // 排序列表
     const rules = chat_data.sortRules ? chat_data.sortRules : [{ label: '当天', dayPeriod: 1 }];
