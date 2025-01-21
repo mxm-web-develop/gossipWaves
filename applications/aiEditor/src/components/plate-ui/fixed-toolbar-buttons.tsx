@@ -71,14 +71,16 @@ export function FixedToolbarButtons() {
       {!readOnly && (
         <>
           <ToolbarGroup>
-            <InsertDropdownMenu />
-            <TurnIntoDropdownMenu />
-            <FontSizeToolbarButton />
+            {/* <InsertDropdownMenu /> */}
+      
+            <UndoToolbarButton />
+            <RedoToolbarButton />
+          
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <UndoToolbarButton />
-            <RedoToolbarButton />
+          <TurnIntoDropdownMenu />
+          <FontSizeToolbarButton />
           </ToolbarGroup>
 
           {/* <ToolbarGroup>
@@ -87,12 +89,7 @@ export function FixedToolbarButtons() {
             </AIToolbarButton>
           </ToolbarGroup> */}
 
-          <ToolbarGroup>
-            <ExportToolbarButton>
-              <ArrowUpToLineIcon />
-            </ExportToolbarButton>
-            <ImportToolbarButton />
-          </ToolbarGroup>
+        
 
     
           <ToolbarGroup>
@@ -150,7 +147,7 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <LinkToolbarButton />
+            {/* <LinkToolbarButton /> */}
             <TableDropdownMenu />
             <EmojiDropdownMenu />
           </ToolbarGroup>
@@ -162,15 +159,21 @@ export function FixedToolbarButtons() {
             <MediaToolbarButton nodeType={FilePlugin.key} />
           </ToolbarGroup>
 
+      
           <ToolbarGroup>
             <LineHeightDropdownMenu />
             <OutdentToolbarButton />
             <IndentToolbarButton />
           </ToolbarGroup>
-
           <ToolbarGroup>
-            <MoreDropdownMenu />
+            <ExportToolbarButton>
+              <ArrowUpToLineIcon />
+            </ExportToolbarButton>
+            <ImportToolbarButton />
           </ToolbarGroup>
+          {/* <ToolbarGroup>
+            <MoreDropdownMenu />
+          </ToolbarGroup> */}
         </>
       )}
 

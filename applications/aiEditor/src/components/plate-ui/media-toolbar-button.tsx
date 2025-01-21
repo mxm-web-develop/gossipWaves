@@ -14,10 +14,15 @@ import {
 } from '@udecode/plate-media/react';
 import {
   AudioLinesIcon,
+  AudioWaveformIcon,
+  FileIcon,
+  FileImage,
   FileUpIcon,
   FilmIcon,
+  Image,
   ImageIcon,
   LinkIcon,
+  VideoIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFilePicker } from 'use-file-picker';
@@ -58,27 +63,27 @@ const MEDIA_CONFIG: Record<
 > = {
   [AudioPlugin.key]: {
     accept: ['audio/*'],
-    icon: <AudioLinesIcon className="size-4" />,
+    icon: <AudioWaveformIcon className="size-4" />,
     title: 'Insert Audio',
-    tooltip: 'Audio',
+    tooltip: '音频',
   },
   [FilePlugin.key]: {
     accept: ['*'],
-    icon: <FileUpIcon className="size-4" />,
+    icon: <FileIcon className="size-4" />,
     title: 'Insert File',
-    tooltip: 'File',
+    tooltip: '文件',
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
-    icon: <ImageIcon className="size-4" />,
+    icon: <Image className="size-4" />,
     title: 'Insert Image',
-    tooltip: 'Image',
+    tooltip: '图片',
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
-    icon: <FilmIcon className="size-4" />,
+    icon: <VideoIcon className="size-4" />,
     title: 'Insert Video',
-    tooltip: 'Video',
+    tooltip: '视频',
   },
 };
 

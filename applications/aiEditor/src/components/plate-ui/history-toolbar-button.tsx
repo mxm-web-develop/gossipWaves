@@ -1,7 +1,7 @@
 'use client';
 
 import { useEditorRef, useEditorSelector, withRef } from '@udecode/plate/react';
-import { Redo2Icon, Undo2Icon } from 'lucide-react';
+import { Redo, Redo2Icon, Undo, Undo2Icon } from 'lucide-react';
 
 import { ToolbarButton } from './toolbar';
 
@@ -21,7 +21,7 @@ export const RedoToolbarButton = withRef<typeof ToolbarButton>((props, ref) => {
       tooltip="Redo"
       {...props}
     >
-      <Redo2Icon />
+      <Redo  />
     </ToolbarButton>
   );
 });
@@ -37,12 +37,13 @@ export const UndoToolbarButton = withRef<typeof ToolbarButton>((props, ref) => {
     <ToolbarButton
       ref={ref}
       disabled={disabled}
+      size={'sm'}
       onClick={() => editor.undo()}
       onMouseDown={(e) => e.preventDefault()}
-      tooltip="Undo"
+      tooltip="撤回"
       {...props}
     >
-      <Undo2Icon className=" text-[10px]" size={'10px'}/>
+      <Undo  />
     </ToolbarButton>
   );
 });

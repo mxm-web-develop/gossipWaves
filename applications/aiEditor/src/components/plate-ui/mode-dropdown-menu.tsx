@@ -35,13 +35,13 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
     editing: (
       <>
         <Pen size={10}/>
-        <span className="hidden lg:inline">编辑</span>
+        <span className="hidden lg:inline text-[10px]">编辑</span>
       </>
     ),
     viewing: (
       <>
         <Eye />
-        <span className="hidden lg:inline">预览</span>
+        <span className="hidden lg:inline text-[10px]">预览</span>
       </>
     ),
   };
