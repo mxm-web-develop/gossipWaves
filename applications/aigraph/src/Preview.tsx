@@ -1,114 +1,103 @@
-import MxMweb from "./application/AiGraph";
+import { useRef } from 'react';
+import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
+import AiGraph from './application/AiGraph';
+import { contextMenuType } from './application/graph/MyContextMenu';
 
 function Preview() {
+  const graphRef = useRef<GraphRefType>(null);
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
-  const g6Data = {
-    nodes: [
-      {
-        id: "1", // 对应于 elementId
-        label: "客户", // 对应于 type
-        data: { "category": "A" },
-        properties: {
-          cert_type: "身份证",
-          cert_no: "354688197809119894",
-          cust_type: "P",
-          cust_no: "1008249906",
-          cust_name: "张三"
-        },
-        type: 'circle'
-      },
-      {
-        id: "2",
-        label: "客户",
-        data: { "category": "A" },
-        properties: {
-          cert_type: "身份证",
-          cert_no: "354688197809119895",
-          cust_type: "P",
-          cust_no: "1008249907",
-          cust_name: "李四"
-        },
-        type: 'circle'
-      },
-      {
-        id: "3",
-        label: "客户",
-        data: { "category": "A" },
-        properties: {
-          cert_type: "身份证",
-          cert_no: "354688197809119896",
-          cust_type: "P",
-          cust_no: "1008249908",
-          cust_name: "王五"
-        },
-        type: 'star'
-      },
-      {
-        id: "4",
-        label: "客户",
-        data: { "category": "C" },
-        properties: {
-          cert_type: "身份证",
-          cert_no: "354688197809119897",
-          cust_type: "P",
-          cust_no: "1008249909",
-          cust_name: "赵六"
-        },
-        type: 'circle'
-      }
-    ],
-    edges: [
-      {
-        id: "0000010000D000000000000600000200007000104E87BB8E", // 对应于 elementId
-        source: "1", // 对应于 fromId
-        target: "2", // 对应于 toId
-        label: "拥有", // 对应于 type
-        properties: {
-          src_id: "2199036887040",
-          cust_no: "1008249906",
-          acct_no: "0010033877433",
-          weight: 1,
-          dst_id: "1099518967824"
-        },
-        directed: true // 保留 directed 属性
-      },
-      {
-        id: "0000010000D000000000000600000200007000104E87BB8F",
-        source: "1",
-        target: "3",
-        label: "拥有",
 
-        properties: {
-          src_id: "2199036887041",
-          cust_no: "1008249907",
-          acct_no: "0010033877434",
-          weight: 2,
-          dst_id: "1099518967825"
-        },
-        directed: true
-      },
-      {
-        id: "0000010000D000000000000600000200007000104E87BB8G",
-        source: "2",
-        target: "4",
-        label: "拥有",
-        properties: {
-          src_id: "2199036887042",
-          cust_no: "1008249908",
-          acct_no: "0010033877435",
-          weight: 1,
-          dst_id: "1099518967826"
-        },
-        directed: true
-      }
-    ]
+  const handleEvent = (type: string, data?: any) => {
+    console.log(type, data, '8888888888888888');
+    switch (type) {
+      case contextMenuType['NODE:VIEW']:
+        break;
+      case AI_GRAPH_TYPE.SEARCH:
+        break;
+      case AI_GRAPH_TYPE.SAVE:
+        break;
+      case AI_GRAPH_TYPE.EXPORT:
+        break;
+      case AI_GRAPH_TYPE.BACK:
+        break;
+    }
   };
   return (
-    <div className="h-screen w-screen relative">
-      <MxMweb treeData={g6Data} />
+    <div className="h-[100vh] w-full overflow-hidden">
+      <div className="h-[calc(100%-50px)]">
+        <AiGraph graphRef={graphRef} handleEvent={handleEvent} initData={null} createBy={'admin'} />
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            const add_items = graphRef.current?.add_items;
+            if (!add_items) return;
+            const i = new Date().getTime();
+            const a = {
+              nodes: [
+                {
+                  id: '123',
+                  // type: '客户',
+                  // properties: {
+                  //   cert_type: '身份证',
+                  //   cert_no: '354688197809119894',
+                  //   cust_type: 'P',
+                  //   cust_no: '1008249906',
+                  //   cust_name: '张三',
+                  // },
+                  // primaryKey: '1008249906',
+                  data: { name: '张三', category: '蔬菜' },
+                },
+                {
+                  id: i + 1 + '',
+                  // type: '客户',
+                  // properties: {
+                  //   cert_type: '身份证',
+                  //   cert_no: '354688197809119894',
+                  //   cust_type: 'P',
+                  //   cust_no: '1008249906',
+                  //   cust_name: '张三',
+                  // },
+                  // primaryKey: '1008249906',
+                  data: { name: '李四', category: '主食' },
+                },
+              ],
+              edges: [
+                {
+                  id: i + 2 + '',
+                  source: '123',
+                  target: i + 1 + '',
+                  properties: {
+                    src_id: '2199036887040',
+                    cust_no: '1008249906',
+                    acct_no: '0010033877433',
+                    weight: 1,
+                    dst_id: '1099518967824',
+                  },
+                  directed: true,
+                  data: { name: '关系' },
+                },
+              ],
+            };
+            add_items(a);
+          }}
+        >
+          添加数据
+        </button>
+        <button>删除数据</button>
+        <button>清空画布数据</button>
+        <button
+          onClick={() => {
+            const updateNodeById = graphRef.current?.updateNodeById;
+            if (!updateNodeById) return;
+            updateNodeById('123', { fill: 'red', size: 40 });
+          }}
+        >
+          修改数据颜色
+        </button>
+      </div>
     </div>
-  )
+  );
 }
 
-
-export default Preview
+export default Preview;

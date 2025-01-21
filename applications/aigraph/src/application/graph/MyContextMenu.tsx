@@ -1,89 +1,80 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { createPortal } from 'react-dom';
-import {
-  ListItem,
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from '../../components/ui/navigation-menu';
+import { Menu } from 'antd';
+import './style.css';
+import { useEffect } from 'react';
 
-import { useAppState } from '../store';
+export enum contextMenuType {
+  'NODE:ONCE' = 'node:once',
+  'NODE:SECOND_DEGREE' = 'node:second_degree',
+  'NODE:THIRD_DEGREE' = 'node:third_degree',
+  'NODE:FOUR_DEGREE' = 'node:four_degree',
+  'NODE:ANT_SELECT' = 'node:ant_select',
+  'NODE:DELETE' = 'node:delete',
+  'NODE:VIEW' = 'node:view',
+}
 
-const MyContextMenu = ({ targetType, onClose = () => { } }: any) => {
-  console.log('targetType node,edge or canvas', targetType);
-  const { graph } = useAppState();
-  const [, setVisible] = useState(true);
-  useEffect(() => {
-    if (graph) {
-      graph.on('contextmenu', (e) => {
-        console.log('32i4rue32890u89032uj89032j890jh3280j328ifj2389iojio', e);
-      });
-    }
-  }, [graph, onClose]);
-  // useEffect(() => {
-  //   const handleClickOutside = (event: any) => {
-  //     if (!event.target.closest('.g6-contextmenu')) {
-  //       setTimeout(() => {
-  //         setVisible(false);
-  //         onClose();
-  //       }, 150);
-  //     }
-  //   };
-
-  //   const timer = setTimeout(() => {
-  //     document.addEventListener('mousedown', handleClickOutside);
-  //   }, 0);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [onClose]);
-
-  const menu = (): JSX.Element => {
-    if (targetType === 'node') {
-      return (
-        <NavigationMenu className="cursor-default">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <ListItem>node</ListItem>
-              <ListItem>删除</ListItem>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      );
-    } else if (targetType === 'edge') {
-      return (
-        <NavigationMenu className="cursor-default">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <ListItem>edge</ListItem>
-              <ListItem>删除</ListItem>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      );
-    } else if (targetType === 'canvas') {
-      return (
-        <NavigationMenu className="cursor-default">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <ListItem>canvas</ListItem>
-              <ListItem>删除</ListItem>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      );
-    }
-    return <></>;
-  };
-
-  return createPortal(
+const MyContextMenu = ({
+  targetInfo,
+  handleContextMenuEvent,
+}: {
+  targetInfo: { info: any; targetType: string };
+  handleContextMenuEvent: (type: string, data?: any) => void;
+}) => {
+  return (
     <div id="context-menu" className="fixed bg-white rounded-md shadow-md dark:bg-slate-950">
-      {menu()}
-    </div>,
-    document.body
+      {targetInfo.targetType === 'node' && (
+        <NodeMenu handleContextMenuEvent={handleContextMenuEvent} />
+      )}
+    </div>
   );
 };
 
 export default MyContextMenu;
+
+const NodeMenu = ({ handleContextMenuEvent }: any) => {
+  const items = [
+    {
+      key: 'graphAiSub1',
+      label: '展开',
+      popupClassName: 'graphSubMenu',
+      popupOffset: [-4, -5],
+      children: [
+        {
+          key: contextMenuType['NODE:ONCE'],
+          label: '一度',
+          width: 86,
+        },
+        { key: contextMenuType['NODE:SECOND_DEGREE'], label: '二度' },
+        { key: contextMenuType['NODE:THIRD_DEGREE'], label: '三度' },
+        { key: contextMenuType['NODE:FOUR_DEGREE'], label: '四度' },
+      ],
+    },
+    {
+      key: contextMenuType['NODE:ANT_SELECT'],
+      label: '反选',
+    },
+    {
+      key: contextMenuType['NODE:DELETE'],
+      label: '清除节点',
+    },
+    {
+      key: contextMenuType['NODE:VIEW'],
+      label: '节点详细信息',
+    },
+  ];
+  return (
+    <Menu
+      selectable={false}
+      mode="vertical"
+      style={{ width: 120, borderRadius: '4px 0 0 4px', padding: 0, fontSize: '12px' }}
+      items={items}
+      onClick={({ item, key, keyPath, domEvent }: any) => {
+        handleContextMenuEvent && handleContextMenuEvent(key);
+        console.log('====================================');
+        console.log(item, key, keyPath, domEvent);
+        console.log('====================================');
+      }}
+    />
+  );
+};
