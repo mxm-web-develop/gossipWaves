@@ -32,7 +32,8 @@ export const ToolbarSeparator = withCn(
 
 const toolbarButtonVariants = cva(
   cn(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([data-icon])]:size-4'
+    `inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium text-foreground ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+    focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([data-icon])]:size-[14px]`
   ),
   {
     defaultVariants: {
@@ -47,7 +48,7 @@ const toolbarButtonVariants = cva(
       },
       variant: {
         default:
-          'bg-transparent hover:bg-muted hover:text-muted-foreground aria-checked:bg-accent aria-checked:text-accent-foreground',
+          'bg-white hover:bg-muted hover:text-muted-foreground aria-checked:bg-accent aria-checked:text-accent-foreground',
         outline:
           'border border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
       },
@@ -57,7 +58,7 @@ const toolbarButtonVariants = cva(
 
 const dropdownArrowVariants = cva(
   cn(
-    'inline-flex items-center justify-center rounded-r-md text-sm font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+    'inline-flex items-center justify-center rounded-r-md text-sm  text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
   ),
   {
     defaultVariants: {
@@ -162,7 +163,7 @@ export const ToolbarSplitButton = React.forwardRef<
   return (
     <ToolbarButton
       ref={ref}
-      className={cn('group flex gap-0 px-0 hover:bg-transparent', className)}
+      className={cn('group flex gap-0 px-1 hover:bg-transparent', className)}
       {...props}
     >
       {children}
@@ -240,7 +241,7 @@ export const ToolbarGroup = withRef<'div'>(({ children, className }, ref) => {
     >
       <div className="flex items-center">{children}</div>
 
-      <div className="mx-1.5 py-0.5 group-last/toolbar-group:!hidden">
+      <div className="mx-3 py-0.5 group-last/toolbar-group:!hidden">
         <Separator orientation="vertical" />
       </div>
     </div>

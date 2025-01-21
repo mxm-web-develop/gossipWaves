@@ -23,7 +23,7 @@ export const TooltipContent = withCn(
   withProps(TooltipPrimitive.Content, {
     sideOffset: 4,
   }),
-  'z-50 overflow-hidden rounded-md bg-black px-3 py-1.5 text-sm font-semibold text-white shadow-md'
+  'z-50 overflow-hidden rounded-md bg-gray-700 px-3 py-1.5 text-[12px] text-white shadow-md'
 );
 
 export function withTooltip<
