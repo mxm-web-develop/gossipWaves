@@ -1,0 +1,90 @@
+[
+    {
+      "name": "Claude 3 Sonnet",
+      "type": "model",
+      "is_open_source": false,
+      "date": "2024-03-04",
+      "post": {
+        "content": "Claude 3 Sonnet is Anthropic's latest AI model, offering enhanced capabilities in reasoning, analysis, and coding",
+        "rawString": "Claude 3 Sonnet represents a significant advancement in AI capabilities..."
+      },
+      "owner": "Anthropic",
+      "network": "global",
+      "isEvent": false,
+      "img": "claude3-sonnet.jpg",
+      "sourceUrl": {
+        "url": "https://www.anthropic.com/claude",
+        "iframeUrl": "",
+        "githubUrl": "",
+        "downloadUrl": ""
+      },
+      "tags": ["AI", "LLM", "Claude", "GPT"],
+      "model_score": {
+        "MMLU": 86.8,
+        "GPQA": 83.4,
+        "MMMU": 67.3,
+        "HellaSWAG": 87.3,
+        "HumanEval": 71.2,
+        "BBHard": 70.1,
+        "GSM8K": 88.4,
+        "MATH": 54.2
+      },
+      "status": "published"
+    },
+    {
+      "name": "Llama 3 Vision",
+      "type": "model",
+      "is_open_source": true,
+      "date": "2024-03-15",
+      "post": {
+        "content": "Meta's latest multimodal model combining advanced vision capabilities with language understanding",
+        "rawString": "Llama 3 Vision builds upon the success of previous Llama models..."
+      },
+      "owner": "Meta",
+      "network": "global",
+      "isEvent": false,
+      "img": "llama3-vision.jpg",
+      "sourceUrl": {
+        "url": "https://ai.meta.com/llama",
+        "iframeUrl": "",
+        "githubUrl": "https://github.com/facebookresearch/llama",
+        "downloadUrl": "https://ai.meta.com/resources/models-and-libraries/llama-downloads/"
+      },
+      "tags": ["AI", "LLM", "Vision", "Multimodal", "Open Source"],
+      "model_score": {
+        "MMLU": 82.5,
+        "GPQA": 80.1,
+        "MMMU": 71.2,
+        "HellaSWAG": 85.6,
+        "HumanEval": 67.8,
+        "BBHard": 68.9,
+        "GSM8K": 84.3,
+        "MATH": 52.1
+      },
+      "status": "published"
+    },
+    {
+      "name": "Flowith",
+      "type": "application",
+      "is_open_source": true,
+      "date": "2024-02-28",
+      "post": {
+        "content": "An AI-powered workflow automation tool for developers",
+        "rawString": "Flowith helps developers automate their daily tasks using AI..."
+      },
+      "owner": "Flowith Team",
+      "network": "global",
+      "isEvent": false,
+      "img": "flowith-logo.png",
+      "sourceUrl": {
+        "url": "https://flowith.ai",
+        "iframeUrl": "https://app.flowith.ai",
+        "githubUrl": "https://github.com/flowith/flowith",
+        "downloadUrl": "https://flowith.ai/download"
+      },
+      "tags": ["Automation", "Developer Tools", "Workflow", "AI"],
+      "model_score": {},
+      "status": "draft"
+    }
+  ]
+
