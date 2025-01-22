@@ -9,7 +9,7 @@ export const nodeStyleConfig: any = {
       type: 'circle',
       fillOpacity: 1,
       label: true,
-      labelText: (d: any) => '你好的我的快乐啊',
+      labelText: (d: any) => d.data?.name,
       labelFill: '#ffffff',
       labelFontSize: 12,
       labelOffsetY: (d: any) => -((d.style?.size || 80) / 2 + 6),
