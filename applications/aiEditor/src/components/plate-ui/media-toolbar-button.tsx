@@ -137,11 +137,11 @@ export function MediaToolbarButton({
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => openFilePicker()}>
                 {currentConfig.icon}
-                Upload from computer
+                从电脑上传
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
-                Insert via URL
+                从URL插入
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -179,7 +179,7 @@ function MediaUrlDialogContent({
   const [url, setUrl] = useState('');
 
   const embedMedia = useCallback(() => {
-    if (!isUrl(url)) return toast.error('Invalid URL');
+    if (!isUrl(url)) return toast.error('请输入正确的URL');
 
     setOpen(false);
     editor.tf.insertNodes({
@@ -206,21 +206,21 @@ function MediaUrlDialogContent({
             if (e.key === 'Enter') embedMedia();
           }}
           label="URL"
-          placeholder=""
+          placeholder="请输入URL"
           type="url"
           autoFocus
         />
       </AlertDialogDescription>
 
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogCancel>取消</AlertDialogCancel>
         <AlertDialogAction
           onClick={(e) => {
             e.preventDefault();
             embedMedia();
           }}
         >
-          Accept
+          确定
         </AlertDialogAction>
       </AlertDialogFooter>
     </>

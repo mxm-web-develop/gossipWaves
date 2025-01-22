@@ -14,12 +14,12 @@ import { useThemedHtml } from './slate-to-html';
 import { getEditorHtmlContent } from './getHtml';
 export interface IEditorProps{
   value?:string | any
-  onChange?: (value:any) => void
 }
 export interface PlateEditorRef {
   getEditor: () => TPlateEditor;
   getData: () => any;
   getHtml: () => any;
+  clear: () => void;
   // getString: () => string;
 }
 const PlateEditor = forwardRef<PlateEditorRef,IEditorProps>((props:IEditorProps,ref)=> {
@@ -29,7 +29,15 @@ const PlateEditor = forwardRef<PlateEditorRef,IEditorProps>((props:IEditorProps,
     getEditor: () => editor as any,
     // getString: () => editor.(),
     getData: () => editor.children,
-    getHtml: async () => await getEditorHtmlContent(editor)
+    getHtml: async () => await getEditorHtmlContent(editor),
+    clear: () => {
+      editor.tf.setValue([
+        {
+          type: 'p',
+          children: [{ text: '' }]
+        }
+      ]);
+    }
   }))
 
   return (

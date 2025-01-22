@@ -93,45 +93,45 @@ export function FixedToolbarButtons() {
 
     
           <ToolbarGroup>
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="加粗 (⌘+B)">
               <BoldIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={ItalicPlugin.key}
-              tooltip="Italic (⌘+I)"
+              tooltip="斜体 (⌘+I)"
             >
               <ItalicIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={UnderlinePlugin.key}
-              tooltip="Underline (⌘+U)"
+              tooltip="下划线 (⌘+U)"
             >
               <UnderlineIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={StrikethroughPlugin.key}
-              tooltip="Strikethrough (⌘+⇧+M)"
+              tooltip="删除线 (⌘+⇧+M)"
             >
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="代码 (⌘+E)">
               <Code2Icon size={10}/>
             </MarkToolbarButton>
 
             <ColorDropdownMenu
               nodeType={FontColorPlugin.key}
-              tooltip="Text color"
+              tooltip="文字颜色"
             >
               <BaselineIcon />
             </ColorDropdownMenu>
 
             <ColorDropdownMenu
               nodeType={FontBackgroundColorPlugin.key}
-              tooltip="Background color"
+              tooltip="背景颜色"
             >
               <PaintBucketIcon />
             </ColorDropdownMenu>
