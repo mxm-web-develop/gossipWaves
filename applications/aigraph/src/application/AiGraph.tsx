@@ -5,8 +5,15 @@ import GraphView, { GraphRefType } from './views/GraphView';
 const AiGraph = (props: {
   graphRef?: React.RefObject<GraphRefType>;
   handleEvent?: (type: string, data?: any) => any;
-  initData: null | GraphData;
+  initData?: null | GraphData;
   createBy?: string;
+  token?: string;
+  username?: string;
+  gientechSet?:{
+    spacename?:string;
+    filedId?:string;
+    limit?:number;
+  }
 }) => {
   return (
     <div

@@ -25,9 +25,19 @@ function Preview() {
   return (
     <div className="h-[100vh] w-full overflow-hidden">
       <div className="h-[calc(100%-50px)]">
-        <AiGraph graphRef={graphRef} handleEvent={handleEvent} initData={null} createBy={'admin'} />
+        <AiGraph 
+        token={'123'}
+        username={'admin'}
+        gientechSet={
+          {
+            spacename:'123',
+            // filedId:'123',
+            // limit:100
+          }
+        }
+        graphRef={graphRef} handleEvent={handleEvent} initData={null} createBy={'admin'} />
       </div>
-      <div>
+      {/* <div>
         <button
           onClick={() => {
             const add_items = graphRef.current?.add_items;
@@ -95,7 +105,7 @@ function Preview() {
         >
           修改数据颜色
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

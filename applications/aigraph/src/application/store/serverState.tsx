@@ -23,7 +23,6 @@ const initialState = {
 export const useServerState = create<ServerState>((set, get) => ({
   ...initialState,
   connectionStatus: 'unable',
-
   // 设置 URL
   setUrl: (url: string) => {
     set((state) => ({
@@ -31,7 +30,6 @@ export const useServerState = create<ServerState>((set, get) => ({
       connectionStatus: url && state.token ? 'setted' : 'unable',
     }));
   },
-
   // 设置 Token
   setToken: (token: string) => {
     set((state) => ({
@@ -39,7 +37,6 @@ export const useServerState = create<ServerState>((set, get) => ({
       connectionStatus: state.url ? 'setted' : 'unable',
     }));
   },
-
   // 测试连接
   testConnection: async () => {
     const { url, token } = get(); // 修正为获取整个状态
@@ -47,7 +44,6 @@ export const useServerState = create<ServerState>((set, get) => ({
       set({ connectionStatus: 'unable' });
       return;
     }
-
     try {
       await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
       set({ connectionStatus: 'connected' });

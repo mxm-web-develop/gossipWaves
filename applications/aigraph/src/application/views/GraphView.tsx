@@ -52,7 +52,7 @@ export enum AI_GRAPH_TYPE {
 }
 
 function GraphView(props: {
-  initData: null | GraphData;
+  initData?: null | GraphData;
   handleEvent?: (type: string, data?: any) => any;
   graphRef?: React.RefObject<GraphRefType | null>;
   createBy?: string;

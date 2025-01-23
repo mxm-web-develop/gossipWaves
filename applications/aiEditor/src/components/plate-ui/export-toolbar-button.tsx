@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
+import TurndownService from 'turndown';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import MD from 'slate-markdown';
 
 import { withProps } from '@udecode/cn';
 import {
@@ -12,101 +14,8 @@ import {
   serializeHtml,
 } from '@udecode/plate';
 import { useEditorRef } from '@udecode/plate/react';
-import { BaseAlignPlugin } from '@udecode/plate-alignment';
-import {
-  BaseBoldPlugin,
-  BaseCodePlugin,
-  BaseItalicPlugin,
-  BaseStrikethroughPlugin,
-  BaseSubscriptPlugin,
-  BaseSuperscriptPlugin,
-  BaseUnderlinePlugin,
-} from '@udecode/plate-basic-marks';
-import { BaseBlockquotePlugin } from '@udecode/plate-block-quote';
-import {
-  BaseCodeBlockPlugin,
-  BaseCodeLinePlugin,
-  BaseCodeSyntaxPlugin,
-} from '@udecode/plate-code-block';
-import { BaseCommentsPlugin } from '@udecode/plate-comments';
-import { BaseDatePlugin } from '@udecode/plate-date';
-import {
-  BaseFontBackgroundColorPlugin,
-  BaseFontColorPlugin,
-  BaseFontSizePlugin,
-} from '@udecode/plate-font';
-import {
-  BaseHeadingPlugin,
-  BaseTocPlugin,
-  HEADING_KEYS,
-  HEADING_LEVELS,
-} from '@udecode/plate-heading';
-import { BaseHighlightPlugin } from '@udecode/plate-highlight';
-import { BaseHorizontalRulePlugin } from '@udecode/plate-horizontal-rule';
-import { BaseIndentPlugin } from '@udecode/plate-indent';
-import { BaseIndentListPlugin } from '@udecode/plate-indent-list';
-import { BaseKbdPlugin } from '@udecode/plate-kbd';
-import { BaseColumnItemPlugin, BaseColumnPlugin } from '@udecode/plate-layout';
-import { BaseLineHeightPlugin } from '@udecode/plate-line-height';
-import { BaseLinkPlugin } from '@udecode/plate-link';
-import {
-  BaseEquationPlugin,
-  BaseInlineEquationPlugin,
-} from '@udecode/plate-math';
-import {
-  BaseAudioPlugin,
-  BaseFilePlugin,
-  BaseImagePlugin,
-  BaseMediaEmbedPlugin,
-  BaseVideoPlugin,
-} from '@udecode/plate-media';
-import { BaseMentionPlugin } from '@udecode/plate-mention';
-import {
-  BaseTableCellHeaderPlugin,
-  BaseTableCellPlugin,
-  BaseTablePlugin,
-  BaseTableRowPlugin,
-} from '@udecode/plate-table';
-import { BaseTogglePlugin } from '@udecode/plate-toggle';
-import { ArrowDownToLineIcon } from 'lucide-react';
-import Prism from 'prismjs';
 
-import { BlockquoteElementStatic } from '@/components/plate-ui/blockquote-element-static';
-import { CodeBlockElementStatic } from '@/components/plate-ui/code-block-element-static';
-import { CodeLeafStatic } from '@/components/plate-ui/code-leaf-static';
-import { CodeLineElementStatic } from '@/components/plate-ui/code-line-element-static';
-import { CodeSyntaxLeafStatic } from '@/components/plate-ui/code-syntax-leaf-static';
-import { ColumnElementStatic } from '@/components/plate-ui/column-element-static';
-import { ColumnGroupElementStatic } from '@/components/plate-ui/column-group-element-static';
-import { CommentLeafStatic } from '@/components/plate-ui/comment-leaf-static';
-import { DateElementStatic } from '@/components/plate-ui/date-element-static';
-import { HeadingElementStatic } from '@/components/plate-ui/heading-element-static';
-import { HighlightLeafStatic } from '@/components/plate-ui/highlight-leaf-static';
-import { HrElementStatic } from '@/components/plate-ui/hr-element-static';
-import { ImageElementStatic } from '@/components/plate-ui/image-element-static';
-import {
-  FireLiComponent,
-  FireMarker,
-} from '@/components/plate-ui/indent-fire-marker';
-import {
-  TodoLiStatic,
-  TodoMarkerStatic,
-} from '@/components/plate-ui/indent-todo-marker-static';
-import { KbdLeafStatic } from '@/components/plate-ui/kbd-leaf-static';
-import { LinkElementStatic } from '@/components/plate-ui/link-element-static';
-import { MediaAudioElementStatic } from '@/components/plate-ui/media-audio-element-static';
-import { MediaFileElementStatic } from '@/components/plate-ui/media-file-element-static';
-import { MediaVideoElementStatic } from '@/components/plate-ui/media-video-element-static';
-import { MentionElementStatic } from '@/components/plate-ui/mention-element-static';
-import { ParagraphElementStatic } from '@/components/plate-ui/paragraph-element-static';
-import {
-  TableCellElementStatic,
-  TableCellHeaderStaticElement,
-} from '@/components/plate-ui/table-cell-element-static';
-import { TableElementStatic } from '@/components/plate-ui/table-element-static';
-import { TableRowElementStatic } from '@/components/plate-ui/table-row-element-static';
-import { TocElementStatic } from '@/components/plate-ui/toc-element-static';
-import { ToggleElementStatic } from '@/components/plate-ui/toggle-element-static';
+import { ArrowDownToLineIcon } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -130,19 +39,16 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
 
   const getCanvas = async () => {
     const { default: html2canvas } = await import('html2canvas');
-
     const style = document.createElement('style');
     document.head.append(style);
     style.sheet?.insertRule(
       'body > div:last-child img { display: inline-block !important; }'
     );
-
     const canvas = await html2canvas(editor.api.toDOMNode(editor)!);
     style.remove();
 
     return canvas;
   };
-
   const downloadFile = ({
     content,
     filename,
@@ -238,7 +144,24 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
 
     downloadFile({ content: html, filename: 'plate.html', isHtml: true });
   };
+  const exportToMarkdown = async () => {
+    const turndownService = new TurndownService();
+    const editorStatic = createSlateEditor({
+      plugins: staticPlugins,
+      value: editor.children,
+    });
 
+    const html = await serializeHtml(editorStatic, {
+      components: myComponents,
+      editorComponent: EditorStatic,
+    });
+    const markdown = turndownService.turndown(html);
+    
+    downloadFile({
+      content: `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`,
+      filename: 'plate.md'
+    });
+  };
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
@@ -258,9 +181,8 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
           <DropdownMenuItem onSelect={exportToImage}>
             导出为图片
           </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            导出为Markdown{' '}
-            <span className="text-xs text-muted-foreground">(coming soon)</span>
+          <DropdownMenuItem onSelect={exportToMarkdown}>
+            导出为Markdown
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

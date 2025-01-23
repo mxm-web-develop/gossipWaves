@@ -4,10 +4,15 @@ import { Graph } from '@antv/g6';
 interface AppState {
   status: 'app_init' | 'data_init' | 'canvas_init' | 'app_wait' | 'app_process' | 'app_error';
   rawData: any;
-  mode: 'local' | 'server';
+  mode: 'local' | 'server'; //控制网络模式，影响查询和计算的模式
   graph: Graph | null;
-  data_type: 'antv' | 'gitech';
-  graph_type: 'gitech_finance' | 'default';
+  data_type: 'antv' | 'gitech'; //控制图谱数据传入结构类型
+  graph_type: 'gitech_finance' | 'default'; //控制图谱样式
+  gientechSet?:{
+    spacename:string;
+    filedId?:string;
+    limit:number;
+  }
   // 具体方法替代通用的 setAppState
   changeStatus: (
     status: 'app_init' | 'data_init' | 'canvas_init' | 'app_wait' | 'app_process' | 'app_error'
