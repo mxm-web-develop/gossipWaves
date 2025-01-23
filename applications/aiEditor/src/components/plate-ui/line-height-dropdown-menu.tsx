@@ -30,7 +30,7 @@ export function LineHeightDropdownMenu({ ...props }: DropdownMenuProps) {
       <DropdownMenuTrigger asChild>
         <ToolbarButton
           pressed={openState.open}
-          tooltip="Line height"
+          tooltip="行高"
           isDropdown
         >
           <WrapText />
