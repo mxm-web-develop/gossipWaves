@@ -1,3 +1,4 @@
-import { api_getConversations } from './apis/get_conversations';
 
-export { api_getConversations };
+import { wholeGraphSearch } from './apis/whole_graph_search';
+
+export {  wholeGraphSearch };

@@ -25,6 +25,11 @@ interface AppState {
     graph_type: 'gitech_finance' | 'default';
     mode: 'local' | 'server';
   }) => void;
+  setGientechSet: (config: {
+    spacename: string;
+    filedId?: string;
+    limit: number;
+  }) => void;
   //setAppStatus: (status: AppStatus) => void;
 }
 export const useAppState = create<AppState>((set) => ({
@@ -67,6 +72,13 @@ export const useAppState = create<AppState>((set) => ({
         draft.mode = config.mode;
         draft.data_type = config.data_type;
         draft.graph_type = config.graph_type;
+      })
+    ),
+
+  setGientechSet: (config) =>
+    set(
+      produce((draft) => {
+        draft.gientechSet = config;
       })
     ),
 }));

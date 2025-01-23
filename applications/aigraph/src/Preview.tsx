@@ -26,11 +26,12 @@ function Preview() {
     <div className="h-[100vh] w-full overflow-hidden">
       <div className="h-[calc(100%-50px)]">
         <AiGraph 
-        token={'123'}
-        username={'admin'}
+        url={`api_proxy`}
+        token={'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3NzA3NTcyLCJpYXQiOjE3Mzc2MjExNzJ9.QRvR-b6BZ4WGEkplJ6Cve8I8X5oEoGfzvJ3igo0Vi7U'}
+        // username={'admin'}
         gientechSet={
           {
-            spacename:'123',
+            spacename:'demo_basketballplayer',
             // filedId:'123',
             // limit:100
           }

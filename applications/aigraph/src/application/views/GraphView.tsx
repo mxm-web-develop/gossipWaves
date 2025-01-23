@@ -27,6 +27,10 @@ import {
   pluginsConfig,
 } from '../graph/config';
 import { message } from 'antd';
+import CanvasController from './components/CanvasController';
+import AppController from './components/AppController';
+import LoadingGraph from './LoadingGraph';
+import ErrorGraph from './ErrorGraph';
 
 const ZOOM = 0.1;
 
@@ -58,11 +62,18 @@ function GraphView(props: {
   createBy?: string;
 }) {
   const { handleEvent, graphRef, initData, createBy } = props;
-  const { setGraph, graph } = useAppState();
+  const { setGraph, graph, status, mode, data_type, graph_type } = useAppState();
   const containerRef = useRef<HTMLDivElement>(null);
   const [targetInfo, setTargetInfo]: any = useState({});
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const isFullScreen = useRef(false);
+
+  useEffect(() => {
+    console.log(mode, data_type, graph_type, 'mode, data_type, graph_type');
+    console.log(status, 'status');
+  }, [mode, data_type, graph_type,status]);
+
+
   const get_items = (): GraphData | any => {
     if (!graph) return console.error('图谱未渲染完成');
     return graph.getData();
@@ -143,13 +154,13 @@ function GraphView(props: {
     }
   };
 
-  useImperativeHandle(graphRef, () => ({
-    add_items,
-    delete_items,
-    clear_items,
-    get_items,
-    updateNodeById,
-  }));
+  // useImperativeHandle(graphRef, () => ({
+  //   add_items,
+  //   delete_items,
+  //   clear_items,
+  //   get_items,
+  //   updateNodeById,
+  // }));
 
   const handleGraphEvent = (type: string, data?: any) => {
     if (!graph) return message.warning('graph未初始化');
@@ -220,7 +231,6 @@ function GraphView(props: {
   }, []);
 
   useEffect(() => {
-    console.log('graph', graph);
     if (!initData || !graph) return;
     add_items(initData);
   }, [initData, graph]);
@@ -238,11 +248,19 @@ function GraphView(props: {
 
   return (
     <>
-      <div
-        ref={containerRef}
-        id="graph-container"
-        className="relative"
-        style={{ width: '100%', height: '100%' }}
+      {status === 'app_init' || status === 'data_init' && (
+        <LoadingGraph />
+      )}
+      {status === 'app_error' && (
+        <ErrorGraph message="图谱初始化失败" /> 
+      )}
+      {status === 'app_wait' && (
+        <>
+        <div
+            ref={containerRef}
+            id="graph-container"
+            className="relative"
+            style={{ width: '100%', height: '100%' }}
       >
         <div
           style={{ bottom: '20px', left: '16px' }}
@@ -267,82 +285,12 @@ function GraphView(props: {
             </>
           )}
         </div>
-        <div
-          style={{ top: '80px', width: '44px' }}
-          className="absolute right-[15px] border-[1px] border-solid border-[#EEEEEE] rounded-[4px] bg-white"
-        >
-          {[
-            { img: Fullscreen, type: 'fullScreen' },
-            { img: ScaleUp, type: 'scaleUp' },
-            { img: ScaleDown, type: 'scaleDown' },
-            { img: Refresh, type: 'refresh' },
-          ].map((item, index: number) => {
-            return (
-              <div
-                style={{ borderTop: index !== 0 ? '1px solid #eeeeee' : 'none' }}
-                className={`graphBtns w-full h-[44px] flex justify-center items-center cursor-pointer`}
-                onClick={() => handleGraphEvent(item.type)}
-              >
-                <img src={item.img} width={20} height={20} />
-              </div>
-            );
-          })}
+        <CanvasController handleEvent={handleGraphEvent} />
+        <AppController handleEvent={handleGraphEvent} /> 
         </div>
-        <div className=" absolute top-5" style={{ left: '16px' }}>
-          <div
-            style={{ padding: '4px 16px' }}
-            className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-md"
-          >
-            <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
-            <div
-              className="   text-sm"
-              onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.BACK)}
-            >
-              返回
-            </div>
-          </div>
-        </div>
-        <div className="tool-bar absolute top-5 right-[15px]">
-          <div className="flex items-center justify-between" style={{ columnGap: '16px' }}>
-            <div
-              style={{ borderRadius: '4px' }}
-              className="flex items-center border border-solid border-[#EEEEEE] justify-between bg-white"
-            >
-              <LayoutMenu />
-              <Separator.Root className="bg-[#EEEEEE]" style={{ height: '20px', width: '1px' }} />
-              <SearchMenu handleEvent={handleEvent} />
-              {/* <DisplayMenu /> */}
-            </div>
-
-            <div
-              style={{ padding: '4px 16px' }}
-              className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
-            >
-              <img src={SaveOutlined} width={16} height={16} className="mr-[6px]" />
-              <div
-                className="text-sm text-[#555555]"
-                onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.SAVE)}
-              >
-                保存
-              </div>
-            </div>
-            <div
-              style={{ padding: '4px 16px' }}
-              className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
-            >
-              <img src={Download} width={16} height={16} className="mr-[6px]" />
-              <div
-                className="text-sm text-[#555555]"
-                onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.EXPORT)}
-              >
-                导出
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <MyContextMenu targetInfo={targetInfo} handleContextMenuEvent={handleContextMenuEvent} />
+          <MyContextMenu targetInfo={targetInfo} handleContextMenuEvent={handleContextMenuEvent} />
+        </>
+      )}
     </>
   );
 }
