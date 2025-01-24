@@ -29,14 +29,19 @@ function Preview() {
         url={`api_proxy`}
         token={token}
         // username={'admin'}
-        gientechSet={
+        gientechServer={
           {
+            url:`api_proxy`,
+            token:token,
             spaceName:'demo_basketballplayer'
             // filedId:'123',
             // limit:100
           }
         }
-        graphRef={graphRef} handleEvent={handleEvent} initData={null} createBy={'admin'} />
+        graphRef={graphRef} 
+        handleEvent={handleEvent}
+         initData={null}
+          createBy={'admin'} />
       </div>
       {/* <div>
         <button

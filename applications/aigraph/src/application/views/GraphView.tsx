@@ -62,16 +62,12 @@ function GraphView(props: {
   createBy?: string;
 }) {
   const { handleEvent, graphRef, initData, createBy } = props;
-  const { setGraph, graph, status, mode, data_type, graph_type } = useAppState();
+  const { setGraph, graph, status, graphData,setGraphData, changeStatus, graph_type } = useAppState();
   const containerRef = useRef<HTMLDivElement>(null);
   const [targetInfo, setTargetInfo]: any = useState({});
-  const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+  // const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const isFullScreen = useRef(false);
 
-  useEffect(() => {
-    console.log(mode, data_type, graph_type, 'mode, data_type, graph_type');
-    console.log(status, 'status');
-  }, [mode, data_type, graph_type,status]);
 
 
   const get_items = (): GraphData | any => {
@@ -186,8 +182,13 @@ function GraphView(props: {
   };
 
   useEffect(() => {
+  
+    if (status === 'app_init') return;
+    changeStatus('canvas_init')
+    console.log('进来了',status)
     if (!containerRef.current) return;
     const parentElement = containerRef.current.parentElement;
+   console.log('parentElement',parentElement)
     if (!parentElement) return;
     const width = parentElement.clientWidth;
     const height = parentElement.clientHeight;
@@ -223,28 +224,31 @@ function GraphView(props: {
         },
       }).default,
     });
+   
     newGraph.render();
     setGraph(newGraph);
+    changeStatus('app_wait')
     return () => {
       newGraph.destroy();
     };
-  }, []);
+  }, [status,graphData]);
 
   useEffect(() => {
+    console.log('画布初始化了',graph)
     if (!initData || !graph) return;
     add_items(initData);
   }, [initData, graph]);
 
-  useEffect(() => {
-    if (graph) {
-      registerDefaultGraph(graph, setGraphData, handleEvent);
-    }
-    return () => {
-      if (graph) {
-        cancelDefaultGraph(graph);
-      }
-    };
-  }, [graph]);
+  // useEffect(() => {
+  //   if (graph) {
+  //     registerDefaultGraph(graph, setGraphData, handleEvent);
+  //   }
+  //   return () => {
+  //     if (graph) {
+  //       cancelDefaultGraph(graph);
+  //     }
+  //   };
+  // }, [graph]);
 
   return (
     <>
@@ -254,12 +258,13 @@ function GraphView(props: {
       {status === 'app_error' && (
         <ErrorGraph message="图谱初始化失败" /> 
       )}
-      {status === 'app_wait' && (
-        <>
-        <div
+      {
+        status === 'app_wait' && (
+          <>
+          <div
             ref={containerRef}
             id="graph-container"
-            className="relative"
+            className="relative z-10"
             style={{ width: '100%', height: '100%' }}
       >
         <div

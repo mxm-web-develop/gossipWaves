@@ -4,6 +4,7 @@ import GraphView, { GraphRefType } from './views/GraphView';
 import { useAppState, useServerState } from './store';
 import { useEffect } from 'react';
 import { wholeGraphSearch } from './services';
+import { transformGientechToG6 } from './utils/convertData';
 
 const AiGraph = (props: {
   graphRef?: React.RefObject<GraphRefType>;
@@ -13,20 +14,21 @@ const AiGraph = (props: {
   token?: string;
   url?:string
   username?: string;
-  gientechSet?:{
+  gientechServer?:{
+    url:string
+    token?: string;
     spaceName:string;
     filedId?:string;
     limit?:number;
   }
 }) => {
   const { setUrl, setToken, testConnection,url, token, connectionStatus } = useServerState();
-  const { setAppConfig, changeStatus, status,mode,data_type,setGientechSet,gientechSet } = useAppState();
+  const { setAppConfig, changeStatus, status,mode,setGraphData,setGientechSet, } = useAppState();
 
   useEffect(() => {
+    changeStatus('app_init');
     const initializeApp = async () => {
-      try {
-        changeStatus('app_init');
-
+      try { 
         if (props.url) {
           setUrl(props.url);
           setToken(props.token || "");
@@ -38,17 +40,15 @@ const AiGraph = (props: {
               data_type: 'gitech',
               graph_type: 'gitech_finance'
             });
-            console.log(props.gientechSet, 'gientechSet');
+            console.log(props.gientechServer, 'gientechSet');
           
-            if (props.gientechSet) {
+            if (props.gientechServer) {
               const gientechConfig = {
-                spaceName: props.gientechSet.spaceName,
-                filedId: props.gientechSet.filedId,
-                limit: props.gientechSet.limit || 2000
+                spaceName: props.gientechServer.spaceName,
+                filedId: props.gientechServer.filedId,
+                limit: props.gientechServer.limit || 2000
               };
               setGientechSet(gientechConfig);
-              
-              
               const gdata = await wholeGraphSearch(
                 {
                   baseURL: props.url,
@@ -56,7 +56,9 @@ const AiGraph = (props: {
                 },
                 gientechConfig
               );
-              console.log('开始网络请求数据，转换数据，set数据', gdata);
+              const antD = transformGientechToG6(gdata as any)
+              console.log('开始网络请求数据，转换数据，set数据', gdata,antD);
+              setGraphData(antD)
             }
             changeStatus('data_init');
           } else {
@@ -69,6 +71,7 @@ const AiGraph = (props: {
             data_type: 'antv',
             graph_type: 'default'
           });
+          setGraphData(props.initData || {})
           changeStatus('data_init');
         }
       } catch (error) {
@@ -78,7 +81,7 @@ const AiGraph = (props: {
     };
 
     initializeApp();
-  }, [props.token, props.url, props.gientechSet]);
+  }, [props.token, props.url, props.gientechServer]);
 
   return (
     <div
@@ -86,7 +89,6 @@ const AiGraph = (props: {
       transition-colors duration-300 box-border bg-white text-black}`}
       onContextMenu={(e) => e.preventDefault()} // 禁止默认的鼠标右键操作
     >
-
       <GraphView {...props} />
     </div>
   );
