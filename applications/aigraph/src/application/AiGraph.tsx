@@ -14,45 +14,56 @@ const AiGraph = (props: {
   url?:string
   username?: string;
   gientechSet?:{
-    spacename:string;
+    spaceName:string;
     filedId?:string;
     limit?:number;
   }
 }) => {
-  const { setUrl, setToken, testConnection, connectionStatus } = useServerState();
+  const { setUrl, setToken, testConnection,url, token, connectionStatus } = useServerState();
   const { setAppConfig, changeStatus, status,mode,data_type,setGientechSet,gientechSet } = useAppState();
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Set initial status
         changeStatus('app_init');
 
-        // If token is provided, set up server mode
         if (props.url) {
           setUrl(props.url);
           setToken(props.token || "");
           const connectionResult = await testConnection();
-          console.log(connectionResult, 'connectionResult');
-          // Only proceed if connection is successful
-          if (connectionResult === 'connected') {  // 直接使用测试结果而不是状态
+    
+          if (connectionResult === 'connected') {
             setAppConfig({
               mode: 'server',
               data_type: 'gitech',
               graph_type: 'gitech_finance'
             });
-            setGientechSet({
-              spacename: props.gientechSet?.spacename || '',
-              filedId: props.gientechSet?.filedId || '',
-              limit: props.gientechSet?.limit || 2000
-            });
+            console.log(props.gientechSet, 'gientechSet');
+          
+            if (props.gientechSet) {
+              const gientechConfig = {
+                spaceName: props.gientechSet.spaceName,
+                filedId: props.gientechSet.filedId,
+                limit: props.gientechSet.limit || 2000
+              };
+              setGientechSet(gientechConfig);
+              
+              
+              const gdata = await wholeGraphSearch(
+                {
+                  baseURL: props.url,
+                  token: props.token || ''
+                },
+                gientechConfig
+              );
+              console.log('开始网络请求数据，转换数据，set数据', gdata);
+            }
             changeStatus('data_init');
           } else {
             changeStatus('app_error');
             return;
           }
         } else {
-          // Set local mode if no token
           setAppConfig({
             mode: 'local',
             data_type: 'antv',
@@ -67,22 +78,8 @@ const AiGraph = (props: {
     };
 
     initializeApp();
-  }, [props.token, props.gientechSet]); 
+  }, [props.token, props.url, props.gientechSet]);
 
-   useEffect(()=>{      
-      const fetchData = async () => {
-        if(status === 'data_init'){
-          console.log( '开始数据初始化',gientechSet);
-          if(mode === 'server'&&gientechSet){
-          const gdata =  await wholeGraphSearch(props.url, gientechSet.filedId, gientechSet.limit, props.username, props.token);
-          console.log( '开始网络请求数据，转换数据，set数据',gdata);
-        }else{
-          console.log(   '开始本地数据初始化');
-        }
-      }
-    } 
-    fetchData();
-   },[status,gientechSet])
   return (
     <div
       className={`flex flex-col justify-center items-center w-full h-full

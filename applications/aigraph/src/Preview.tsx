@@ -3,12 +3,12 @@ import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
 import AiGraph from './application/AiGraph';
 import { contextMenuType } from './application/graph/MyContextMenu';
 
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3NzcxMDUyLCJpYXQiOjE3Mzc2ODQ2NTJ9.AAcesT5g7qJUJvYfoKWwOXzQqBhxmwsdX-BZQjAlHk0';
 function Preview() {
   const graphRef = useRef<GraphRefType>(null);
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
 
   const handleEvent = (type: string, data?: any) => {
-    console.log(type, data, '8888888888888888');
     switch (type) {
       case contextMenuType['NODE:VIEW']:
         break;
@@ -27,11 +27,11 @@ function Preview() {
       <div className="h-[calc(100%-50px)]">
         <AiGraph 
         url={`api_proxy`}
-        token={'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3NzA3NTcyLCJpYXQiOjE3Mzc2MjExNzJ9.QRvR-b6BZ4WGEkplJ6Cve8I8X5oEoGfzvJ3igo0Vi7U'}
+        token={token}
         // username={'admin'}
         gientechSet={
           {
-            spacename:'demo_basketballplayer',
+            spaceName:'demo_basketballplayer'
             // filedId:'123',
             // limit:100
           }

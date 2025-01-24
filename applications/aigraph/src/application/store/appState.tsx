@@ -9,7 +9,7 @@ interface AppState {
   data_type: 'antv' | 'gitech'; //控制图谱数据传入结构类型
   graph_type: 'gitech_finance' | 'default'; //控制图谱样式
   gientechSet?:{
-    spacename:string;
+    spaceName:string;
     filedId?:string;
     limit:number;
   }
@@ -26,7 +26,7 @@ interface AppState {
     mode: 'local' | 'server';
   }) => void;
   setGientechSet: (config: {
-    spacename: string;
+    spaceName: string;
     filedId?: string;
     limit: number;
   }) => void;

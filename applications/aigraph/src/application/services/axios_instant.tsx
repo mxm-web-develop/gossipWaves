@@ -27,7 +27,7 @@ const createAxiosInstance = (
         });
       }
       if (token) {
-        config.headers.set('Authorization', `Bearer ${token}`); // 仅在token存在时添加Authorization
+        config.headers.set('Authorization', `${token}`); // 仅在token存在时添加Authorization
       }
       return config;
     },
