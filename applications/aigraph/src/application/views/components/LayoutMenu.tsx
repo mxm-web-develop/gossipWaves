@@ -24,15 +24,15 @@ const LayoutMenu = () => {
   const { graph } = useAppState();
   const handleLayoutChange = (value: string) => setSelectedLayout(value);
 
-  useEffect(() => {
-    if (!graph) return;
-    graph.setLayout({
-      type: selectedLayout,
-      preventOverlap: true, // 防止节点重叠
-      nodeSpacing: 50, // 节点间距
-    });
-    graph.layout();
-  }, [selectedLayout]);
+  // useEffect(() => {
+  //   if (!graph) return;
+  //   graph.setLayout({
+  //     type: selectedLayout,
+  //     preventOverlap: true, // 防止节点重叠
+  //     nodeSpacing: 50, // 节点间距
+  //   });
+  //   graph.layout();
+  // }, [selectedLayout]);
 
   return (
     <Menubar className="flex rounded-md bg-white !text-[#555555]">

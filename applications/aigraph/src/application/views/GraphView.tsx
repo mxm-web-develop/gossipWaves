@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useImperativeHandle, useRef, useState, forwardRef } from 'react';
-import { Graph, GraphData } from '@antv/g6';
+import { CircularLayout, ForceLayout, Graph, GraphData, GridLayout, register } from '@antv/g6';
 import { useAppState } from '../store';
 import { cancelDefaultGraph, registerDefaultGraph } from '../graph/default';
 import MyContextMenu, { contextMenuType } from '../graph/MyContextMenu';
@@ -55,7 +55,16 @@ export enum AI_GRAPH_TYPE {
   CLICK_CANVAS = 'click_canvas',
   CLICK_EDGE = 'click_edge',
 }
+const registerLayouts = () => {
+  // 注册力导向布局
+  register('layout', 'force', ForceLayout);
 
+  // 注册环形布局
+  register('layout', 'circular', CircularLayout);
+
+  // 注册网格布局
+  register('layout', 'grid', GridLayout);
+};
 const GraphView = forwardRef((props: {
   initData?: null | GraphData;
   handleEvent?: (type: string, data?: any) => any;
@@ -164,7 +173,7 @@ const GraphView = forwardRef((props: {
     
     return () => {
       if (newGraph && !newGraph.destroyed) {
-        newGraph.destroy();
+       // newGraph.destroy();
       }
     };
   }, [status, containerRef.current,graphData]);
@@ -204,6 +213,7 @@ const GraphView = forwardRef((props: {
             <CanvasController handleEvent={handleGraphEvent} />
             <AppController handleEvent={handleGraphEvent} />
             <MyContextMenu targetInfo={targetInfo} handleContextMenuEvent={handleContextMenuEvent} />
+
             <div
               style={{ bottom: '20px', left: '16px' }}
               className="absolute flex justify-start gap-x-3 items-center  opacity-40 text-sm "
