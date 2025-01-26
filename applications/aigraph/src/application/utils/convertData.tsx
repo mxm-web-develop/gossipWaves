@@ -64,7 +64,8 @@ export function transformGientechToG6(data: { nodeList: any[], edgeList: any[] }
     id: node.vid,
     label: node.properties.name || node.vid,
     ...node,
-    type: node.nodeType,
+    // type: node.nodeType,
+    data:{ "category": node.nodeType}
   }));
 
   // 转换边

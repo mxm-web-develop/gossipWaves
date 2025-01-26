@@ -2,7 +2,7 @@ import { GraphData } from '@antv/g6';
 import './style.css';
 import GraphView, { GraphRefType } from './views/GraphView';
 import { useAppState, useServerState } from './store';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { wholeGraphSearch } from './services';
 import { transformGientechToG6 } from './utils/convertData';
 
@@ -24,7 +24,7 @@ const AiGraph = (props: {
 }) => {
   const { setUrl, setToken, testConnection,url, token, connectionStatus } = useServerState();
   const { setAppConfig, changeStatus, status,mode,setGraphData,setGientechSet, } = useAppState();
-
+  const canvasContainer = useRef(null)
   useEffect(() => {
     changeStatus('app_init');
     const initializeApp = async () => {
@@ -85,11 +85,12 @@ const AiGraph = (props: {
 
   return (
     <div
+      ref={canvasContainer}
       className={`flex flex-col justify-center items-center w-full h-full
       transition-colors duration-300 box-border bg-white text-black}`}
       onContextMenu={(e) => e.preventDefault()} // 禁止默认的鼠标右键操作
     >
-      <GraphView {...props} />
+      <GraphView ref={canvasContainer} {...props} />
     </div>
   );
 };

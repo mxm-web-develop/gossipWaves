@@ -3,7 +3,7 @@ import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
 import AiGraph from './application/AiGraph';
 import { contextMenuType } from './application/graph/MyContextMenu';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3NzcxMDUyLCJpYXQiOjE3Mzc2ODQ2NTJ9.AAcesT5g7qJUJvYfoKWwOXzQqBhxmwsdX-BZQjAlHk0';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3OTQxNzg5LCJpYXQiOjE3Mzc4NTUzODl9.N9-cOuL1erL1PfQVCJcT2wqMRz-ZLYHH55MxVaih424';
 function Preview() {
   const graphRef = useRef<GraphRefType>(null);
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
