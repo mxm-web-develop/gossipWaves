@@ -110,6 +110,18 @@ export default ({ mode }: { mode: string }) => {
       cors: true,
       host: '0.0.0.0',
       port: 8888,
+      proxy: {
+        "/api_proxy": {
+          target: "http://10.15.12.13:9005",
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => {
+            const newPath = path.replace(/^\/api_proxy/, "/proxy/graph");
+            console.log(`Rewriting path from ${path} to ${newPath}`); // 调试用
+            return newPath;
+          },
+        },
+      },
     },
   });
 };

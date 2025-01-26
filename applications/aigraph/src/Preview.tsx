@@ -3,12 +3,12 @@ import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
 import AiGraph from './application/AiGraph';
 import { contextMenuType } from './application/graph/MyContextMenu';
 
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3OTQxNzg5LCJpYXQiOjE3Mzc4NTUzODl9.N9-cOuL1erL1PfQVCJcT2wqMRz-ZLYHH55MxVaih424';
 function Preview() {
   const graphRef = useRef<GraphRefType>(null);
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
 
   const handleEvent = (type: string, data?: any) => {
-    console.log(type, data, '8888888888888888');
     switch (type) {
       case contextMenuType['NODE:VIEW']:
         break;
@@ -25,9 +25,25 @@ function Preview() {
   return (
     <div className="h-[100vh] w-full overflow-hidden">
       <div className="h-[calc(100%-50px)]">
-        <AiGraph graphRef={graphRef} handleEvent={handleEvent} initData={null} createBy={'admin'} />
+        <AiGraph 
+        url={`api_proxy`}
+        token={token}
+        // username={'admin'}
+        gientechServer={
+          {
+            url:`api_proxy`,
+            token:token,
+            spaceName:'demo_basketballplayer'
+            // filedId:'123',
+            // limit:100
+          }
+        }
+        graphRef={graphRef} 
+        handleEvent={handleEvent}
+         initData={null}
+          createBy={'admin'} />
       </div>
-      <div>
+      {/* <div>
         <button
           onClick={() => {
             const add_items = graphRef.current?.add_items;
@@ -95,7 +111,7 @@ function Preview() {
         >
           修改数据颜色
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

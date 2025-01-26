@@ -50,7 +50,7 @@ export function NumberedIndentListToolbarButton() {
           })
         }
         data-state={pressed ? 'on' : 'off'}
-        tooltip="Numbered List"
+        tooltip="有序列表"
       >
         <ListOrdered className="size-4" />
       </ToolbarSplitButtonPrimary>
@@ -138,7 +138,7 @@ export function BulletedIndentListToolbarButton() {
           });
         }}
         data-state={pressed ? 'on' : 'off'}
-        tooltip="Bulleted List"
+        tooltip="无序列表"
       >
         <List className="size-4" />
       </ToolbarSplitButtonPrimary>

@@ -15,7 +15,7 @@ export const IndentTodoToolbarButton = withRef<typeof ToolbarButton>(
     const { props } = useIndentTodoToolBarButton(state);
 
     return (
-      <ToolbarButton ref={ref} tooltip="Todo" {...props} {...rest}>
+      <ToolbarButton ref={ref} tooltip="待办事项" {...props} {...rest}>
         <ListTodoIcon />
       </ToolbarButton>
     );

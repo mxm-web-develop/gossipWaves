@@ -13,7 +13,7 @@ export const OutdentToolbarButton = withRef<typeof ToolbarButton>(
     const { props } = useOutdentButton();
 
     return (
-      <ToolbarButton ref={ref} tooltip="Outdent" {...props} {...rest}>
+      <ToolbarButton ref={ref} tooltip="缩进" {...props} {...rest}>
         <Outdent />
       </ToolbarButton>
     );

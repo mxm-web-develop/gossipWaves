@@ -10,7 +10,7 @@ interface ServerState {
   // Actions
   setUrl: (url: string) => void;
   setToken: (token: string) => void;
-  testConnection: () => Promise<void>;
+  testConnection: () => Promise<string>;
   resetState: () => void;
 }
 
@@ -23,7 +23,6 @@ const initialState = {
 export const useServerState = create<ServerState>((set, get) => ({
   ...initialState,
   connectionStatus: 'unable',
-
   // 设置 URL
   setUrl: (url: string) => {
     set((state) => ({
@@ -31,7 +30,6 @@ export const useServerState = create<ServerState>((set, get) => ({
       connectionStatus: url && state.token ? 'setted' : 'unable',
     }));
   },
-
   // 设置 Token
   setToken: (token: string) => {
     set((state) => ({
@@ -39,20 +37,25 @@ export const useServerState = create<ServerState>((set, get) => ({
       connectionStatus: state.url ? 'setted' : 'unable',
     }));
   },
-
   // 测试连接
   testConnection: async () => {
     const { url, token } = get(); // 修正为获取整个状态
-    if (!url || !token) {
+    console.log(url, token, 'from')
+    if (!url) {
       set({ connectionStatus: 'unable' });
-      return;
+      return 'unable'
     }
-
     try {
-      await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+      const requestUrl = `${url}/search/ping`;
+      console.log(requestUrl, 'requestUrl');
+      const res  = await axios.get(requestUrl);
+      console.log(requestUrl,res, 'res');
       set({ connectionStatus: 'connected' });
+      return 'connected'  
     } catch (error) {
+      console.error('Connection error:', error);  // 添加详细的错误日志
       set({ connectionStatus: 'error' });
+      return 'error'
     }
   },
 

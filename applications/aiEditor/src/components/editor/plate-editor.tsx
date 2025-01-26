@@ -10,25 +10,34 @@ import { useCreateEditor } from '@/components/editor/use-create-editor';
 import { SettingsDialog } from '@/components/editor/settings';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import { PlateStatic, serializeHtml } from '@udecode/plate';
+import { useThemedHtml } from './slate-to-html';
+import { getEditorHtmlContent } from './getHtml';
 export interface IEditorProps{
   value?:string | any
-  onChange?: (value:any) => void
 }
 export interface PlateEditorRef {
   getEditor: () => TPlateEditor;
   getData: () => any;
   getHtml: () => any;
+  clear: () => void;
+  // getString: () => string;
 }
 const PlateEditor = forwardRef<PlateEditorRef,IEditorProps>((props:IEditorProps,ref)=> {
   const editor = useCreateEditor({value:props.value});
+ 
   useImperativeHandle(ref, () => ({
     getEditor: () => editor as any,
+    // getString: () => editor.(),
     getData: () => editor.children,
-    getHtml: () => serializeHtml(editor,{
-      components: {
-        
-      }
-    })  
+    getHtml: async () => await getEditorHtmlContent(editor),
+    clear: () => {
+      editor.tf.setValue([
+        {
+          type: 'p',
+          children: [{ text: '' }]
+        }
+      ]);
+    }
   }))
 
   return (

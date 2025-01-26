@@ -68,12 +68,12 @@ export function EmojiPicker({
         settings={settings}
         visibleCategories={visibleCategories}
       />
-      <EmojiPickerPreview
+      {/* <EmojiPickerPreview
         emoji={emoji}
         hasFound={hasFound}
         i18n={i18n}
         isSearching={isSearching}
-      />
+      /> */}
     </div>
   );
 }

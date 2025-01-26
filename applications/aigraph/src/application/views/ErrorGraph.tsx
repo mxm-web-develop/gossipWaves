@@ -3,7 +3,9 @@ import React from 'react'
 
 function ErrorGraph({ message }: { message: string }) {
   return (
-    <div>ErrorGraph</div>
+    <div className="flex items-center justify-center z-50 w-full h-full">
+      <div className="text-lg">ErrorGraph</div>
+    </div>
   )
 }
 
