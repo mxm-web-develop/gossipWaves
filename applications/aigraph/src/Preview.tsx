@@ -3,11 +3,10 @@ import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
 import AiGraph from './application/AiGraph';
 import { contextMenuType } from './application/graph/MyContextMenu';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3OTQxNzg5LCJpYXQiOjE3Mzc4NTUzODl9.N9-cOuL1erL1PfQVCJcT2wqMRz-ZLYHH55MxVaih424';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3OTcwNzMxLCJpYXQiOjE3Mzc4ODQzMzF9.5LKuUWFZ1UPt3jtyo3uvnxyU93Gy1K2iLp9MxhbNj5o';
 function Preview() {
   const graphRef = useRef<GraphRefType>(null);
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
-
   const handleEvent = (type: string, data?: any) => {
     switch (type) {
       case contextMenuType['NODE:VIEW']:
