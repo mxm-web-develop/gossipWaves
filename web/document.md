@@ -1,0 +1,80 @@
+### 组织 organization
+
+```json
+{
+  "id": "1",
+  "name": "中电金信AI研究院",
+  "logo": "https://www.zjfintech.com/logo.png",
+  "description": "中电金信是一家专注于金融科技的公司，提供智能化的解决方案。",
+  "url": "https://www.zjfintech.com"
+}
+```
+
+### 应用资源 application
+
+```json
+{
+  "id": "1",
+  "organizationId": "1",
+  "network": "gientech",
+  "links":{
+    "website": "https://www.zjfintech.com",
+    "github": "https://www.zjfintech.com",
+    "demo": "https://www.zjfintech.com",
+  },
+  "banner":{
+    "status": 1,
+    "title": "小鲸智能客服",
+    "description": "小鲸智能客服是一款智能客服系统，提供智能化的解决方案。",
+    "url": "https://www.zjfintech.com/banner.png"
+  },
+  "contact":["id1","id2"],
+  "tag":["智能会话"，"银行金融"],
+  "name": "小鲸智能客服",
+  "status": 1,
+  "info": {
+    "logo": "https://www.zjfintech.com/logo.png 选填",
+    "coverImg": "https://www.zjfintech.com/cover.png 选填",
+    "short": "小鲸智能客服是一款智能客服系统，提供智能化的解决方案。500字以内",
+    "post": "小鲸智能客服是一款智能客服系统，提供智能化的解决方案。markdown|html|string格式富文本显示",
+  },
+  "assets":[{
+    "id": "1",
+    "name": "小鲸智能客服白皮书",
+    "format": "pdf",
+    "url": "https://www.zjfintech.com/icon.pdf",
+  }],
+  "awards":["2024年最佳智能客服奖"],
+  "createdAt": "2025-01-01",
+  "updatedAt": "2025-01-01",
+  "author": "张三",
+  "reproduce": "https://www.zjfintech.com/reproduce.pdf"
+}
+```  
+
+### 联系人 contact
+
+```json
+[{
+    "id": "1",
+    "label":"技术支持",
+    "name": "张三",
+    "email": "zhangsan@zjfintech.com",
+    // "phone": "13800138000",
+  },{
+    "id": "2",
+    "label":"商务合作",
+    "name": "李四",
+    "email": "lisi@zjfintech.com",
+    // "phone": "13800138000",
+  }]
+```  
+
+### 事件 event
+
+### 资源 resource
+
+### 反馈系统 feedback
+
+
+

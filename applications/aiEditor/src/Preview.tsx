@@ -8,7 +8,7 @@ function Preview() {
   console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
   const handleSubmit = async () => {
     if(editorRef.current){  
-      console.log('提交',await editorRef.current.getHtml());
+      console.log('提交',await editorRef.current.getMarkdown());
     }
   }
   const handleDelete = async () => {
