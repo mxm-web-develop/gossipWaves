@@ -4,16 +4,16 @@ import { Graph, GraphData } from '@antv/g6';
 interface AppState {
   status: 'app_init' | 'data_init' | 'canvas_init' | 'app_wait' | 'app_process' | 'app_error';
   rawData: any;
-  graphData:GraphData;
+  graphData: GraphData;
   mode: 'local' | 'server'; //控制网络模式，影响查询和计算的模式
   graph: Graph | null;
   data_type: 'antv' | 'gitech'; //控制图谱数据传入结构类型
   graph_type: 'gitech_finance' | 'default'; //控制图谱样式
-  gientechSet?:{
-    spaceName:string;
-    filedId?:string;
-    limit:number;
-  }
+  gientechSet?: {
+    spaceName: string;
+    filedId?: string;
+    limit: number;
+  };
   // 具体方法替代通用的 setAppState
   changeStatus: (
     status: 'app_init' | 'data_init' | 'canvas_init' | 'app_wait' | 'app_process' | 'app_error'
@@ -26,17 +26,13 @@ interface AppState {
     graph_type: 'gitech_finance' | 'default';
     mode: 'local' | 'server';
   }) => void;
-  setGientechSet: (config: {
-    spaceName: string;
-    filedId?: string;
-    limit: number;
-  }) => void;
+  setGientechSet: (config: { spaceName: string; filedId?: string; limit: number }) => void;
   setGraphData: (data: GraphData) => void; // 添加新方法声明
   //setAppStatus: (status: AppStatus) => void;
 }
 export const useAppState = create<AppState>((set) => ({
   status: 'app_init',
-  graphData:{},
+  graphData: {},
   rawData: [],
   mode: 'local',
   layout: 'force',
@@ -44,13 +40,13 @@ export const useAppState = create<AppState>((set) => ({
   data_type: 'antv',
   graph_type: 'default',
   // 修改状态的具体方法
-  changeStatus: (status) =>
-    set(
+  changeStatus: (status) => {
+    return set(
       produce((draft) => {
         draft.status = status;
       })
-    ),
-
+    );
+  },
   setGraph: (graph) =>
     set(
       produce((draft) => {

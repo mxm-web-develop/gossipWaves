@@ -14,7 +14,7 @@ export interface WholeGraphSearchResponse {
 
 const wholeGraphSearchMock = {
   data: {},
-  success: true
+  success: true,
 };
 
 export const wholeGraphSearchConfig = {
@@ -29,32 +29,28 @@ export const wholeGraphSearchConfig = {
 import { createAxiosInstance, mockApiResponse } from '../axios_instant';
 
 export async function wholeGraphSearch(
-  network:{
-    baseURL: string,
-    token?: string
-  },  
-  data: WholeGraphSearchRequest,
+  network: {
+    baseURL: string;
+    token?: string;
+  },
+  data: WholeGraphSearchRequest
   //params: WholeGraphSearchRequest,
   // headers?: { userName?: string; userId?: string },
   //token?: string
-  
 ): Promise<WholeGraphSearchResponse> {
-  const instance = createAxiosInstance(
-    network.baseURL,
-    network.token,
-  );
-  console.log(data,'data')
+  const instance = createAxiosInstance(network.baseURL, network.token);
+  console.log(data, 'data');
   // 如果需要mock数据，取消注释下面这行
   // mockApiResponse(instance, wholeGraphSearchConfig.method, wholeGraphSearchConfig.url, wholeGraphSearchMock);
   try {
     const response = await instance({
       url: wholeGraphSearchConfig.url,
       method: wholeGraphSearchConfig.method,
-      data: data
+      data: data,
     });
     return response.data as unknown as WholeGraphSearchResponse;
   } catch (error) {
     console.error('Whole graph search failed:', error);
     throw error;
   }
-} 
+}

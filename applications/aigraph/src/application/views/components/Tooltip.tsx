@@ -29,8 +29,18 @@ export const CustomTooltip: React.FC<TooltipProps> = ({ data }) => {
       >
         {d.category ? d.category.substr(0, 1) : ''}
       </div>
-      <div style={{ height: '40px', marginLeft: '16px' }}>
-        <div style={{ color: '#2A2A2A', fontWeight: '16px', fontSize: '16px' }}>{d.name}</div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '40px',
+          marginLeft: '16px',
+        }}
+      >
+        <div style={{ color: '#2A2A2A', fontWeight: '16px', fontSize: '16px', minWidth: '10px' }}>
+          {d.name}
+        </div>
         <div
           style={{
             height: '20px',
@@ -41,6 +51,7 @@ export const CustomTooltip: React.FC<TooltipProps> = ({ data }) => {
             textAlign: 'center',
             borderRadius: '4px',
             marginTop: '4px',
+            width: 'fit-content',
           }}
         >
           {d.category}

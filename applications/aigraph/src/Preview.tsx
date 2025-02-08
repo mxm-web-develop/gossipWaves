@@ -1,48 +1,33 @@
-import { useRef } from 'react';
-import { AI_GRAPH_TYPE, GraphRefType } from './application/views/GraphView';
 import AiGraph from './application/AiGraph';
-import { contextMenuType } from './application/graph/MyContextMenu';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM3OTcwNzMxLCJpYXQiOjE3Mzc4ODQzMzF9.5LKuUWFZ1UPt3jtyo3uvnxyU93Gy1K2iLp9MxhbNj5o';
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5MDYzODIyLCJpYXQiOjE3Mzg5Nzc0MjJ9.dy0abYteE3SPgGH8G5A-BVblMgeLsbWHJJeS4fKaM8o';
+
 function Preview() {
-  const graphRef = useRef<GraphRefType>(null);
-  console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
-  const handleEvent = (type: string, data?: any) => {
-    switch (type) {
-      case contextMenuType['NODE:VIEW']:
-        break;
-      case AI_GRAPH_TYPE.SEARCH:
-        break;
-      case AI_GRAPH_TYPE.SAVE:
-        break;
-      case AI_GRAPH_TYPE.EXPORT:
-        break;
-      case AI_GRAPH_TYPE.BACK:
-        break;
-    }
-  };
   return (
     <div className="h-[100vh] w-full overflow-hidden">
-      <div className="h-[calc(100%-50px)]">
-        <AiGraph 
-        url={`api_proxy`}
-        token={token}
-        // username={'admin'}
-        gientechServer={
-          {
-            url:`api_proxy`,
-            token:token,
-            spaceName:'demo_basketballplayer'
-            // filedId:'123',
-            // limit:100
-          }
-        }
-        graphRef={graphRef} 
-        handleEvent={handleEvent}
-         initData={null}
-          createBy={'admin'} />
+      <div className="h-[calc(100%-50px)] relative">
+        <AiGraph
+          url={`api_proxy`}
+          token={token}
+          gientechServer={{
+            url: `api_proxy`,
+            token: token,
+            spaceName: 'demo_basketballplayer',
+          }}
+          initData={null}
+          createBy={'admin'}
+          graphModeType="allGraph"
+        />
       </div>
-      {/* <div>
+    </div>
+  );
+}
+
+export default Preview;
+
+{
+  /* <div>
         <button
           onClick={() => {
             const add_items = graphRef.current?.add_items;
@@ -110,9 +95,5 @@ function Preview() {
         >
           修改数据颜色
         </button>
-      </div> */}
-    </div>
-  );
+      </div> */
 }
-
-export default Preview;
