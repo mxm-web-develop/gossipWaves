@@ -34,8 +34,19 @@ const MenubarTrigger = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <MenubarPrimitive.Trigger
     ref={ref}
+    style={{
+      display: 'flex',
+      cursor: 'default',
+      userSelect: 'none',
+      alignItems: 'center',
+      borderRadius: '0.375rem',
+      padding: '0.375rem 0.75rem',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      outline: 'none',
+    }}
     className={cn(
-      'flex cursor-default select-none items-center rounded-sm px-3 py-0 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+      'focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
       className
     )}
     {...props}
@@ -51,15 +62,24 @@ const MenubarSubTrigger = React.forwardRef<
 >(({ className, inset, children, ...props }, ref) => (
   <MenubarPrimitive.SubTrigger
     ref={ref}
-    className={cn(
-      'flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
-      inset && 'pl-8',
-      className
-    )}
+    style={{
+      display: 'flex',
+      cursor: 'default',
+      userSelect: 'none',
+      alignItems: 'center',
+      borderRadius: '0.375rem',
+      padding: '0.375rem 0.75rem',
+      fontSize: '0.875rem',
+      outline: 'none',
+      backgroundColor: 'var(--accent-bg)',
+      color: 'var(--accent-foreground)',
+      ...(inset && { paddingLeft: '2rem' }),
+    }}
+    className={className}
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight style={{ marginLeft: 'auto', height: '1rem', width: '1rem' }} />
   </MenubarPrimitive.SubTrigger>
 ));
 MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;

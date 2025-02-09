@@ -1,4 +1,3 @@
-
 import MockAdapter from 'axios-mock-adapter';
 import axios, { AxiosHeaders, AxiosInstance } from 'axios';
 
@@ -14,7 +13,7 @@ const createAxiosInstance = (
     baseURL: baseURL, // 替换为你的API基础URL
     responseType: responseType || 'json', // 默认响应类型为 json
     timeout: timeout || 60000, // 设置超时时间，默认10秒
-    params: params
+    params: params,
   });
 
   // 请求拦截器，附加token
@@ -72,4 +71,4 @@ const mockApiResponse = (
       throw new Error(`Unsupported method: ${method}`);
   }
 };
-export { createAxiosInstance, mockApiResponse }
+export { createAxiosInstance, mockApiResponse };

@@ -53,29 +53,62 @@ interface G6Data {
   }[];
 }
 
-export function transformGientechToG6(data: { nodeList: any[], edgeList: any[] }): G6Data {
+export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }): G6Data {
   const g6Data: G6Data = {
     nodes: [],
-    edges: []
+    edges: [],
   };
 
   // 转换节点
-  g6Data.nodes = data.nodeList.map(node => ({
-    id: node.vid,
-    label: node.properties.name || node.vid,
-    ...node,
-    // type: node.nodeType,
-    data:{ "category": node.nodeType}
+  g6Data.nodes = data.nodeList.map((item) => ({
+    id: item.properties?.id,
+    data: { name: item.properties?.name || '', category: item.nodeType },
+    properties: Object.entries(item.properties).map((prop: any) => {
+      return {
+        key: prop[0],
+        value: prop[1],
+      };
+    }),
   }));
 
   // 转换边
-  g6Data.edges = data.edgeList.map(edge => ({
-    id: edge.id,
-    source: edge.src.vid,
-    target: edge.dst.vid,
-    label: edge.edgeType,
-    ...edge,
+  g6Data.edges = data.edgeList.map((item) => ({
+    id: item.id,
+    data: {
+      name: item.properties?.name || item.edgeType,
+      category: item.edgeType,
+    },
+    source: item.src.properties.id,
+    target: item.dst.properties.id,
   }));
 
   return g6Data;
 }
+
+export const convertNodeList = (data: any) => {
+  return data.map((item: any) => {
+    return {
+      id: item.properties?.id,
+      data: { name: item.properties?.name || '', category: item.nodeType },
+      properties: Object.entries(item.properties).map((prop: any) => {
+        return {
+          key: prop[0],
+          value: prop[1],
+        };
+      }), //把数组对象的key和value转换成对象
+    };
+  });
+};
+export const convertEdgeList = (data: any) => {
+  return data.map((item: any) => {
+    return {
+      id: item.id,
+      data: {
+        name: item.properties?.name || item.edgeType,
+        category: item.edgeType,
+      },
+      source: item.src.properties.id,
+      target: item.dst.properties.id,
+    };
+  });
+};

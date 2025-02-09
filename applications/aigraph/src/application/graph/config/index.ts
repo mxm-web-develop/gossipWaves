@@ -95,7 +95,18 @@ export const behaviorsConfig = {
   ],
 };
 
-export const layoutConfig = { default: { type: 'force', animation: true } };
+export const layoutConfig = {
+  default: {
+    type: 'force',
+    maxSpeed: 2000,
+    nodeSize: 80,
+    nodeSpacing: 50,
+    preventOverlap: true,
+    linkDistance: 150,
+    chargeStrength: -300,
+    gravity: 0.1,
+  },
+};
 
 export const pluginsConfig = ({
   getContextMenu,

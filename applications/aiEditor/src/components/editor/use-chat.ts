@@ -18,7 +18,7 @@ export const useChat = () => {
     },
     fetch: async (input, init) => {
       const res = await fetch(input, init);
-
+      console.log('进到ai fetch');
       if (!res.ok) {
         // Mock the API response. Remove it when you implement the route /api/ai/command
         await new Promise((resolve) => setTimeout(resolve, 400));
