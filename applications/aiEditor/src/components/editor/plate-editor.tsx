@@ -12,8 +12,8 @@ import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import { PlateStatic, serializeHtml } from '@udecode/plate';
 import { useThemedHtml } from './slate-to-html';
 import { getEditorHtmlContent } from './getHtml';
-export interface IEditorProps{
-  value?:string | any
+export interface IEditorProps {
+  value?: string | any
 }
 export interface PlateEditorRef {
   getEditor: () => TPlateEditor;
@@ -22,12 +22,13 @@ export interface PlateEditorRef {
   clear: () => void;
   // getString: () => string;
 }
-const PlateEditor = forwardRef<PlateEditorRef,IEditorProps>((props:IEditorProps,ref)=> {
-  const editor = useCreateEditor({value:props.value});
- 
+const PlateEditor = forwardRef<PlateEditorRef, IEditorProps>((props: IEditorProps, ref) => {
+  const editor = useCreateEditor({ value: props.value });
+
   useImperativeHandle(ref, () => ({
     getEditor: () => editor as any,
     // getString: () => editor.(),
+    // getMarkdown: async () => await getEditorMarkdownContent(editor),
     getData: () => editor.children,
     getHtml: async () => await getEditorHtmlContent(editor),
     clear: () => {
