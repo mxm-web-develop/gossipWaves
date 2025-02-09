@@ -1,3 +1,22 @@
+# 开发规范
+
+支持 Pc 端和移动端
+支持主题色切换
+支持多语言
+
+## 服务端渲染 {app}
+
+/home
+/applications
+/application/{id}
+
+## 客户端渲染 （components）
+
+## 数据填充
+
+- minio
+- mongo
+
 # 测试环境
 
 ## MongoDB
