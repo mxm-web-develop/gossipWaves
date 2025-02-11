@@ -95,17 +95,16 @@ export const behaviorsConfig = {
   ],
 };
 
-export const layoutConfig = {
+export const layoutConfig: any = {
   default: {
-    type: 'force',
-    maxSpeed: 2000,
-    nodeSize: 80,
-    nodeSpacing: 50,
+    type: 'force-atlas2',
     preventOverlap: true,
-    linkDistance: 150,
-    chargeStrength: -300,
-    gravity: 0.1,
+    kr: 100,
   },
+  force: { type: 'force-atlas2', preventOverlap: true, kr: 100 },
+  circular: { type: 'circular', preventOverlap: true, nodeSpacing: 50 },
+  radial: { type: 'radial', preventOverlap: true, nodeSpacing: 50 },
+  grid: { type: 'grid', preventOverlap: true, nodeSpacing: 50 },
 };
 
 export const pluginsConfig = ({

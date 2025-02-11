@@ -1,7 +1,7 @@
 import AiGraph from './application/AiGraph';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5MDYzODIyLCJpYXQiOjE3Mzg5Nzc0MjJ9.dy0abYteE3SPgGH8G5A-BVblMgeLsbWHJJeS4fKaM8o';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5MzIzMjcwLCJpYXQiOjE3MzkyMzY4NzB9.yhpSsTvY66fxEcJ9p8QXN1rt0sUcMdCM6mlMvJmKrnQ';
 
 function Preview() {
   return (
@@ -13,11 +13,12 @@ function Preview() {
           gientechServer={{
             url: `api_proxy`,
             token: token,
-            spaceName: 'demo_basketballplayer',
+            spaceName: '图解析20250208_3',
+            fileId: 53591,
           }}
           initData={null}
           createBy={'admin'}
-          graphModeType="allGraph"
+          graphModeType="subGraph"
         />
       </div>
     </div>

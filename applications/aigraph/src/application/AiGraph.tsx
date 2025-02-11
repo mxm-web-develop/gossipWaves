@@ -6,6 +6,11 @@ import { useAppState, useServerState } from './store';
 import { useEffect, useRef } from 'react';
 import { wholeGraphSearch } from './services';
 import { transformGientechToG6 } from './utils/convertData';
+import {
+  getEdgeInfo,
+  getNodeInfo,
+  getWholeGraphStatistics,
+} from './services/apis/whole_graph_search';
 
 const AiGraph = (props: {
   graphModeType: 'allGraph' | 'subGraph';
@@ -19,53 +24,143 @@ const AiGraph = (props: {
     url: string;
     token?: string;
     spaceName: string;
-    filedId?: string;
+    fileId?: number;
     limit?: number;
   };
 }) => {
   const { token, url, gientechServer, graphModeType } = props;
-  const { setUrl, setToken, testConnection } = useServerState();
-  const { setAppConfig, changeStatus, status, mode, setGraphData, setGientechSet } = useAppState();
+  const { setUrl, setToken } = useServerState();
+  const {
+    setAppConfig,
+    changeStatus,
+    status,
+    mode,
+    setGraphData,
+    setGientechSet,
+    setNodeInfo,
+    setEdgeInfo,
+  } = useAppState();
   const canvasContainer = useRef(null);
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        if (url) {
-          setUrl(url);
-          setToken(token || '');
-          const connectionResult = await testConnection();
-
-          if (connectionResult === 'connected') {
-            changeStatus('data_init');
-            setAppConfig({
-              mode: 'server',
-              data_type: 'gitech',
-              graph_type: 'gitech_finance',
-            });
-            console.log(props.gientechServer, 'gientechSet');
-
-            if (props.gientechServer) {
-              const gientechConfig = {
-                spaceName: props.gientechServer.spaceName,
-                filedId: props.gientechServer.filedId,
-                limit: props.gientechServer.limit || 2000,
-              };
-              setGientechSet(gientechConfig);
-              const gdata: any = await wholeGraphSearch(
-                {
-                  baseURL: url,
-                  token: token || '',
-                },
-                gientechConfig
-              );
-              const antD = transformGientechToG6(gdata as any);
-              console.log('开始网络请求数据，转换数据，set数据', gdata, antD);
-              setGraphData(antD);
-            }
-          } else {
-            return;
+  const getNodeInfoFn = async (
+    url: string,
+    token: undefined | string,
+    gientechServer: any,
+    graphModeType: string
+  ) => {
+    try {
+      const p: any = { spaceName: gientechServer.spaceName };
+      if (graphModeType === 'subGraph' && gientechServer.fileId) {
+        p.fileId = gientechServer.fileId;
+      }
+      const res: any = await getNodeInfo(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        p
+      );
+      setNodeInfo(res);
+      console.log('====================================');
+      console.log('sdglasjgdslajdg', res);
+      console.log('====================================');
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
+  };
+  const getEdgeInfoFn = async (
+    url: string,
+    token: undefined | string,
+    gientechServer: any,
+    graphModeType: string
+  ) => {
+    try {
+      const p: any = { spaceName: gientechServer.spaceName };
+      if (graphModeType === 'subGraph' && gientechServer.fileId) {
+        p.fileId = gientechServer.fileId;
+      }
+      const res: any = await getEdgeInfo(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        p
+      );
+      setEdgeInfo(res);
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
+  };
+  const getWholeGraphStatisticsFn = async (
+    url: string,
+    token: undefined | string,
+    gientechServer: any,
+    graphModeType: string
+  ) => {
+    try {
+      if (!url) return;
+      const p: any = { spaceName: gientechServer.spaceName };
+      if (graphModeType === 'subGraph' && gientechServer.fileId) {
+        p.fileId = gientechServer.fileId;
+      }
+      const gdata: any = await getWholeGraphStatistics(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        p
+      );
+      console.log('====================================');
+      console.log('getWholeGraphStatisticsFn', gdata);
+      console.log('====================================');
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
+  };
+  const initializeApp = async (
+    url: undefined | string,
+    token: undefined | string,
+    gientechServer: any
+  ) => {
+    try {
+      if (url) {
+        setUrl(url);
+        setToken(token || '');
+        changeStatus('data_init');
+        setAppConfig({
+          mode: 'server',
+          data_type: 'gitech',
+          graph_type: 'gitech_finance',
+        });
+        getNodeInfoFn(url, token, gientechServer, graphModeType);
+        getEdgeInfoFn(url, token, gientechServer, graphModeType);
+        getWholeGraphStatisticsFn(url, token, gientechServer, graphModeType);
+        if (graphModeType === 'subGraph') {
+          if (gientechServer) {
+            const gientechConfig = {
+              spaceName: gientechServer.spaceName,
+              filedId: gientechServer.fileId,
+              limit: gientechServer.limit || 2000,
+            };
+            setGientechSet(gientechConfig);
+            const gdata: any = await wholeGraphSearch(
+              {
+                baseURL: url,
+                token: token || '',
+              },
+              gientechConfig
+            );
+            const antD = transformGientechToG6(gdata as any);
+            console.log('开始网络请求数据，转换数据，set数据', gdata, antD);
+            setGraphData(antD);
           }
         } else {
+          changeStatus('app_wait');
           setAppConfig({
             mode: 'local',
             data_type: 'antv',
@@ -73,22 +168,21 @@ const AiGraph = (props: {
           });
           setGraphData(props.initData || {});
         }
-      } catch (error) {
-        changeStatus('app_error');
-        console.error('Initialization error:', error);
+      } else {
+        setAppConfig({
+          mode: 'local',
+          data_type: 'antv',
+          graph_type: 'default',
+        });
+        setGraphData(props.initData || {});
       }
-    };
-    if (graphModeType === 'allGraph') {
-      initializeApp();
-    } else {
-      changeStatus('app_wait');
-      setAppConfig({
-        mode: 'local',
-        data_type: 'antv',
-        graph_type: 'default',
-      });
-      setGraphData(props.initData || {});
+    } catch (error) {
+      changeStatus('app_error');
+      console.error('Initialization error:', error);
     }
+  };
+  useEffect(() => {
+    initializeApp(url, token, gientechServer);
   }, [token, url, gientechServer, graphModeType]);
 
   return (

@@ -11,6 +11,7 @@ import {
   MenubarPortal,
   MenubarTrigger,
 } from '../../../components/ui/menubar';
+import { layoutConfig } from '../../graph/config';
 const LAYOUT_OPTIONS = [
   { value: 'force', label: '力导布局' },
   { value: 'circular', label: '环形布局' },
@@ -22,17 +23,12 @@ const LayoutMenu = () => {
   // 使用value作为状态值
   const [selectedLayout, setSelectedLayout] = React.useState<string>(LAYOUT_OPTIONS[0].value);
   const { graph } = useAppState();
-  const handleLayoutChange = (value: string) => setSelectedLayout(value);
-
-  // useEffect(() => {
-  //   if (!graph) return;
-  //   graph.setLayout({
-  //     type: selectedLayout,
-  //     preventOverlap: true, // 防止节点重叠
-  //     nodeSpacing: 50, // 节点间距
-  //   });
-  //   graph.layout();
-  // }, [selectedLayout]);
+  const handleLayoutChange = (value: string) => {
+    if (!graph) return;
+    setSelectedLayout(value);
+    graph.setLayout(layoutConfig[value]);
+    graph.layout();
+  };
 
   return (
     <Menubar className="flex rounded-md bg-white !text-[#555555]">

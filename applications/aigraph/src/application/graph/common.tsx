@@ -1,18 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-case-declarations */
 import { GraphData } from '@antv/g6';
 import { DataID } from '@antv/g6/lib/types';
 import { message } from 'antd';
 import { useAppState } from '../store/appState';
 import { contextMenuType } from './MyContextMenu';
+import { AI_GRAPH_TYPE } from '../views/GraphView';
 
-export const useCommonFn = (graph: any) => {
+export const useCommonFn = (graph: any, handleEvent: any, targetInfo: any) => {
   const { changeStatus } = useAppState();
   const get_items = (): GraphData | any => {
     if (!graph) return console.error('图谱未渲染完成');
     return graph.getData();
   };
 
-  const add_items = (data: GraphData) => {
-    if (!graph || graph.destroyed) {
+  const add_items = (data: GraphData, sgraph?: any) => {
+    const _graph = sgraph || graph;
+    if (!_graph || _graph.destroyed) {
       console.error('图谱未渲染完成或已销毁');
       return;
     }
@@ -21,12 +25,12 @@ export const useCommonFn = (graph: any) => {
       const { nodes = [], edges = [] } = data;
 
       // 使用 changeData 而不是 setData，这样可以保持现有数据
-      graph.addData({
+      _graph.addData({
         nodes,
         edges,
       });
 
-      graph.render();
+      _graph.render();
     } catch (error) {
       console.error('添加数据时发生错误:', error);
       changeStatus('app_error');
@@ -46,7 +50,6 @@ export const useCommonFn = (graph: any) => {
 
   const antSelect = () => {
     if (!graph) return message.warning('graph未初始化');
-    debugger;
     const allNodeData = graph.getNodeData();
     const nodeData = graph.getElementDataByState('node', 'selected');
     const selectedId: any = nodeData.map((item: any) => item.id);
@@ -68,9 +71,9 @@ export const useCommonFn = (graph: any) => {
     graph.draw();
   };
 
-  const handleContextMenuEvent = (event: any) => {
-    console.log(event);
-    switch (event.type) {
+  const handleContextMenuEvent = (event: any, data?: any) => {
+    console.log(event, data);
+    switch (event) {
       case contextMenuType['NODE:ONCE']:
         // Handle NODE:ONCE event
         break;
@@ -87,10 +90,14 @@ export const useCommonFn = (graph: any) => {
         antSelect();
         break;
       case contextMenuType['NODE:DELETE']:
-        // Handle EDGE:THIRD_DEGREE event
+        const nodeData = graph.getElementDataByState('node', 'selected');
+        const selectedId: any[] = nodeData.map((item: any) => item.id);
+        delete_items({ nodes: selectedId });
         break;
       case contextMenuType['NODE:VIEW']:
-        // Handle EDGE:THIRD_DEGREE event
+        handleEvent &&
+          targetInfo?.target?.id &&
+          handleEvent(AI_GRAPH_TYPE.CLICK_NODE, graph.getElementData(targetInfo.target.id));
         break;
       default:
         console.warn('Unknown context menu event type:', event.type);

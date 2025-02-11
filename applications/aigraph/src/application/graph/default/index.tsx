@@ -10,14 +10,16 @@ export const registerDefaultGraph = (
   try {
     graph.on('node:click', (e: any) => {
       const id = e.target.id;
-      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_NODE, graph.getElementData(id));
+      console.log('node:click', e.target);
+      //handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_NODE, graph.getElementData(id));
     });
     graph.on('edge:click', (e: any) => {
       const id = e.target.id;
-      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_EDGE, graph.getElementData(id));
+      console.log('edge:click', e.target);
+      //handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_EDGE, graph.getElementData(id));
     });
     graph.on('canvas:click', (e: any) => {
-      handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_CANVAS, e);
+      //handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_CANVAS, e);
     });
     graph.on('node:contextmenu', (e: any) => {
       if (e?.target?.id) {
@@ -39,7 +41,6 @@ export const registerDefaultGraph = (
       // graph.fitCenter({
       //   duration: 830,
       // });
-      setGraphData(graph.getData());
     });
 
     let startTimeRender = 0;

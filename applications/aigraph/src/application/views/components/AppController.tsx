@@ -11,7 +11,10 @@ export default function AppController(props: { handleEvent: (type: string, data?
       className="absolute w-full"
       style={{ height: '32px', top: '20px', left: 0, right: 0, bottom: 0 }}
     >
-      <div className="flex items-center px-3.5 justify-between w-full">
+      <div
+        className="flex items-center px-3.5 justify-between w-full"
+        style={{ padding: '0 15px 0 20px' }}
+      >
         <div>
           <div
             style={{ padding: '4px 16px' }}

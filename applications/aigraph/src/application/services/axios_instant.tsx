@@ -27,6 +27,8 @@ const createAxiosInstance = (
       }
       if (token) {
         config.headers.set('Authorization', `${token}`); // 仅在token存在时添加Authorization
+        // config.headers.set('userid', '1032');
+        // config.headers.set('username', 'testwdf7');
       }
       return config;
     },

@@ -1,13 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-case-declarations */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState, forwardRef } from 'react';
+import { useEffect, useRef, useState, forwardRef, useMemo } from 'react';
 import { CircularLayout, ForceLayout, Graph, GraphData, GridLayout, register } from '@antv/g6';
-import { useAppState } from '../store';
+import { useAppState, useServerState } from '../store';
 import MyContextMenu, { contextMenuType } from '../graph/MyContextMenu';
 import * as Separator from '@radix-ui/react-separator';
 import { DataID } from '@antv/g6/lib/types';
-import { Button, ConfigProvider, Divider, Drawer, Select, Table, Tabs, TabsProps } from 'antd';
+import { uid } from 'uid';
+import {
+  Button,
+  ConfigProvider,
+  Divider,
+  Drawer,
+  Select,
+  Table,
+  Tabs,
+  TabsProps,
+  Form,
+  Checkbox,
+  Row,
+  Col,
+  Input,
+  Radio,
+} from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import './style.css';
 import {
@@ -23,7 +39,13 @@ import AppController from './components/AppController';
 import LoadingGraph from './LoadingGraph';
 import ErrorGraph from './ErrorGraph';
 import { useCommonFn } from '../graph/common';
-import addSearch from '../assets/img/addSearch.png';
+import { registerDefaultGraph } from '../graph/default';
+import { ArrowLeft } from 'lucide-react';
+import CheckOutlined from '../assets/img/CheckOutlined.png';
+import { edgeSearch, nodeSearch } from '../services/apis/whole_graph_search';
+import { transformGientechToG6 } from '../utils/convertData';
+import SearchCom from './components/SearchCom';
+import ItemSearchResult from './components/ItemSearchResult';
 const ZOOM = 0.1;
 
 export type GraphRefType = {
@@ -56,6 +78,30 @@ const registerLayouts = () => {
   // 注册网格布局
   register('layout', 'grid', GridLayout);
 };
+
+const dealPro = (data: any) => {
+  const grouped: any = {};
+  for (const key of Object.keys(data)) {
+    const index = key.indexOf('-');
+    const type = key.substring(0, index); // 提取类型（如propertyKey）
+    const id = key.substring(index + 1); // 提取唯一ID
+
+    if (!grouped[id]) {
+      grouped[id] = {}; // 初始化分组对象
+    }
+    grouped[id][type] = data[key]; // 存储对应类型的值
+  }
+
+  // 将分组对象转换为数组并格式化
+  const result = Object.values(grouped).map((item: any) => ({
+    propertyKey: item.propertyKey,
+    operator: item.operator,
+    propertyValue: item.propertyValue,
+    logicalOperator: data.logicalOperator,
+  }));
+  return result;
+};
+
 const GraphView = forwardRef(
   (
     props: {
@@ -76,15 +122,6 @@ const GraphView = forwardRef(
       console.log('GraphViewaaa', status);
       console.log('====================================');
     }, [status]);
-    const {
-      handleContextMenuEvent,
-      get_items,
-      add_items,
-      delete_items,
-      clear_items,
-      antSelect,
-      updateNodeById,
-    } = useCommonFn(graph);
 
     const [visible, setVisible] = useState(false);
     const [open, setOpen] = useState(false);
@@ -134,6 +171,17 @@ const GraphView = forwardRef(
           break;
       }
     };
+
+    const {
+      handleContextMenuEvent,
+      get_items,
+      add_items,
+      delete_items,
+      clear_items,
+      antSelect,
+      updateNodeById,
+    } = useCommonFn(graph, handleEvent, targetInfo);
+
     const items: TabsProps['items'] = [
       {
         key: '1',
@@ -253,7 +301,7 @@ const GraphView = forwardRef(
       // 在这里直接添加数据
       if (graphData) {
         try {
-          newGraph.setData(graphData);
+          add_items(graphData, newGraph);
           newGraph.render();
           changeStatus('app_wait');
         } catch (error) {
@@ -273,6 +321,7 @@ const GraphView = forwardRef(
     useEffect(() => {
       if (!graph) return;
       console.log('注册事件监听', graph);
+      registerDefaultGraph(graph, setGraphData, handleEvent);
     }, [graph]);
 
     return (
@@ -358,7 +407,7 @@ const GraphView = forwardRef(
           )}
         </div>
 
-        <ItemSearch visible={visible} setVisible={setVisible} />
+        <ItemSearch visible={visible} setVisible={setVisible} add_items={add_items} />
         <ConfigProvider
           drawer={{
             styles: {
@@ -390,7 +439,7 @@ const GraphView = forwardRef(
             }}
           >
             <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-              {/* <div style={{ display: 'flex', height: '57px' }}>
+              <div style={{ display: 'flex', height: '57px' }}>
                 <div
                   style={{ height: '57px', width: '16px', borderBottom: '1px solid #f0f0f0' }}
                 ></div>
@@ -402,6 +451,7 @@ const GraphView = forwardRef(
                   onChange={(v) => {
                     setActiveKey(v);
                   }}
+                  size="large"
                 />
                 <div
                   style={{
@@ -419,15 +469,15 @@ const GraphView = forwardRef(
                     onClick={() => closeDrawer()}
                   />
                 </div>
-              </div> */}
-              {/* <div
+              </div>
+              <div
                 style={{
                   padding: '16px',
                   paddingTop: '16px',
                   color: '#1a1a1a',
                   fontSize: '16px',
                   fontWeight: 'bold',
-                  height: '100%',
+                  height: 'calc(100% - 56px)',
                   overflow: 'hidden',
                   display: activeKey === '1' ? 'block' : 'none',
                 }}
@@ -490,7 +540,7 @@ const GraphView = forwardRef(
                 >
                   <Table columns={columns} dataSource={curData?.properties} pagination={false} />
                 </div>
-              </div> */}
+              </div>
               <div
                 style={{
                   padding: '16px',
@@ -498,12 +548,12 @@ const GraphView = forwardRef(
                   color: '#1a1a1a',
                   fontSize: '16px',
                   fontWeight: 'bold',
-                  height: '100%',
+                  height: 'calc(100% - 56px)',
                   overflow: 'hidden',
                   display: activeKey === '2' ? 'block' : 'none',
                 }}
               >
-                <div style={{ height: 'calc(100% - 122px)', overflowY: 'auto' }}>
+                <div style={{ height: 'calc(100% - 50px)', overflowY: 'auto' }}>
                   <div>点</div>
                   <Select
                     prefix="大小"
@@ -527,30 +577,21 @@ const GraphView = forwardRef(
                     defaultValue="#529BF8"
                     style={{ width: 288, marginTop: 12, borderRadius: 2 }}
                     labelRender={(props: any) => {
-                      return (
-                        <div
-                          style={{
-                            width: '16px',
-                            height: '16px',
-                            borderRadius: '2px',
-                            backgroundColor: props.value || '#529BF8',
-                          }}
-                        ></div>
-                      );
+                      return <ColorBlock color={props.value || '#529BF8'} />;
                     }}
                     onChange={(v) => {
                       setNodeColor(v);
                     }}
                     value={nodeColor}
                     options={[
-                      { value: '#887AF2', label: '#887AF2' },
-                      { value: '#529BF8', label: '#529BF8' },
-                      { value: '#52D4F8', label: '#52D4F8' },
-                      { value: '#4CEDCA', label: '#4CEDCA' },
-                      { value: '#80E35D', label: '#80E35D' },
-                      { value: '#F8B852', label: '#F8B852' },
-                      { value: '#F87E52', label: '#F87E52' },
-                      { value: '#F85D52', label: '#F85D52' },
+                      { value: '#887AF2', label: <ColorBlock color="#887AF2" /> },
+                      { value: '#529BF8', label: <ColorBlock color="#529BF8" /> },
+                      { value: '#52D4F8', label: <ColorBlock color="#52D4F8" /> },
+                      { value: '#4CEDCA', label: <ColorBlock color="#4CEDCA" /> },
+                      { value: '#80E35D', label: <ColorBlock color="#80E35D" /> },
+                      { value: '#F8B852', label: <ColorBlock color="#F8B852" /> },
+                      { value: '#F87E52', label: <ColorBlock color="#F87E52" /> },
+                      { value: '#F85D52', label: <ColorBlock color="#F85D52" /> },
                     ]}
                   />
                 </div>
@@ -573,6 +614,7 @@ const GraphView = forwardRef(
                       backgroundColor: '#fff',
                       borderRadius: '4px',
                       border: '1px solid #dedede',
+                      width: '88px',
                     }}
                   >
                     取消
@@ -584,6 +626,7 @@ const GraphView = forwardRef(
                       border: 'none',
                       borderRadius: '4px',
                       marginLeft: '10px',
+                      width: '88px',
                     }}
                     onClick={() => {
                       if (!updateNodeById || !curData?.id) return;
@@ -607,7 +650,32 @@ const GraphView = forwardRef(
 );
 
 export default GraphView;
-const ItemSearch = ({ visible, setVisible }: any) => {
+
+const ColorBlock = ({ color }: any) => {
+  return (
+    <div
+      style={{
+        width: '16px',
+        height: '16px',
+        borderRadius: '2px',
+        backgroundColor: color,
+      }}
+    ></div>
+  );
+};
+const ItemSearch = ({ visible, setVisible, add_items }: any) => {
+  const { url, token } = useServerState();
+  const { gientechSet } = useAppState();
+  const [nodeForm] = Form.useForm();
+  const [edgeForm] = Form.useForm();
+  const [fromNodeForm] = Form.useForm();
+  const [tailNodeForm] = Form.useForm();
+  const [nodeResult, setNodeResult] = useState<any>([]);
+  const [edgeResult, setEdgeResult] = useState<any>([]);
+  const [activeKey, setActiveKey] = useState('1');
+  const [showNodeSearch, setShowNodeSearch] = useState(true);
+  const [showEdgeSearch, setShowEdgeSearch] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -622,6 +690,111 @@ const ItemSearch = ({ visible, setVisible }: any) => {
       label: '语句查询',
     },
   ];
+  const queryNodes = async (params: any) => {
+    if (!url) {
+      console.log('====================================');
+      console.log('url为空');
+      console.log('====================================');
+      return;
+    }
+    try {
+      setBtnLoading(true);
+      const res = await nodeSearch(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        params
+      );
+      setBtnLoading(false);
+      if (res) {
+        const gData = transformGientechToG6(res);
+        setNodeResult(gData.nodes);
+        setShowNodeSearch(false);
+      }
+    } catch (error) {
+      setBtnLoading(false);
+      console.error('查询失败:', error);
+    }
+  };
+  const queryEdges = async (params: any) => {
+    if (!url) return;
+    try {
+      setBtnLoading(true);
+      const res = await edgeSearch(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        params
+      );
+      setBtnLoading(false);
+      if (res) {
+        const gData = transformGientechToG6(res);
+        setEdgeResult(gData.nodes);
+        setShowEdgeSearch(false);
+      }
+    } catch (error) {
+      setBtnLoading(false);
+      console.error('查询失败:', error);
+    }
+  };
+
+  const handleSearch = () => {
+    switch (activeKey) {
+      case '1':
+        if (!gientechSet) {
+          return message.warning('gientechSet为空');
+        }
+        const values = edgeForm.getFieldsValue();
+        const searchConditions = dealPro(values).filter(
+          (item: any) => item.propertyValue && item.propertyKey && item.operator
+        );
+        queryNodes({
+          nodeType: values.nodeType,
+          spaceName: gientechSet.spaceName,
+          searchConditions,
+        });
+        break;
+      case '2':
+        if (!gientechSet) {
+          return message.warning('gientechSet为空');
+        }
+        const edgeP = edgeForm.getFieldsValue();
+        const edgePropertiesConditions = dealPro(edgeP).filter(
+          (item: any) => item.propertyValue && item.propertyKey && item.operator
+        );
+        const param: any = {
+          edgeType: edgeP.edgeType,
+          spaceName: gientechSet.spaceName,
+          edgePropertiesConditions,
+        };
+        const fromNodeP = fromNodeForm.getFieldsValue();
+        const tailNodeP = tailNodeForm.getFieldsValue();
+        if (fromNodeP.nodeType) {
+          const searchConditions = dealPro(fromNodeP).filter(
+            (item: any) => item.propertyValue && item.propertyKey && item.operator
+          );
+          param.fromNodeSearchRequest = {
+            nodeType: fromNodeP.nodeType,
+            spaceName: gientechSet.spaceName,
+            searchConditions,
+          };
+        }
+        if (tailNodeP.nodeType) {
+          const searchConditions = dealPro(tailNodeP).filter(
+            (item: any) => item.propertyValue && item.propertyKey && item.operator
+          );
+          param.tailNodeSearchRequest = {
+            nodeType: tailNodeP.nodeType,
+            spaceName: gientechSet.spaceName,
+            searchConditions,
+          };
+        }
+        queryEdges(param);
+        break;
+    }
+  };
 
   return (
     <div
@@ -645,7 +818,9 @@ const ItemSearch = ({ visible, setVisible }: any) => {
           size="large"
           defaultActiveKey="1"
           items={items}
-          onChange={() => {}}
+          onChange={(v) => {
+            setActiveKey(v);
+          }}
         />
         <div
           style={{
@@ -664,30 +839,204 @@ const ItemSearch = ({ visible, setVisible }: any) => {
           />
         </div>
       </div>
-      <div style={{ height: 'calc(100% - 121px)' }}>
-        <Select
-          style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px', width: '363px' }}
-          placeholder="请选择类型"
-          options={[]}
+      <div
+        style={{ height: 'calc(100% - 121px)', overflowY: 'auto', overflowX: 'hidden' }}
+        className="scrollView"
+      >
+        <NodeSearchBox
+          activeKey={activeKey}
+          form={nodeForm}
+          nodeResult={nodeResult}
+          setShowNodeSearch={setShowNodeSearch}
+          showNodeSearch={showNodeSearch}
+          setNodeResult={setNodeResult}
         />
-        <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-          <div
+        <EdgeSearchBox
+          activeKey={activeKey}
+          form={edgeForm}
+          setShowEdgeSearch={setShowEdgeSearch}
+          showEdgeSearch={showEdgeSearch}
+          edgeResult={edgeResult}
+          setEdgeResult={setEdgeResult}
+          fromForm={fromNodeForm}
+          tailForm={tailNodeForm}
+        />
+        <div style={{ display: activeKey === '3' ? 'block' : 'none' }}>语句查询</div>
+      </div>
+      <div
+        style={{
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          borderTop: '1px solid #f0f0f0',
+          paddingRight: '20px',
+        }}
+      >
+        {(activeKey === '1' && showNodeSearch) || (activeKey === '2' && showEdgeSearch) ? (
+          <>
+            <Button
+              type="primary"
+              onClick={() => {}}
+              style={{
+                color: '#555555',
+                backgroundColor: '#fff',
+                borderRadius: '4px',
+                border: '1px solid #dedede',
+                width: '88px',
+              }}
+            >
+              重置
+            </Button>
+            <Button
+              ghost
+              style={{
+                background: 'linear-gradient(#2867FF, #8789FF)',
+                border: 'none',
+                borderRadius: '4px',
+                marginLeft: '10px',
+                width: '88px',
+              }}
+              onClick={handleSearch}
+              loading={btnLoading}
+            >
+              查询
+            </Button>
+          </>
+        ) : (
+          <Button
+            ghost
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginTop: '20px',
+              background: 'linear-gradient(#2867FF, #8789FF)',
+              border: 'none',
+              borderRadius: '4px',
+              marginLeft: '10px',
+              width: '88px',
+            }}
+            onClick={() => {
+              add_items(activeKey === '1' ? { nodes: nodeResult } : []);
             }}
           >
-            <div style={{ fontSize: '14px', color: '#2A2A2A' }}>查询条件</div>
-            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <img src={addSearch} width={14} height={14} style={{ marginRight: '4px' }} />
-              <div style={{ color: '#305EBA' }}>添加查询条件</div>
-            </div>
-          </div>
-        </div>
+            添加
+          </Button>
+        )}
       </div>
-      <div style={{ height: '64px', border: '1px solid #f0f0f0' }}></div>
+    </div>
+  );
+};
+
+const NodeSearchBox = (props: {
+  activeKey: string;
+  setShowNodeSearch: (arg: boolean) => void;
+  showNodeSearch: boolean;
+  form: any;
+  nodeResult: any;
+  setNodeResult: (arg: any) => void;
+}) => {
+  const { activeKey, setShowNodeSearch, showNodeSearch, form, nodeResult } = props;
+
+  const handleResult = (type: any) => {
+    switch (type) {
+      case 'back':
+        setShowNodeSearch(true);
+        break;
+    }
+  };
+
+  const { nodeInfo } = useAppState();
+  const nodeInfoOptions = useMemo(() => {
+    return nodeInfo?.map((item: any) => {
+      return {
+        label: item.nodeType,
+        value: item.nodeType,
+        properties: item.properties,
+      };
+    });
+  }, [nodeInfo]);
+  return (
+    <div style={{ display: activeKey === '1' ? 'block' : 'none' }}>
+      <div style={{ display: showNodeSearch ? 'block' : 'none' }}>
+        <SearchCom options={nodeInfoOptions} form={form} typeName="nodeType" type="head" />
+      </div>
+      <div style={{ display: showNodeSearch ? 'none' : 'block' }}>
+        <ItemSearchResult data={nodeResult} handleResult={handleResult} {...props} />
+      </div>
+    </div>
+  );
+};
+
+const EdgeSearchBox = (props: {
+  activeKey: string;
+  setShowEdgeSearch: (arg: boolean) => void;
+  showEdgeSearch: boolean;
+  form: any;
+  edgeResult: any;
+  setEdgeResult: (arg: any) => void;
+  fromForm: any;
+  tailForm: any;
+}) => {
+  const { activeKey, setShowEdgeSearch, showEdgeSearch, form, edgeResult, fromForm, tailForm } =
+    props;
+
+  const handleResult = (type: any) => {
+    switch (type) {
+      case 'back':
+        setShowEdgeSearch(true);
+        break;
+    }
+  };
+
+  const { edgeInfo, nodeInfo } = useAppState();
+  const edgeInfoOptions = useMemo(() => {
+    return edgeInfo?.map((item: any) => {
+      return {
+        label: item.edgeType,
+        value: item.edgeType,
+        properties: item.properties,
+      };
+    });
+  }, [edgeInfo]);
+  const nodeInfoOptions = useMemo(() => {
+    return nodeInfo?.map((item: any) => {
+      return {
+        label: item.nodeType,
+        value: item.nodeType,
+        properties: item.properties,
+      };
+    });
+  }, [nodeInfo]);
+  return (
+    <div style={{ display: activeKey === '2' ? 'block' : 'none' }}>
+      <div style={{ display: showEdgeSearch ? 'block' : 'none' }}>
+        <SearchCom options={edgeInfoOptions} form={form} typeName="edgeType" type="head" />
+        <Divider />
+        <div
+          style={{
+            fontSize: '14px',
+            color: '#2A2A2A',
+            marginLeft: '20px',
+            fontWeight: 700,
+          }}
+        >
+          头节点
+        </div>
+        <SearchCom options={nodeInfoOptions} form={fromForm} typeName="nodeType" />
+        <Divider />
+        <div
+          style={{
+            fontSize: '14px',
+            color: '#2A2A2A',
+            marginLeft: '20px',
+            fontWeight: 700,
+          }}
+        >
+          尾节点
+        </div>
+        <SearchCom options={nodeInfoOptions} form={tailForm} typeName="nodeType" />
+      </div>
+      <div style={{ display: showEdgeSearch ? 'none' : 'block' }}>
+        <ItemSearchResult data={edgeResult} handleResult={handleResult} {...props} />
+      </div>
     </div>
   );
 };

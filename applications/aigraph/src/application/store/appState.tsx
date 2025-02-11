@@ -26,8 +26,12 @@ interface AppState {
     graph_type: 'gitech_finance' | 'default';
     mode: 'local' | 'server';
   }) => void;
-  setGientechSet: (config: { spaceName: string; filedId?: string; limit: number }) => void;
+  setGientechSet: (config: { spaceName: string; filedId?: number; limit: number }) => void;
   setGraphData: (data: GraphData) => void; // 添加新方法声明
+  nodeInfo: any[];
+  setNodeInfo: (data: any[]) => void;
+  edgeInfo: any[];
+  setEdgeInfo: (data: any[]) => void;
   //setAppStatus: (status: AppStatus) => void;
 }
 export const useAppState = create<AppState>((set) => ({
@@ -85,6 +89,20 @@ export const useAppState = create<AppState>((set) => ({
     set(
       produce((draft) => {
         draft.graphData = data;
+      })
+    ),
+  nodeInfo: [],
+  setNodeInfo: (data) =>
+    set(
+      produce((draft) => {
+        draft.nodeInfo = data;
+      })
+    ),
+  edgeInfo: [],
+  setEdgeInfo: (data) =>
+    set(
+      produce((draft) => {
+        draft.edgeInfo = data;
       })
     ),
 }));

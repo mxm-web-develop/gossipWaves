@@ -24,7 +24,7 @@ const MyContextMenu = ({
   return (
     <div id="context-menu" className="fixed bg-white rounded-md shadow-md dark:bg-slate-950">
       {targetInfo.targetType === 'node' && (
-        <NodeMenu handleContextMenuEvent={handleContextMenuEvent} />
+        <NodeMenu handleContextMenuEvent={handleContextMenuEvent} targetInfo={targetInfo} />
       )}
     </div>
   );
@@ -32,7 +32,7 @@ const MyContextMenu = ({
 
 export default MyContextMenu;
 
-const NodeMenu = ({ handleContextMenuEvent }: any) => {
+const NodeMenu = ({ handleContextMenuEvent, targetInfo }: any) => {
   const items = [
     {
       key: 'graphAiSub1',
@@ -70,7 +70,7 @@ const NodeMenu = ({ handleContextMenuEvent }: any) => {
       style={{ width: 120, borderRadius: '4px 0 0 4px', padding: 0, fontSize: '12px' }}
       items={items}
       onClick={({ item, key, keyPath, domEvent }: any) => {
-        handleContextMenuEvent && handleContextMenuEvent(key);
+        handleContextMenuEvent && handleContextMenuEvent(key, targetInfo);
         console.log('====================================');
         console.log(item, key, keyPath, domEvent);
         console.log('====================================');

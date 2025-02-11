@@ -60,8 +60,8 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
   };
 
   // 转换节点
-  g6Data.nodes = data.nodeList.map((item) => ({
-    id: item.properties?.id,
+  g6Data.nodes = (data.nodeList || []).map((item) => ({
+    id: item.vid,
     data: { name: item.properties?.name || '', category: item.nodeType },
     properties: Object.entries(item.properties).map((prop: any) => {
       return {
@@ -72,15 +72,20 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
   }));
 
   // 转换边
-  g6Data.edges = data.edgeList.map((item) => ({
-    id: item.id,
-    data: {
-      name: item.properties?.name || item.edgeType,
-      category: item.edgeType,
-    },
-    source: item.src.properties.id,
-    target: item.dst.properties.id,
-  }));
+  g6Data.edges = (data.edgeList || []).map((item) => {
+    console.log('====================================');
+    console.log('item.src.vid', item.id, item.src);
+    console.log('====================================');
+    return {
+      id: item.id,
+      data: {
+        name: item.properties?.name || item.edgeType,
+        category: item.edgeType,
+      },
+      source: item.src.vid,
+      target: item.dst.vid,
+    };
+  });
 
   return g6Data;
 }
@@ -88,7 +93,7 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
 export const convertNodeList = (data: any) => {
   return data.map((item: any) => {
     return {
-      id: item.properties?.id,
+      id: item.vid,
       data: { name: item.properties?.name || '', category: item.nodeType },
       properties: Object.entries(item.properties).map((prop: any) => {
         return {
@@ -107,8 +112,8 @@ export const convertEdgeList = (data: any) => {
         name: item.properties?.name || item.edgeType,
         category: item.edgeType,
       },
-      source: item.src.properties.id,
-      target: item.dst.properties.id,
+      source: item.src.vid,
+      target: item.dst.vid,
     };
   });
 };
