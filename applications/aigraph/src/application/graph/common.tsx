@@ -6,8 +6,25 @@ import { message } from 'antd';
 import { useAppState } from '../store/appState';
 import { contextMenuType } from './MyContextMenu';
 import { AI_GRAPH_TYPE } from '../views/GraphView';
+import { uniqArr2By, uniqBy } from '../utils/tools';
+import { nodeStepSearch } from '../services/apis/whole_graph_search';
+import { transformGientechToG6 } from '../utils/convertData';
 
-export const useCommonFn = (graph: any, handleEvent: any, targetInfo: any) => {
+export const useCommonFn = ({
+  graph,
+  handleEvent,
+  targetInfo,
+  gientechSet,
+  url,
+  token,
+}: {
+  graph: any;
+  handleEvent: any;
+  targetInfo: any;
+  gientechSet: any;
+  url: null | string;
+  token: null | string;
+}) => {
   const { changeStatus } = useAppState();
   const get_items = (): GraphData | any => {
     if (!graph) return console.error('图谱未渲染完成');
@@ -22,14 +39,19 @@ export const useCommonFn = (graph: any, handleEvent: any, targetInfo: any) => {
     }
 
     try {
-      const { nodes = [], edges = [] } = data;
-
-      // 使用 changeData 而不是 setData，这样可以保持现有数据
-      _graph.addData({
-        nodes,
-        edges,
+      if (!_graph) return console.error('图谱未渲染完成');
+      _graph.addData((prev: GraphData) => {
+        const { nodes: oldNodes, edges: oldEdges } = prev;
+        const { nodes, edges } = data;
+        let newNodes = uniqArr2By(oldNodes || [], nodes || [], 'id');
+        let newEdges = uniqArr2By(oldEdges || [], edges || [], 'id');
+        newNodes = uniqBy(newNodes, 'id');
+        newEdges = uniqBy(newEdges, 'id');
+        return {
+          nodes: newNodes,
+          edges: newEdges,
+        };
       });
-
       _graph.render();
     } catch (error) {
       console.error('添加数据时发生错误:', error);
@@ -70,20 +92,43 @@ export const useCommonFn = (graph: any, handleEvent: any, targetInfo: any) => {
     graph.updateNodeData([{ id, style: { ...style } }]);
     graph.draw();
   };
-
+  const nodeStepSearchFn = async (step: number) => {
+    if (!url || !token) return;
+    try {
+      const nodeData = graph.getElementDataByState('node', 'selected');
+      const res = await nodeStepSearch(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        { spaceName: gientechSet.spaceName, step, nodes: nodeData }
+      );
+      console.log('====================================');
+      console.log('step------>', res);
+      console.log('====================================');
+      const gData = transformGientechToG6(res);
+      add_items(gData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleContextMenuEvent = (event: any, data?: any) => {
     console.log(event, data);
     switch (event) {
       case contextMenuType['NODE:ONCE']:
+        nodeStepSearchFn(1);
         // Handle NODE:ONCE event
         break;
       case contextMenuType['NODE:SECOND_DEGREE']:
+        nodeStepSearchFn(2);
         // Handle NODE:SECOND_DEGREE event
         break;
       case contextMenuType['NODE:THIRD_DEGREE']:
+        nodeStepSearchFn(3);
         // Handle NODE:THIRD_DEGREE event
         break;
       case contextMenuType['NODE:FOUR_DEGREE']:
+        nodeStepSearchFn(4);
         // Handle EDGE:ONCE event
         break;
       case contextMenuType['NODE:ANT_SELECT']:

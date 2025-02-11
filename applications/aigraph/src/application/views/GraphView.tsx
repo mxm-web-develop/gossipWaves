@@ -7,7 +7,6 @@ import { useAppState, useServerState } from '../store';
 import MyContextMenu, { contextMenuType } from '../graph/MyContextMenu';
 import * as Separator from '@radix-ui/react-separator';
 import { DataID } from '@antv/g6/lib/types';
-import { uid } from 'uid';
 import {
   Button,
   ConfigProvider,
@@ -18,11 +17,6 @@ import {
   Tabs,
   TabsProps,
   Form,
-  Checkbox,
-  Row,
-  Col,
-  Input,
-  Radio,
 } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import './style.css';
@@ -40,12 +34,12 @@ import LoadingGraph from './LoadingGraph';
 import ErrorGraph from './ErrorGraph';
 import { useCommonFn } from '../graph/common';
 import { registerDefaultGraph } from '../graph/default';
-import { ArrowLeft } from 'lucide-react';
-import CheckOutlined from '../assets/img/CheckOutlined.png';
-import { edgeSearch, nodeSearch } from '../services/apis/whole_graph_search';
-import { transformGientechToG6 } from '../utils/convertData';
+import { cypherSearch, edgeSearch, nodeSearch } from '../services/apis/whole_graph_search';
+import { convertEdgeToNode, transformGientechToG6 } from '../utils/convertData';
 import SearchCom from './components/SearchCom';
 import ItemSearchResult from './components/ItemSearchResult';
+import CodeSearchTemplate from './components/CodeSearchTemplate';
+import { uniqBy } from '../utils/tools';
 const ZOOM = 0.1;
 
 export type GraphRefType = {
@@ -112,8 +106,9 @@ const GraphView = forwardRef(
     ref: any
   ) => {
     const { createBy } = props;
-    const { setGraph, graph, status, graphData, setGraphData, changeStatus, graph_type } =
+    const { setGraph, graph, status, graphData, setGraphData, changeStatus, gientechSet } =
       useAppState();
+    const { url, token } = useServerState();
     const containerRef = useRef<HTMLDivElement>(null);
     const [targetInfo, setTargetInfo]: any = useState({});
     const isFullScreen = useRef(false);
@@ -180,7 +175,7 @@ const GraphView = forwardRef(
       clear_items,
       antSelect,
       updateNodeById,
-    } = useCommonFn(graph, handleEvent, targetInfo);
+    } = useCommonFn({ graph, handleEvent, targetInfo, gientechSet, url, token });
 
     const items: TabsProps['items'] = [
       {
@@ -316,12 +311,12 @@ const GraphView = forwardRef(
         }
       };
     }, [containerRef.current, graphData]);
-
+    const [graphInfo, setGraphInfo]: any = useState({});
     // 注册事件监听
     useEffect(() => {
       if (!graph) return;
       console.log('注册事件监听', graph);
-      registerDefaultGraph(graph, setGraphData, handleEvent);
+      registerDefaultGraph({ graph, handleEvent, setGraphInfo });
     }, [graph]);
 
     return (
@@ -367,7 +362,7 @@ const GraphView = forwardRef(
                     }}
                   >
                     <span style={{ color: '#888888' }}>节点数:</span>
-                    <span style={{ color: '#555555' }}>{graphData?.nodes?.length}</span>
+                    <span style={{ color: '#555555' }}>{graphInfo?.nodeCount}</span>
                   </div>
                   <Separator.Root
                     style={{ backgroundColor: '#EEEEEE', height: '20px', width: '1px' }}
@@ -381,7 +376,7 @@ const GraphView = forwardRef(
                     }}
                   >
                     <span style={{ color: '#888888' }}>关系数:</span>
-                    <span style={{ color: '#555555' }}>{graphData?.edges?.length}</span>
+                    <span style={{ color: '#555555' }}>{graphInfo?.edgeCount}</span>
                   </div>
                   {createBy && (
                     <>
@@ -663,6 +658,7 @@ const ColorBlock = ({ color }: any) => {
     ></div>
   );
 };
+const defaultCode = `//点击进入编辑模式\n//编辑模式中点击空白或者键盘‘esc'\n//退出编辑`;
 const ItemSearch = ({ visible, setVisible, add_items }: any) => {
   const { url, token } = useServerState();
   const { gientechSet } = useAppState();
@@ -672,9 +668,12 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
   const [tailNodeForm] = Form.useForm();
   const [nodeResult, setNodeResult] = useState<any>([]);
   const [edgeResult, setEdgeResult] = useState<any>([]);
+  const [codeResult, setCodeResult] = useState<any>([]);
   const [activeKey, setActiveKey] = useState('1');
   const [showNodeSearch, setShowNodeSearch] = useState(true);
   const [showEdgeSearch, setShowEdgeSearch] = useState(true);
+  const [showCodeSearch, setShowCodeSearch] = useState(true);
+  const [searchCode, setSearchCode] = useState(defaultCode);
   const [btnLoading, setBtnLoading] = useState(false);
   const items: TabsProps['items'] = [
     {
@@ -717,6 +716,43 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
       console.error('查询失败:', error);
     }
   };
+  const queryCypher = async (params: any) => {
+    if (!url) return;
+    try {
+      setBtnLoading(true);
+      const res = await cypherSearch(
+        {
+          baseURL: url,
+          token: token || '',
+        },
+        params
+      );
+      setBtnLoading(false);
+      if (res) {
+        console.log('====================================');
+        console.log('sgasdga', res);
+        console.log('====================================');
+        //const gData = transformGientechToG6(res);
+        setCodeResult(
+          res.map((item: any) => {
+            const { props, id } = item;
+            const { columnContent, content, id: vid, name, type } = props[0];
+            return {
+              ...JSON.parse(content),
+              columnContent,
+              type,
+              id: vid,
+            };
+          })
+        );
+        setShowCodeSearch(false);
+      }
+    } catch (error) {
+      setBtnLoading(false);
+      console.error('查询失败:', error);
+    }
+  };
+
   const queryEdges = async (params: any) => {
     if (!url) return;
     try {
@@ -731,7 +767,7 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
       setBtnLoading(false);
       if (res) {
         const gData = transformGientechToG6(res);
-        setEdgeResult(gData.nodes);
+        setEdgeResult(gData.edges);
         setShowEdgeSearch(false);
       }
     } catch (error) {
@@ -746,15 +782,18 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
         if (!gientechSet) {
           return message.warning('gientechSet为空');
         }
-        const values = edgeForm.getFieldsValue();
-        const searchConditions = dealPro(values).filter(
+        const nodeP = nodeForm.getFieldsValue();
+        const searchConditions = dealPro(nodeP).filter(
           (item: any) => item.propertyValue && item.propertyKey && item.operator
         );
-        queryNodes({
-          nodeType: values.nodeType,
+        const p1: any = {
+          nodeType: nodeP.nodeType,
           spaceName: gientechSet.spaceName,
+          fileId: gientechSet.filedId,
           searchConditions,
-        });
+        };
+        gientechSet.filedId && (p1.filedId = gientechSet.filedId);
+        queryNodes(p1);
         break;
       case '2':
         if (!gientechSet) {
@@ -791,7 +830,16 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
             searchConditions,
           };
         }
+        gientechSet.filedId && (param.filedId = gientechSet.filedId);
         queryEdges(param);
+        break;
+      case '3':
+        if (!gientechSet) {
+          return message.warning('gientechSet为空');
+        }
+        const p3: any = { spaceName: gientechSet.spaceName, cypher: searchCode };
+        gientechSet.filedId && (p3.filedId = gientechSet.filedId);
+        queryCypher(p3);
         break;
     }
   };
@@ -861,7 +909,15 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
           fromForm={fromNodeForm}
           tailForm={tailNodeForm}
         />
-        <div style={{ display: activeKey === '3' ? 'block' : 'none' }}>语句查询</div>
+        <CodeSearchBox
+          activeKey={activeKey}
+          showCodeSearch={showCodeSearch}
+          setShowCodeSearch={setShowCodeSearch}
+          searchCode={searchCode}
+          setSearchCode={setSearchCode}
+          codeResult={codeResult}
+          setCodeResult={setCodeResult}
+        />
       </div>
       <div
         style={{
@@ -873,7 +929,9 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
           paddingRight: '20px',
         }}
       >
-        {(activeKey === '1' && showNodeSearch) || (activeKey === '2' && showEdgeSearch) ? (
+        {(activeKey === '1' && showNodeSearch) ||
+        (activeKey === '2' && showEdgeSearch) ||
+        (activeKey === '3' && showCodeSearch) ? (
           <>
             <Button
               type="primary"
@@ -914,12 +972,87 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
               width: '88px',
             }}
             onClick={() => {
-              add_items(activeKey === '1' ? { nodes: nodeResult } : []);
+              activeKey === '1' &&
+                add_items({ nodes: nodeResult.filter((item: any) => item.choosed) });
+              if (activeKey === '2') {
+                const res: any = convertEdgeToNode(edgeResult.filter((item: any) => item.choosed));
+                add_items(res);
+                return;
+              }
+
+              if (activeKey === '3') {
+                const r = codeResult.filter((item: any) => item.choosed);
+                const nodeList = r.filter((item: any) => item.type === 'NODE');
+                const edgeList = r.filter((item: any) => item.type === 'EDGE');
+                const { nodes, edges } = convertEdgeToNode(edgeList);
+                const gData = transformGientechToG6({ nodeList, edgeList: [] });
+                add_items({ nodes: nodes.concat(gData.nodes), edges });
+              }
             }}
           >
             添加
           </Button>
         )}
+      </div>
+    </div>
+  );
+};
+
+const CodeSearchBox = (props: {
+  activeKey: string;
+  showCodeSearch: boolean;
+  setShowCodeSearch: (arg: boolean) => void;
+  searchCode: string;
+  codeResult: string;
+  setSearchCode: (arg: string) => void;
+  setCodeResult: (arg: string) => void;
+}) => {
+  const {
+    activeKey,
+    showCodeSearch,
+    searchCode,
+    setShowCodeSearch,
+    codeResult,
+    setCodeResult,
+    setSearchCode,
+  } = props;
+
+  const eventEmitter = (type: string, data?: any) => {
+    switch (type) {
+      case 'code-search:search':
+        break;
+      case 'code-search:setCode':
+        setSearchCode(data);
+        break;
+    }
+  };
+
+  const handleResult = (type: any) => {
+    switch (type) {
+      case 'back':
+        setShowCodeSearch(true);
+        break;
+    }
+  };
+  return (
+    <div style={{ display: activeKey === '3' ? 'block' : 'none', height: '100%' }}>
+      <div
+        style={{
+          display: showCodeSearch ? 'block' : 'none',
+          padding: '20px',
+          height: '100%',
+        }}
+      >
+        <CodeSearchTemplate searchCode={searchCode} eventsEmitter={eventEmitter} />
+      </div>
+      <div style={{ display: showCodeSearch ? 'none' : 'block' }}>
+        <ItemSearchResult
+          data={codeResult}
+          handleResult={handleResult}
+          setResult={setCodeResult}
+          resultType="cypher"
+          {...props}
+        />
       </div>
     </div>
   );
@@ -933,7 +1066,7 @@ const NodeSearchBox = (props: {
   nodeResult: any;
   setNodeResult: (arg: any) => void;
 }) => {
-  const { activeKey, setShowNodeSearch, showNodeSearch, form, nodeResult } = props;
+  const { activeKey, setShowNodeSearch, showNodeSearch, form, nodeResult, setNodeResult } = props;
 
   const handleResult = (type: any) => {
     switch (type) {
@@ -959,7 +1092,13 @@ const NodeSearchBox = (props: {
         <SearchCom options={nodeInfoOptions} form={form} typeName="nodeType" type="head" />
       </div>
       <div style={{ display: showNodeSearch ? 'none' : 'block' }}>
-        <ItemSearchResult data={nodeResult} handleResult={handleResult} {...props} />
+        <ItemSearchResult
+          data={nodeResult}
+          handleResult={handleResult}
+          setResult={setNodeResult}
+          resultType="node"
+          {...props}
+        />
       </div>
     </div>
   );
@@ -975,8 +1114,16 @@ const EdgeSearchBox = (props: {
   fromForm: any;
   tailForm: any;
 }) => {
-  const { activeKey, setShowEdgeSearch, showEdgeSearch, form, edgeResult, fromForm, tailForm } =
-    props;
+  const {
+    activeKey,
+    setShowEdgeSearch,
+    showEdgeSearch,
+    form,
+    edgeResult,
+    fromForm,
+    tailForm,
+    setEdgeResult,
+  } = props;
 
   const handleResult = (type: any) => {
     switch (type) {
@@ -1035,7 +1182,13 @@ const EdgeSearchBox = (props: {
         <SearchCom options={nodeInfoOptions} form={tailForm} typeName="nodeType" />
       </div>
       <div style={{ display: showEdgeSearch ? 'none' : 'block' }}>
-        <ItemSearchResult data={edgeResult} handleResult={handleResult} {...props} />
+        <ItemSearchResult
+          data={edgeResult}
+          handleResult={handleResult}
+          setResult={setEdgeResult}
+          resultType="edge"
+          {...props}
+        />
       </div>
     </div>
   );

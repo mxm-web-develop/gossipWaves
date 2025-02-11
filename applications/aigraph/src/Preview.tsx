@@ -13,8 +13,8 @@ function Preview() {
           gientechServer={{
             url: `api_proxy`,
             token: token,
-            spaceName: '图解析20250208_3',
-            fileId: 53591,
+            spaceName: '图解析20250211_2',
+            fileId: 53805,
           }}
           initData={null}
           createBy={'admin'}

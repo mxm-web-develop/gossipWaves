@@ -2,12 +2,26 @@ import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import CheckOutlined from '../../assets/img/CheckOutlined.png';
 import { Empty } from 'antd';
-const ItemSearchResult = ({ data, handleResult, setNodeResult }: any) => {
+import arrowLeft from '../../assets/img/arrowLeft.png';
+
+const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) => {
   useEffect(() => {
     console.log('====================================');
-    console.log(data);
+    console.log(data, 12112);
     console.log('====================================');
   }, [data]);
+  const getName = (item: any) => {
+    return resultType === 'edge'
+      ? item.src.properties?.name || item.nodeType
+      : resultType === 'node'
+      ? item?.data?.name
+      : item.type === 'EDGE'
+      ? item.src?.properties?.name
+      : item.properties?.name || item.nodeType;
+  };
+  const getName2 = (item: any) => {
+    return item.dst.properties?.name || item.nodeType;
+  };
   return (
     <div style={{ padding: '12px 20px' }}>
       <div
@@ -17,7 +31,9 @@ const ItemSearchResult = ({ data, handleResult, setNodeResult }: any) => {
         }}
       >
         <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
-        <span style={{ color: '#2a2a2a', fontSize: '14px' }}>点查询结果</span>
+        <span style={{ color: '#2a2a2a', fontSize: '14px' }}>
+          {resultType === 'node' ? '点' : resultType === 'edge' ? '线' : '语句'}查询结果
+        </span>
       </div>
       {(data || []).map((item: any, index: number) => {
         return (
@@ -36,7 +52,7 @@ const ItemSearchResult = ({ data, handleResult, setNodeResult }: any) => {
               backgroundColor: item.choosed ? '#F1F5FF' : '#fff',
             }}
             onClick={() => {
-              setNodeResult((pre: any) => {
+              setResult((pre: any) => {
                 return pre.map((i: any) => {
                   if (i.id === item.id) {
                     return { ...i, choosed: !i.choosed };
@@ -46,34 +62,61 @@ const ItemSearchResult = ({ data, handleResult, setNodeResult }: any) => {
               });
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div
-                style={{
-                  background: '#DBBDA0',
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '4px',
-                  fontSize: '20px',
-                  color: '#fff',
-                  lineHeight: '32px',
-                  textAlign: 'center',
-                }}
-              >
-                {item.category ? item.category.substr(0, 1) : '圆'}
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+                alignItems: 'center',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <IconCom str={getName(item).substr(0, 1) || ''} />
+                <div
+                  style={{
+                    marginLeft: '12px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    color: '#2a2a2a',
+                    fontSize: '14px',
+                    width: resultType === 'edge' || item.type === 'EDGE' ? '60px' : '255px',
+                  }}
+                >
+                  {getName(item)}
+                </div>
               </div>
-              <div
-                style={{
-                  width: '255px',
-                  marginLeft: '12px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  color: '#2a2a2a',
-                  fontSize: '14px',
-                }}
-              >
-                {item?.data?.name}
-              </div>
+              {(resultType === 'edge' || item.type === 'EDGE') && (
+                <>
+                  <img
+                    src={arrowLeft}
+                    width={12}
+                    height={12}
+                    style={{ flexShrink: 0, margin: '0 16px' }}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                    }}
+                  >
+                    <IconCom str={getName2(item).substr(0, 1) || ''} />
+                    <div
+                      style={{
+                        marginLeft: '12px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        color: '#2a2a2a',
+                        fontSize: '14px',
+                        width: resultType === 'edge' || item.type === 'EDGE' ? '60px' : '255px',
+                      }}
+                    >
+                      {getName2(item)}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
             {item.choosed && <img src={CheckOutlined} width={20} height={20} />}
           </div>
@@ -85,3 +128,22 @@ const ItemSearchResult = ({ data, handleResult, setNodeResult }: any) => {
 };
 
 export default ItemSearchResult;
+
+const IconCom = ({ str }: { str: string }) => {
+  return (
+    <div
+      style={{
+        background: '#BD9CFF',
+        width: '32px',
+        height: '32px',
+        borderRadius: '4px',
+        fontSize: '20px',
+        color: '#fff',
+        lineHeight: '32px',
+        textAlign: 'center',
+      }}
+    >
+      {str}
+    </div>
+  );
+};

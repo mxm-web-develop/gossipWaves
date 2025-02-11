@@ -2,20 +2,16 @@
 import { Graph } from '@antv/g6';
 import { AI_GRAPH_TYPE } from '../../views/GraphView';
 
-export const registerDefaultGraph = (
-  graph: Graph,
-  setGraphData: (arg: any) => void,
-  handleEvent?: (type: string, data?: any) => any
-) => {
+export const registerDefaultGraph = ({ graph, handleEvent, setGraphInfo }: any) => {
   try {
     graph.on('node:click', (e: any) => {
       const id = e.target.id;
-      console.log('node:click', e.target);
+      console.log('node:click', graph.getElementData(id));
       //handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_NODE, graph.getElementData(id));
     });
     graph.on('edge:click', (e: any) => {
       const id = e.target.id;
-      console.log('edge:click', e.target);
+      console.log('edge:click', graph.getElementData(id));
       //handleEvent && handleEvent(AI_GRAPH_TYPE.CLICK_EDGE, graph.getElementData(id));
     });
     graph.on('canvas:click', (e: any) => {
@@ -38,9 +34,13 @@ export const registerDefaultGraph = (
     });
 
     graph.on('afterdraw', function (event: any) {
-      // graph.fitCenter({
-      //   duration: 830,
-      // });
+      const { edges, nodes } = graph.getData();
+      setGraphInfo({ nodeCount: nodes.length, edgeCount: edges.length });
+    });
+
+    graph.on('afterrender', function (event: any) {
+      const { edges, nodes } = graph.getData();
+      setGraphInfo({ nodeCount: nodes.length, edgeCount: edges.length });
     });
 
     let startTimeRender = 0;

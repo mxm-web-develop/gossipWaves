@@ -12,6 +12,7 @@ function LoadingGraph() {
         display: 'flex',
         justifyContent: 'center',
         backgroundColor: 'white',
+        zIndex: 9999,
       }}
     >
       <div

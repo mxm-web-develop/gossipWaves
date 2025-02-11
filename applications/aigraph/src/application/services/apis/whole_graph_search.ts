@@ -70,6 +70,23 @@ export const edgeSearchConfig = {
   response_type: {} as WholeGraphSearchResponse,
 };
 
+export const cypherSearchConfig = {
+  url: '/search/cypherSearch',
+  method: 'post',
+  mockData: wholeGraphSearchMock,
+  description: '',
+  request_type: {} as WholeGraphSearchRequest,
+  response_type: {} as WholeGraphSearchResponse,
+};
+
+export const nodeStepSearchConfig = {
+  url: '/search/nodeStepSearch',
+  method: 'post',
+  mockData: wholeGraphSearchMock,
+  description: '',
+  request_type: {} as WholeGraphSearchRequest,
+  response_type: {} as WholeGraphSearchResponse,
+};
 import { createAxiosInstance, mockApiResponse } from '../axios_instant';
 
 let instance: any = null;
@@ -197,6 +214,48 @@ export async function edgeSearch(
     const response = await instance({
       url: edgeSearchConfig.url,
       method: edgeSearchConfig.method,
+      data,
+    });
+    return response.data as unknown as any;
+  } catch (error) {
+    console.error('search failed:', error);
+    throw error;
+  }
+}
+
+export async function cypherSearch(
+  network: {
+    baseURL: string;
+    token?: string;
+  },
+  data: any
+): Promise<any> {
+  instance = instance || createAxiosInstance(network.baseURL, network.token);
+  try {
+    const response = await instance({
+      url: cypherSearchConfig.url,
+      method: cypherSearchConfig.method,
+      data,
+    });
+    return response.data as unknown as any;
+  } catch (error) {
+    console.error('search failed:', error);
+    throw error;
+  }
+}
+
+export async function nodeStepSearch(
+  network: {
+    baseURL: string;
+    token?: string;
+  },
+  data: any
+): Promise<any> {
+  instance = instance || createAxiosInstance(network.baseURL, network.token);
+  try {
+    const response = await instance({
+      url: nodeStepSearchConfig.url,
+      method: nodeStepSearchConfig.method,
       data,
     });
     return response.data as unknown as any;
