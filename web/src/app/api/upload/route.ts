@@ -1,116 +1,52 @@
-import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-import { existsSync } from 'fs';
+import { NextRequest, NextResponse } from "next/server";
+import { Client } from "minio";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+const minioClient = new Client({
+  endPoint: process.env.MINIO_ENDPOINT!,
+  port: Number(process.env.MINIO_PORT),
+  useSSL: process.env.MINIO_USE_SSL === "true",
+  accessKey: process.env.MINIO_ACCESS_KEY!,
+  secretKey: process.env.MINIO_SECRET_KEY!,
+});
 
-// 允许的文件类型配置
-const ALLOWED_TYPES = {
-  pdf: ['application/pdf'],
-  image: ['image/jpeg', 'image/png', 'image/gif']
-};
-
-const maxSize = 80 * 1024 * 1024; // 80MB
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const uploadType = formData.get('type') as string; // 'cover' | 'post' | 'article'
-    const postId = formData.get('postId') as string; // 富文本编辑器的文章ID
-    
+    const file = formData.get("file") as File;
+
     if (!file) {
-      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+      return NextResponse.json({ error: "没有文件" }, { status: 400 });
     }
 
-    // 验证文件大小
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: 'File size exceeds limit (80MB)' },
-        { status: 400 }
-      );
+    const buffer = await file.arrayBuffer();
+    const bucketName = process.env.MINIO_BUCKET_NAME || "test";
+    const objectName = `${Date.now()}-${file.name}`;
+
+    // 确保 bucket 存在
+    const bucketExists = await minioClient.bucketExists(bucketName);
+    if (!bucketExists) {
+      await minioClient.makeBucket(bucketName);
     }
 
-    // 确定文件存储路径和验证文件类型
-    let uploadDir: string;
-    let fileUrl: string;
-    
-    switch (uploadType) {
-      case 'article':
-        if (!ALLOWED_TYPES.pdf.includes(file.type)) {
-          return NextResponse.json({ error: 'Only PDF files are allowed for articles' }, { status: 400 });
-        }
-        uploadDir = path.join(process.cwd(), 'public', 'articles');
-        break;
-        
-      case 'cover':
-        if (!ALLOWED_TYPES.image.includes(file.type)) {
-          return NextResponse.json({ error: 'Only images are allowed for covers' }, { status: 400 });
-        }
-        uploadDir = path.join(process.cwd(), 'public', 'images', 'coverimg');
-        break;
-        
-      case 'post':
-        if (!ALLOWED_TYPES.image.includes(file.type)) {
-          return NextResponse.json({ error: 'Only images are allowed for posts' }, { status: 400 });
-        }
-        if (!postId) {
-          return NextResponse.json({ error: 'Post ID is required for post images' }, { status: 400 });
-        }
-        uploadDir = path.join(process.cwd(), 'public', 'images', 'postimg', postId);
-        break;
-        
-      default:
-        return NextResponse.json({ error: 'Invalid upload type' }, { status: 400 });
-    }
+    // 上传文件
+    await minioClient.putObject(
+      bucketName,
+      objectName,
+      Buffer.from(buffer),
+      file.size,
+      { "Content-Type": file.type }
+    );
 
-    // 确保目录存在
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    // 生成预签名 URL
+    const url = await minioClient.presignedGetObject(
+      bucketName,
+      objectName,
+      24 * 60 * 60
+    );
 
-    // 生成文件名和保存文件
-    const timestamp = Date.now();
-    const extension = path.extname(file.name);
-    const fileName = `${timestamp}${extension}`;
-    const filePath = path.join(uploadDir, fileName);
-
-    // 将文件内容转换为 Buffer 并保存
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
-    // 生成文件访问URL
-    switch (uploadType) {
-      case 'article':
-        fileUrl = `/articles/${fileName}`;
-        break;
-      case 'cover':
-        fileUrl = `/images/coverimg/${fileName}`;
-        break;
-      case 'post':
-        fileUrl = `/images/postimg/${postId}/${fileName}`;
-        break;
-    }
-
-    return NextResponse.json({
-      success: true,
-      url: fileUrl,
-      fileName,
-      originalName: file.name,
-      type: file.type,
-      size: file.size
-    });
-
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
+    return NextResponse.json({ success: true, url });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return NextResponse.json({ error: "上传失败" }, { status: 500 });
   }
-} 
+}

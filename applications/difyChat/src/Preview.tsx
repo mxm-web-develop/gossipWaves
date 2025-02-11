@@ -8,6 +8,7 @@ function Preview() {
         url="/myproxy"
         token="app-jRRwbSXPpFdDUahm7QmPdyFq"
         //token='app-H9ftP5wGNWhlqcGfy1CgyDcf'
+        username="admin"
         mock={false}
       />
     </ChatClientProvider>

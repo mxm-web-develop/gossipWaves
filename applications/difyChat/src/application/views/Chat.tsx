@@ -1,11 +1,10 @@
-
 import { useMobileOrientation } from "react-device-detect"
 import { cn } from "@udecode/cn"
 import MInput from "./components/MInputer"
 import useAppStore from "../store";
 import { useEffect, useRef, useState } from "react";
 import { IMessageData, ModuleState } from "../types/chat.types";
-import { api_getConversations, api_getMessages } from "../services";
+import { api_getAppInfo, api_getConversations, api_getMessages } from "../services";
 import PullDown from '@better-scroll/pull-down'
 import MouseWheel from '@better-scroll/mouse-wheel'
 import ObserveDOM from '@better-scroll/observe-dom'
@@ -17,6 +16,7 @@ import { api_getParameters } from "../services/apis/get_paramets";
 import { uid } from 'uid'
 import Loading from "./components/Loading";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { States } from "../types/system";
 // import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { GetMessagesResponse } from "../services/apis/get_messages";
 
@@ -29,6 +29,8 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
   const chat_data = useAppStore(state => state.chat_data)
   // const setMessegesData = useAppStore(state => state.setMessegesData)
   const setChatData = useAppStore(state => state.setChatData)
+  const setAppState = useAppStore(state => state.setAppState)
+  const appState = useAppStore(state => state.app_data.app_state)
   const config = useAppStore(state => state.config_data)
   const app_data = useAppStore(state => state.app_data)
   const [bs, setBs] = useState<BScroll>()
@@ -50,7 +52,7 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
     });
     return response;
   };
-  const { data, isLoading, error, isFetching, isError, isRefetching, refetch, isSuccess } = useQuery({
+  const { data, isLoading, isError, refetch, isSuccess } = useQuery({
     queryKey: ['API_GETCHATHISTORY', chat_data.actived_conversation],
     enabled: !!chat_data.actived_conversation, // 只有在 activedConversation 存在时才启用查询
     retry: false, // 禁用重
@@ -59,52 +61,73 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
       fetchMessages(chat_data.actived_conversation)
   });
   useEffect(() => {
-
+    // 没有活跃对话时，设置为 Waiting 状态
+    if (!chat_data.actived_conversation) {
+      setChatData(pre => ({
+        ...pre,
+        state: ModuleState.Waiting
+      }))
+      return;
+    }
     if (isLoading) {
+      console.log('这里进来了么？1')
       setChatData(pre => ({
         ...pre,
         state: ModuleState.Loading
       }))
     }
     if (isSuccess) {
+      console.log('这里进来了么？2')
       setChatData(pre => ({
         ...pre,
         state: ModuleState.Waiting
       }))
     }
     if (isError) {
+      console.log('这里进来了么？3')
       setChatData(pre => ({
         ...pre,
         state: ModuleState.Error
       }))
     }
-    // if (isFetching) {
-    //   setChatData(pre => ({
-    //     ...pre,
-    //     state: ModuleState.Process
-    //   }))
-    // }
     // console.log(isLoading, isSuccess, isError)
   }, [isLoading, isSuccess, isError])
   //初始化聊天历史数据
   useEffect(() => {
     if (app_data.initial_ready) {
-      api_getConversations({
-        data: {
-          user: user
-        },
-        config: {
-          url: config.url,
-          token: config.token
-        }
-      }).then(data => {
-        const activeId = data.data && data.data.length > 0 ? data.data[0].id : ''
+      Promise.all([
+        api_getConversations({
+          data: {
+            user: user
+          },
+          config: {
+            url: config.url,
+            token: config.token
+          }
+        }),
+        api_getAppInfo({
+          data: {
+            user: user
+          },
+          config
+        })
+      ]).then(([conversationsData, appInfoData]) => {
+        const activeId = conversationsData.data && conversationsData.data.length > 0
+          ? conversationsData.data[0].id
+          : '';
+
         setChatData(pre => ({
           ...pre,
-          conversations: data as any,
+          conversations: conversationsData as any,
           actived_conversation: activeId
-        }))
-      })
+        }));
+
+        console.log(appInfoData, 'api_getAppInfo');
+        setAppState(States.Waiting);
+      }).catch(error => {
+        console.error('初始化数据加载失败:', error);
+        setAppState(States.Error);
+      });
     }
   }, [app_data.initial_ready, config])
   useEffect(() => {
@@ -122,7 +145,12 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
     console.log('下拉了')
   }
 
+  useEffect(() => {
+    console.log('appState', appState)
 
+  }, [
+    appState
+  ])
   useEffect(() => {
     if (chatScroll.current) {
       const bs = new BScroll(chatScroll.current, {
@@ -172,11 +200,6 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
         },
         body: JSON.stringify(requestData),
       });
-      // setChatData(pre => ({
-      //   ...pre,
-      //   state: ModuleState.Process
-      // }))
-
       if (!response.body) {
         throw new Error('ReadableStream not supported in this browser.');
       }
@@ -198,8 +221,6 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
                   created_at: data['created_at'],
                   id: data['id']
                 };
-
-                // console.log(data, 'zhelizheli')
                 setChatData(pre => ({
                   ...pre,
                   current_taskId: data['task_id']
@@ -235,17 +256,13 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
                 break;
               case 'message_replace':
                 break;
-
               case 'message_end':
-                // console.log(queryClient.getQueryData(['API_GETCHATHISTORY', chat_data.actived_conversation]))
-
                 api_getConversations({
                   data: {
                     user: user
                   },
                   config: config
                 }).then(d => {
-                  //const activeId = data.data && data.data.length > 0 ? data.data[0].id : ''
                   setChatData(pre => ({
                     ...pre,
                     conversations: d as any,
@@ -293,7 +310,6 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
     if (chat_data.actived_conversation) {
       setChatData(pre => ({
         ...pre,
-        // state: !pre.actived_conversation ? ModuleState.Waiting : ModuleState.Loading,
         current_conversation_messages: {
           has_more: pre.current_conversation_messages.has_more,
           limit: pre.current_conversation_messages.limit,
@@ -303,58 +319,48 @@ const Chat = ({ user, onActionEmmiter }: { user: string, onActionEmmiter?: (type
       }))
       console.log('获取聊天数据')
       refetch()
-      // api_getMessages({
-      //   data: {
-      //     user: 'mxm',
-      //     conversation_id: chat_data.actived_conversation
-      //   },
-      //   config: config
-      // }).then(data => {
-      //   setChatData(pre => ({
-      //     ...pre,
-      //     current_conversation_messages: {
-      //       has_more: data.has_more,
-      //       limit: data.limit,
-      //       data: data.data as any
-      //     },
-      //     state: ModuleState.Waiting
-      //   }))
-      // })
     }
   }, [
     chat_data.actived_conversation
   ])
   return (
-    <div className={cn(' w-full pb-[65px]  overflow-y-hidden relative box-border', {
-      'pt-12': !isPortrait
-    })} style={{
-      height: isPortrait ? 'calc(100% - 46px)' : '100%'
-    }}>
-      {/* <NavBar chat_list={chat_data.conversations.data} /> */}
-      <div className='chat-container mx-auto py-3 h-full w-full ' ref={chatScroll}>
-        <div>
-          {
-            isLoading && <Loading />
-          }
-          {
-            data && data.data.map((i) => <ChatListItem key={uid(16)} i={i} is_current_stream={false} chat_data={chat_data} />)
-          }
-          {/* {
-            streamMessageList && streamMessageList.length > 0 && streamMessageList.map((i, index) => {
-              // Determine if the current item is the last item in the streamMessageList array
-              const isCurrentStream = index === streamMessageList.length - 1;
-              return <ChatListItem key={uid(16)} i={i} is_current_stream={isCurrentStream} chat_data={chat_data} />
-            })
-          } */}
+    appState === States.Loading ? <Loading /> :
+      <div className={cn('w-full pb-[65px] overflow-y-hidden relative box-border', {
+        'pt-12': !isPortrait
+      })} style={{
+        height: isPortrait ? 'calc(100% - 46px)' : '100%'
+      }}>
+        <div className='chat-container mx-auto py-3 h-full w-full ' ref={chatScroll}>
+          <>
+            {isLoading && <Loading />}
+            {data && data.data.length > 0 ? (
+              data.data.map((i) => (
+                <ChatListItem
+                  key={uid(16)}
+                  i={i}
+                  is_current_stream={false}
+                  chat_data={chat_data}
+                />
+              ))
+            ) : (
+              <div className="flex items-center h-full  justify-center  text-gray-500">
+                <div className="flex-col items-center h-fit justify-center text-center">
+                  <div className="text-lg">
+                    暂无聊天记录
+                  </div>
+                  <button className=" text-theme-primary  rounded-lg p-2">
+                    聊天配置
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        </div>
+        <div className={
+          cn('input z-10 absolute w-full bottom-[0px] pt-[8px] md:max-w-[100%] pb-[20px] backdrop-blur-xs bg-opacity-90')}>
+          <MInput user={user} onSend={handleSendData} />
         </div>
       </div>
-      <div className={
-        cn('input z-10 absolute w-full bottom-[0px] pt-[8px] md:max-w-[100%] pb-[20px] backdrop-blur-xs bg-opacity-90')}>
-        <MInput onSend={handleSendData} />
-      </div>
-
-    </div>
-
 
   )
 }

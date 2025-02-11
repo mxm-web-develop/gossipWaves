@@ -10,7 +10,7 @@ import ScrollBar from '@better-scroll/scroll-bar'
 import DataSortedConversationList from "./DataSortedConversationList"
 import { IChatSortRule, ModuleState } from "../../types/chat.types"
 import useAppStore from "../../store"
-import { LayoutList } from 'lucide-react'
+import { AlignHorizontalDistributeCenter, LayoutList } from 'lucide-react'
 import { api_stopChatMessages } from "@/application/services/apis/stop_chatmessage"
 interface IHSideBar {
   children?: ReactNode
@@ -31,6 +31,7 @@ const NvaBar = (props: IHSideBar) => {
   const chat_data = useAppStore(state => state.chat_data)
   const app_data = useAppStore(state => state.app_data)
   const [open, setOpen] = useState(false)
+  const toggleSettingOpen = useAppStore(state => state.toggleSettingOpen)
   const scrollBarH = useRef<any>(null)
   const scrollBarP = useRef<any>(null)
   const setChatData = useAppStore(state => state.setChatData)
@@ -149,6 +150,7 @@ const NvaBar = (props: IHSideBar) => {
         <NavBar
           left={<AppstoreOutline fontSize={24} />} backIcon={null}
           right={<div className="flex justify-end gap-x-2">
+            <AlignHorizontalDistributeCenter size={24} className="cursor-pointer" onClick={toggleSettingOpen} />
             <LayoutList size={24} onClick={() => setOpen(true)} />
             {/* <AlignJustify  fontSize={24} /> */}
             <AddSquareOutline fontSize={24} onPointerDown={createNewConversation} /></div>}>
@@ -163,7 +165,7 @@ const NvaBar = (props: IHSideBar) => {
       <>
         <div className="absolute right-0 top-0 py-5 px-5 text-theme-white z-50">
           <div className="flex gap-x-3">
-
+            <AlignHorizontalDistributeCenter onClick={toggleSettingOpen} size={24} className="cursor-pointer text-theme-white hover:text-white" />
             <AddSquareOutline
               onPointerDown={createNewConversation}
               fontSize={24} className="cursor-pointer text-theme-white hover:text-white" />

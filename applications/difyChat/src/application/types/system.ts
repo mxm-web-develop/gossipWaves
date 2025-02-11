@@ -27,4 +27,7 @@ export interface AppState {
   // 单独的chat应用不需要切换 current_module: Modules;
   initial_ready: boolean;
   app_state: States;
+  setting_open: boolean;
+  setting_info: any;
+  setting_input: any;
 }

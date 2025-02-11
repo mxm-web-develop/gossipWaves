@@ -4,14 +4,15 @@ import { ModuleState } from "@/application/types/chat.types";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@udecode/cn";
 
-import { CircleStop, LoaderCircle, Play } from "lucide-react";
+import { CircleStop, LoaderCircle, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMobileOrientation } from "react-device-detect";
 interface MInputProps {
   onSend?: (value: string) => void;
+  user: string
 }
 
-export default function MInput({ onSend }: MInputProps) {
+export default function MInput({ onSend, user }: MInputProps) {
   const { isPortrait } = useMobileOrientation()
   const [value, setValue] = useState<string>("")
 
@@ -22,7 +23,7 @@ export default function MInput({ onSend }: MInputProps) {
     if (chat_data.current_taskId) {
       await api_stopChatMessages({
         data: {
-          user: 'mxm',
+          user: user,
           task_id: chat_data.current_taskId
         },
         config: config
@@ -43,7 +44,7 @@ export default function MInput({ onSend }: MInputProps) {
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={`mxm ai ${chat_data.state}`}
+          placeholder={`请输入聊天内容`}
           className="block w-full rounded-full border-0
            bg-white
            px-4 py-3 text-theme-dark shadow-sm pr-[42px]
@@ -65,7 +66,7 @@ export default function MInput({ onSend }: MInputProps) {
           })}
         >
           {chat_data.state === ModuleState.Waiting && <Play size={14} />}
-          {chat_data.state === ModuleState.Process && <CircleStop onPointerDown={handleStop} size={14} />}
+          {chat_data.state === ModuleState.Process && <Pause onPointerDown={handleStop} size={14} />}
           {chat_data.state === ModuleState.Loading && <LoaderCircle size={14} className="spin" />}
         </button>
       </div>

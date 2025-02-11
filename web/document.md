@@ -1,3 +1,43 @@
+# 开发规范
+
+支持 Pc 端和移动端
+支持主题色切换
+支持多语言
+
+## 服务端渲染 {app}
+
+/home
+/applications
+/application/{id}
+
+## 客户端渲染 （components）
+
+## 数据填充
+
+- minio
+- mongo
+
+# 测试环境
+
+## MongoDB
+
+MONGODB_URI=mongodb://admin:password@mxm-ai.com:27017/testmongo?authSource=admin
+MONGO_USERNAME=admin
+MONGO_PASSWORD=password
+MONGO_HOST=mxm-ai.com
+MONGO_PORT=27017
+MONGO_DB=testmongo
+MONGO_AUTH_SOURCE=admin
+
+## MinIO
+
+MINIO_ENDPOINT=45.77.12.232
+MINIO_PORT=9000
+MINIO_USE_SSL=false
+MINIO_ACCESS_KEY=admin
+MINIO_SECRET_KEY=password
+MINIO_BUCKET_NAME=test
+
 ### 组织 organization
 
 ```json
@@ -50,31 +90,31 @@
   "author": "张三",
   "reproduce": "https://www.zjfintech.com/reproduce.pdf"
 }
-```  
+```
 
 ### 联系人 contact
 
 ```json
-[{
+[
+  {
     "id": "1",
-    "label":"技术支持",
+    "label": "技术支持",
     "name": "张三",
-    "email": "zhangsan@zjfintech.com",
+    "email": "zhangsan@zjfintech.com"
     // "phone": "13800138000",
-  },{
+  },
+  {
     "id": "2",
-    "label":"商务合作",
+    "label": "商务合作",
     "name": "李四",
-    "email": "lisi@zjfintech.com",
+    "email": "lisi@zjfintech.com"
     // "phone": "13800138000",
-  }]
-```  
+  }
+]
+```
 
 ### 事件 event
 
 ### 资源 resource
 
 ### 反馈系统 feedback
-
-
-
