@@ -133,6 +133,7 @@ const AiGraph = (props: {
       if (url) {
         setUrl(url);
         setToken(token || '');
+        setGientechSet(gientechServer || {});
         changeStatus('data_init');
         setAppConfig({
           mode: 'server',
@@ -149,7 +150,7 @@ const AiGraph = (props: {
               fileId: gientechServer.fileId,
               limit: gientechServer.limit || 2000,
             };
-            setGientechSet({ ...gientechConfig, fileName: gientechServer.fileName });
+
             const gdata: any = await wholeGraphSearch(
               {
                 baseURL: url,

@@ -72,8 +72,14 @@ const CodeSearchTemplate = (props: ICodeSearchTemplate) => {
       </ConfigProvider>
       <pre
         onClick={() => setOpen(true)}
-        className="cursor-nesw-resize h-[75vh] bg-gray-800  text-white rounded-lg overflow-y-scroll overflow-x-auto"
-        style={{ height: '100%' }}
+        style={{
+          cursor: 'nesw-resize',
+          backgroundColor: '#2d2d2d',
+          color: 'white',
+          borderRadius: '0.5rem',
+          overflowX: 'auto',
+          height: '100%',
+        }}
       >
         <code className="language-javascript">{searchCode}</code>
       </pre>

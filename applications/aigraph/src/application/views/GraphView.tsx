@@ -740,7 +740,7 @@ const ColorBlock = ({ color }: any) => {
 const defaultCode = `//点击进入编辑模式\n//编辑模式中点击空白或者键盘‘esc'\n//退出编辑`;
 const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any) => {
   const { url, token } = useServerState();
-  const { gientechSet } = useAppState();
+  const { gientechSet, graph } = useAppState();
   const [nodeForm] = Form.useForm();
   const [edgeForm] = Form.useForm();
   const [fromNodeForm] = Form.useForm();
@@ -789,7 +789,17 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
       setBtnLoading(false);
       if (res) {
         const gData = transformGientechToG6(res);
-        setNodeResult(gData.nodes);
+        if (!graph) return;
+        const allNodeData = graph.getNodeData();
+        const ids = allNodeData.map((element: any) => {
+          return element.id;
+        });
+        setNodeResult(
+          gData.nodes.filter((item: any) => {
+            item.choosed = ids.includes(item.id);
+            return item;
+          })
+        );
         setShowNodeSearch(false);
       }
     } catch (error) {
@@ -848,7 +858,17 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
       setBtnLoading(false);
       if (res) {
         const gData = transformGientechToG6(res);
-        setEdgeResult(gData.edges);
+        if (!graph) return;
+        const allEdgeData = graph.getEdgeData();
+        const ids = allEdgeData.map((element: any) => {
+          return element.id;
+        });
+        setEdgeResult(
+          gData.edges.map((item: any) => {
+            item.choosed = ids.includes(item.id);
+            return item;
+          })
+        );
         setShowEdgeSearch(false);
       }
     } catch (error) {
@@ -984,6 +1004,9 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
       <div
         style={{ height: 'calc(100% - 121px)', overflowY: 'auto', overflowX: 'hidden' }}
         className="scrollView"
+        onWheel={(e) => {
+          e.stopPropagation();
+        }}
       >
         <NodeSearchBox
           ref={nodeSearchRef}

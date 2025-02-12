@@ -41,8 +41,11 @@ export const useCommonFn = ({
     try {
       if (!_graph) return console.error('图谱未渲染完成');
       let flag = false;
+      let oldN: any = [];
+      let newN: any = [];
       _graph.addData((prev: GraphData) => {
-        const { nodes: oldNodes, edges: oldEdges } = prev;
+        const { nodes: oldNodes, edges: oldEdges }: any = prev;
+        oldN = oldNodes;
         const { nodes, edges } = data;
         let newNodes = uniqArr2By(oldNodes || [], nodes || [], 'id');
         let newEdges = uniqArr2By(oldEdges || [], edges || [], 'id');
@@ -51,13 +54,21 @@ export const useCommonFn = ({
         if (newEdges.length || newNodes.length) {
           flag = true;
         }
+        newN = newNodes;
         return {
           nodes: newNodes,
           edges: newEdges,
         };
       });
       if (flag) {
-        _graph.render();
+        if (!oldN.length && newN?.length === 1) {
+          _graph.draw();
+          _graph.fitCenter();
+        } else {
+          _graph.render();
+        }
+      } else if (oldN.length) {
+        message.warning('图谱已存在该数据');
       }
     } catch (error) {
       console.error('添加数据时发生错误:', error);
