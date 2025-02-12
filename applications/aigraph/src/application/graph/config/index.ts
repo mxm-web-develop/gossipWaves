@@ -79,10 +79,6 @@ export const edgeStyleConfig: any = {
 export const behaviorsConfig = {
   default: [
     'drag-canvas',
-    {
-      key: 'zoom-canvas',
-      preventDefault: false,
-    },
     // {
     //   key: 'brush-select',
     //   type: 'brush-select',
@@ -93,6 +89,7 @@ export const behaviorsConfig = {
     // { key: 'AutoAdaptLabel', type: 'AutoAdaptLabel', enable: true },
     { key: 'drag-element', type: 'drag-element', enable: true },
     { key: 'click-select', type: 'click-select', multiple: true },
+    { key: 'zoom-canvas', type: 'zoom-canvas', preventDefault: false },
     // { key: 'focus-element', type: 'focus-element', enable: true, animation: true },
     // { key: 'hover-activate', type: 'hover-activate', enable: true },
   ],
