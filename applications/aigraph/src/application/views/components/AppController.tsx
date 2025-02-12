@@ -21,10 +21,7 @@ export default function AppController(props: { handleEvent: (type: string, data?
             className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-md"
           >
             <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
-            <div
-              className="text-sm"
-              // onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.BACK)}
-            >
+            <div className="text-sm" onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.BACK)}>
               返回
             </div>
           </div>

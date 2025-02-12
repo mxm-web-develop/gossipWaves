@@ -20,6 +20,14 @@ function Preview() {
           initData={null}
           createBy={'admin'}
           graphModeType="subGraph"
+          handleCallBack={(type: string, data?: any) => {
+            console.log(type, 'sdgjaklsg');
+
+            switch (type) {
+              case 'back':
+                break;
+            }
+          }}
         />
       </div>
     </div>

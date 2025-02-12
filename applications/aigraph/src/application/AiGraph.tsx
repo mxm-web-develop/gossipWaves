@@ -13,6 +13,7 @@ import {
 } from './services/apis/whole_graph_search';
 
 const AiGraph = (props: {
+  handleCallBack?: (type: string, data?: any) => any;
   graphModeType: 'allGraph' | 'subGraph';
   handleEvent?: (type: string, data?: any) => any;
   initData?: null | GraphData;

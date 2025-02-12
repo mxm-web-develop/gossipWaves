@@ -90,13 +90,14 @@ const dealPro = (data: any) => {
 const GraphView = forwardRef(
   (
     props: {
+      handleCallBack?: (type: string, data?: any) => any;
       initData?: null | GraphData;
       handleEvent?: (type: string, data?: any) => any;
       createBy?: string;
     },
     ref: any
   ) => {
-    const { createBy } = props;
+    const { createBy, handleCallBack } = props;
     const { setGraph, graph, status, graphData, setGraphData, changeStatus, gientechSet } =
       useAppState();
     const { url, token } = useServerState();
@@ -155,6 +156,7 @@ const GraphView = forwardRef(
           setShowExport(true);
           break;
         case AI_GRAPH_TYPE.BACK:
+          handleCallBack && handleCallBack(AI_GRAPH_TYPE.BACK);
           break;
       }
     };
@@ -682,6 +684,7 @@ const GraphView = forwardRef(
                 a.href = url;
                 a.download = `${exportName || gientechSet?.fileName}.png`;
                 a.click();
+                setShowExport(false);
               }}
               style={{
                 background: `linear-gradient(99.9deg, #2B69FF -4.18%, #8F91FF 106.52%)`,
