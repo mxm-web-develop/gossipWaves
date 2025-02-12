@@ -272,6 +272,7 @@ const GraphView = forwardRef(
         edge: edgeStyleConfig.default,
         layout: layoutConfig.default,
         behaviors: behaviorsConfig.default,
+        transforms: ['process-parallel-edges'],
         plugins: pluginsConfig({
           getContextMenu: (a: any, b: any) => {
             const { targetType } = a;
