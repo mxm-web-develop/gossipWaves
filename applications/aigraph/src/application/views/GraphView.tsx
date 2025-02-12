@@ -153,6 +153,7 @@ const GraphView = forwardRef(
         case AI_GRAPH_TYPE.SAVE:
           break;
         case AI_GRAPH_TYPE.EXPORT:
+          setExportName(gientechSet?.fileName || '');
           setShowExport(true);
           break;
         case AI_GRAPH_TYPE.BACK:
@@ -682,7 +683,7 @@ const GraphView = forwardRef(
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `${exportName || gientechSet?.fileName}.png`;
+                a.download = `${exportName}.png`;
                 a.click();
                 setShowExport(false);
               }}
