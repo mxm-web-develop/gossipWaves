@@ -99,7 +99,7 @@ export const layoutConfig: any = {
   default: {
     type: 'force-atlas2',
     preventOverlap: true,
-    kr: 100,
+    kr: 50,
   },
   force: { type: 'force-atlas2', preventOverlap: true, kr: 100 },
   circular: { type: 'circular', preventOverlap: true, nodeSpacing: 50 },

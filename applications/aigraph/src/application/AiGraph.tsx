@@ -26,6 +26,7 @@ const AiGraph = (props: {
     spaceName: string;
     fileId?: number;
     limit?: number;
+    fileName: string;
   };
 }) => {
   const { token, url, gientechServer, graphModeType } = props;
@@ -144,10 +145,10 @@ const AiGraph = (props: {
           if (gientechServer) {
             const gientechConfig = {
               spaceName: gientechServer.spaceName,
-              filedId: gientechServer.fileId,
+              fileId: gientechServer.fileId,
               limit: gientechServer.limit || 2000,
             };
-            setGientechSet(gientechConfig);
+            setGientechSet({ ...gientechConfig, fileName: gientechServer.fileName });
             const gdata: any = await wholeGraphSearch(
               {
                 baseURL: url,

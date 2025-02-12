@@ -40,6 +40,7 @@ export const useCommonFn = ({
 
     try {
       if (!_graph) return console.error('图谱未渲染完成');
+      let flag = false;
       _graph.addData((prev: GraphData) => {
         const { nodes: oldNodes, edges: oldEdges } = prev;
         const { nodes, edges } = data;
@@ -47,12 +48,17 @@ export const useCommonFn = ({
         let newEdges = uniqArr2By(oldEdges || [], edges || [], 'id');
         newNodes = uniqBy(newNodes, 'id');
         newEdges = uniqBy(newEdges, 'id');
+        if (newEdges.length || newNodes.length) {
+          flag = true;
+        }
         return {
           nodes: newNodes,
           edges: newEdges,
         };
       });
-      _graph.render();
+      if (flag) {
+        _graph.render();
+      }
     } catch (error) {
       console.error('添加数据时发生错误:', error);
       changeStatus('app_error');
@@ -96,12 +102,21 @@ export const useCommonFn = ({
     if (!url || !token) return;
     try {
       const nodeData = graph.getElementDataByState('node', 'selected');
+      const p = {
+        spaceName: gientechSet.spaceName,
+        fileId: gientechSet.fileId,
+        step,
+        nodes: nodeData,
+      };
+      if (gientechSet.fileId) {
+        p.fileId = gientechSet.fileId;
+      }
       const res = await nodeStepSearch(
         {
           baseURL: url,
           token: token || '',
         },
-        { spaceName: gientechSet.spaceName, step, nodes: nodeData }
+        p
       );
       console.log('====================================');
       console.log('step------>', res);

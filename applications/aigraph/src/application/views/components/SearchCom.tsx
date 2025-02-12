@@ -3,6 +3,7 @@ import { useState } from 'react';
 import addSearch from '../../assets/img/addSearch.png';
 import { uid } from 'uid';
 import { DeleteOutlined } from '@ant-design/icons';
+import { forwardRef, useImperativeHandle } from 'react';
 
 interface ISearchCom {
   options: Array<{ label: string; value: string }>;
@@ -11,9 +12,16 @@ interface ISearchCom {
   type?: string;
 }
 
-const SearchCom = ({ options, form, typeName, type }: ISearchCom) => {
+const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref) => {
   const [properties, setProperties] = useState<any>([]);
   const [fields, setFields]: any = useState([]);
+
+  useImperativeHandle(ref, () => ({
+    clearField: () => {
+      setFields([]);
+    },
+  }));
+
   return (
     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
       <Form form={form} initialValues={{ logicalOperator: 'and' }}>
@@ -130,7 +138,7 @@ const SearchCom = ({ options, form, typeName, type }: ISearchCom) => {
       </Form>
     </div>
   );
-};
+});
 
 export default SearchCom;
 

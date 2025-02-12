@@ -1,7 +1,7 @@
 import AiGraph from './application/AiGraph';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5MzIzMjcwLCJpYXQiOjE3MzkyMzY4NzB9.yhpSsTvY66fxEcJ9p8QXN1rt0sUcMdCM6mlMvJmKrnQ';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5NDEwMzc3LCJpYXQiOjE3MzkzMjM5Nzd9.wp17cqaGfE_akY4fJNmUDo0VlPM2RElRiFbeMBN6Vq0';
 
 function Preview() {
   return (
@@ -14,6 +14,7 @@ function Preview() {
             url: `api_proxy`,
             token: token,
             spaceName: '图解析20250211_2',
+            fileName: '一个文件',
             fileId: 53805,
           }}
           initData={null}

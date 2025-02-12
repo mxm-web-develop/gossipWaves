@@ -40,30 +40,13 @@ export default function AppController(props: { handleEvent: (type: string, data?
               <SearchMenu handleEvent={handleEvent} />
               {/* <DisplayMenu /> */}
             </div>
-
-            {/* <div
-        style={{ padding: '4px 16px' }}
-        className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
-      >
-        <img src={SaveOutlined} width={16} height={16} className="mr-[6px]" />
-        <div
-          className="text-sm text-[#555555]"
-          onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.SAVE)}
-        >
-          保存
-        </div>
-      </div> */}
             <div
               style={{ padding: '4px 16px' }}
               className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"
+              onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.EXPORT)}
             >
               <img src={Download} width={16} height={16} className="mr-[6px]" />
-              <div
-                className="text-sm text-[#555555]"
-                onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.EXPORT)}
-              >
-                导出
-              </div>
+              <div className="text-sm text-[#555555]">导出</div>
             </div>
           </div>
         </div>

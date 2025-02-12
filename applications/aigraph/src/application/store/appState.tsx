@@ -11,8 +11,9 @@ interface AppState {
   graph_type: 'gitech_finance' | 'default'; //控制图谱样式
   gientechSet?: {
     spaceName: string;
-    filedId?: string;
+    fileId?: string;
     limit: number;
+    fileName: string;
   };
   // 具体方法替代通用的 setAppState
   changeStatus: (
@@ -26,7 +27,12 @@ interface AppState {
     graph_type: 'gitech_finance' | 'default';
     mode: 'local' | 'server';
   }) => void;
-  setGientechSet: (config: { spaceName: string; filedId?: number; limit: number }) => void;
+  setGientechSet: (config: {
+    spaceName: string;
+    filedId?: number;
+    limit: number;
+    fileName: string;
+  }) => void;
   setGraphData: (data: GraphData) => void; // 添加新方法声明
   nodeInfo: any[];
   setNodeInfo: (data: any[]) => void;
