@@ -4,4 +4,8 @@
   box-shadow: none;
   min-width: 86px;
   width: 86px;
+  background-color: 'red';
+}
+.myContextMenuItem:hover {
+  background-color: #edf4ff;
 }

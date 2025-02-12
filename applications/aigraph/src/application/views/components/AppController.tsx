@@ -1,11 +1,16 @@
 import { ArrowLeft } from 'lucide-react';
-import LayoutMenu from './LayoutMenu';
 import * as Separator from '@radix-ui/react-separator';
-import SearchMenu from './SearchMenu';
 import { AI_GRAPH_TYPE } from '../../lib_enter';
 import Download from '../../assets/img/Download.png';
-export default function AppController(props: { handleEvent: (type: string, data?: any) => any }) {
-  const { handleEvent } = props;
+import LayoutCom from './LayoutMenu';
+import SearchMenu from './SearchMenu';
+export default function AppController(props: {
+  handleEvent: (type: string, data?: any) => any;
+  containerRef: any;
+  openSearch: boolean;
+  setOpenSearch: (arg: boolean) => void;
+}) {
+  const { handleEvent, containerRef, openSearch, setOpenSearch } = props;
   return (
     <div
       className="absolute w-full"
@@ -26,17 +31,33 @@ export default function AppController(props: { handleEvent: (type: string, data?
             </div>
           </div>
         </div>
-        <div className="tool-bar  ">
+        <div className="tool-bar">
           <div className="flex items-center justify-between" style={{ columnGap: '16px' }}>
             <div
+              style={{
+                width: '237px',
+                height: '32px',
+                border: '1px solid #eeeeee',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                backgroundColor: '#ffffff',
+                alignItems: 'center',
+              }}
+            >
+              <LayoutCom containerRef={containerRef} />
+              <Separator.Root className="bg-[#EEEEEE]" style={{ height: '20px', width: '1px' }} />
+              <SearchMenu handleEvent={handleEvent} open={openSearch} setOpen={setOpenSearch} />
+            </div>
+            {/* <div
+              id="layoutBox"
               style={{ borderRadius: '4px' }}
               className="flex items-center border border-solid border-[#EEEEEE] justify-between bg-white"
             >
-              <LayoutMenu />
+              <LayoutMenu containerRef={containerRef} />
               <Separator.Root className="bg-[#EEEEEE]" style={{ height: '20px', width: '1px' }} />
               <SearchMenu handleEvent={handleEvent} />
-              {/* <DisplayMenu /> */}
-            </div>
+            </div> */}
             <div
               style={{ padding: '4px 16px' }}
               className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-[4px]"

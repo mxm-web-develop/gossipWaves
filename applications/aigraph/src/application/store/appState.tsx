@@ -29,7 +29,7 @@ interface AppState {
   }) => void;
   setGientechSet: (config: {
     spaceName: string;
-    filedId?: number;
+    fileId?: number;
     limit: number;
     fileName: string;
   }) => void;

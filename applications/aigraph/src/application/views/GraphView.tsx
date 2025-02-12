@@ -90,6 +90,7 @@ const dealPro = (data: any) => {
 const GraphView = forwardRef(
   (
     props: {
+      graphModeType: string;
       handleCallBack?: (type: string, data?: any) => any;
       initData?: null | GraphData;
       handleEvent?: (type: string, data?: any) => any;
@@ -97,7 +98,7 @@ const GraphView = forwardRef(
     },
     ref: any
   ) => {
-    const { createBy, handleCallBack } = props;
+    const { createBy, handleCallBack, graphModeType } = props;
     const { setGraph, graph, status, graphData, setGraphData, changeStatus, gientechSet } =
       useAppState();
     const { url, token } = useServerState();
@@ -110,7 +111,6 @@ const GraphView = forwardRef(
       console.log('====================================');
     }, [status]);
 
-    const [visible, setVisible] = useState(false);
     const [open, setOpen] = useState(false);
     const [curData, setCurData] = useState<any>(null);
     const [nodeSize, setNodeSize] = useState<any>(80);
@@ -119,7 +119,7 @@ const GraphView = forwardRef(
     console.log('当前版本:', import.meta.env.VITE_APP_VERSION);
     const openDrawer = (data: any) => {
       setCurData(data);
-      setVisible(false);
+      setOpenSearch(false);
       setOpen(true);
       setActiveKey('1');
       if (data?.style?.size) {
@@ -133,6 +133,7 @@ const GraphView = forwardRef(
       setCurData(null);
       setOpen(false);
     };
+    const [openSearch, setOpenSearch] = useState(false);
     const handleEvent = (type: string, data?: any) => {
       console.log(type, data, '8888888888888888');
       switch (type) {
@@ -148,7 +149,7 @@ const GraphView = forwardRef(
         case contextMenuType['NODE:VIEW']:
           break;
         case AI_GRAPH_TYPE.SEARCH:
-          setVisible(true);
+          setOpenSearch(!openSearch);
           break;
         case AI_GRAPH_TYPE.SAVE:
           break;
@@ -332,7 +333,12 @@ const GraphView = forwardRef(
           ) : (
             status === 'app_wait' && (
               <>
-                <AppController handleEvent={handleGraphEvent} />
+                <AppController
+                  handleEvent={handleGraphEvent}
+                  containerRef={containerRef}
+                  openSearch={openSearch}
+                  setOpenSearch={setOpenSearch}
+                />
                 <CanvasController handleEvent={handleGraphEvent} />
                 <MyContextMenu
                   targetInfo={targetInfo}
@@ -399,314 +405,319 @@ const GraphView = forwardRef(
               </>
             )
           )}
-        </div>
-
-        <ItemSearch visible={visible} setVisible={setVisible} add_items={add_items} />
-        <ConfigProvider
-          drawer={{
-            styles: {
-              mask: {
-                backgroundColor: 'transparent',
+          <ItemSearch
+            openSearch={openSearch}
+            setOpenSearch={setOpenSearch}
+            add_items={add_items}
+            graphModeType={graphModeType}
+          />
+          <ConfigProvider
+            drawer={{
+              styles: {
+                mask: {
+                  backgroundColor: 'transparent',
+                },
+                content: {
+                  backgroundColor: 'white',
+                },
+                body: { backgroundColor: 'white' },
               },
-              content: {
-                backgroundColor: 'white',
-              },
-              body: { backgroundColor: 'white' },
-            },
-          }}
-        >
-          <Drawer
-            title="Basic Drawer"
-            open={open}
-            getContainer={false}
-            width={320}
-            onClose={closeDrawer}
-            styles={{
-              header: { display: 'none' },
-              mask: {
-                backgroundColor: 'transparent',
-              },
-              content: {
-                backgroundColor: 'white',
-              },
-              body: { backgroundColor: 'white', padding: 0 },
             }}
           >
-            <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-              <div style={{ display: 'flex', height: '57px' }}>
-                <div
-                  style={{ height: '57px', width: '16px', borderBottom: '1px solid #f0f0f0' }}
-                ></div>
-                <Tabs
-                  style={{ flex: 1 }}
-                  defaultActiveKey="1"
-                  items={items}
-                  activeKey={activeKey}
-                  onChange={(v) => {
-                    setActiveKey(v);
-                  }}
-                  size="large"
-                />
-                <div
-                  style={{
-                    height: '57px',
-                    paddingRight: '16px',
-                    paddingTop: '20px',
-                    cursor: 'pointer',
-                    borderBottom: '1px solid #f0f0f0',
-                  }}
-                >
-                  <CloseOutlined
-                    width={16}
-                    height={16}
-                    style={{ color: '#555555' }}
-                    onClick={() => closeDrawer()}
-                  />
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: '16px',
-                  paddingTop: '16px',
-                  color: '#1a1a1a',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  height: 'calc(100% - 56px)',
-                  overflow: 'hidden',
-                  display: activeKey === '1' ? 'block' : 'none',
-                }}
-              >
-                <div>{curData?.data?.name}</div>
-                <div style={{ display: 'flex', marginTop: '12px', alignItems: 'center' }}>
-                  <div style={{ maxWidth: '132px', display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        width: '32px',
-                        color: '#888888',
-                        fontSize: '14px',
-                        fontWeight: 'normal',
-                        marginRight: '8px',
-                        flexShrink: 0,
-                      }}
-                    >
-                      类别:
-                    </div>
-                    <div
-                      style={{
-                        color: '#1a1a1a',
-                        fontSize: '14px',
-                        fontWeight: 'normal',
-                        textOverflow: 'ellipsis',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {curData?.data?.category}
-                    </div>
-                  </div>
-                  <Divider type="vertical" style={{ borderColor: '#EEEEEE' }} />
-                  <div style={{ maxWidth: '132px', display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        color: '#888888',
-                        fontSize: '14px',
-                        fontWeight: 'normal',
-                        marginRight: '8px',
-                      }}
-                    >
-                      id:
-                    </div>
-                    <div
-                      style={{
-                        color: '#1a1a1a',
-                        fontSize: '14px',
-                        fontWeight: 'normal',
-                        textOverflow: 'ellipsis',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {curData?.id}
-                    </div>
-                  </div>
-                </div>
-                <Divider style={{ borderColor: '#EEEEEE', margin: '12px 0' }} />
-                <div
-                  style={{ overflowY: 'auto', overflowX: 'hidden', height: 'calc(100% - 170px)' }}
-                >
-                  <Table columns={columns} dataSource={curData?.properties} pagination={false} />
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: '16px',
-                  paddingTop: '16px',
-                  color: '#1a1a1a',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  height: 'calc(100% - 56px)',
-                  overflow: 'hidden',
-                  display: activeKey === '2' ? 'block' : 'none',
-                }}
-              >
-                <div style={{ height: 'calc(100% - 50px)', overflowY: 'auto' }}>
-                  <div>点</div>
-                  <Select
-                    prefix="大小"
-                    defaultValue={80}
-                    style={{ width: 288, marginTop: 12 }}
+            <Drawer
+              title="Basic Drawer"
+              open={open}
+              getContainer={false}
+              width={320}
+              onClose={closeDrawer}
+              styles={{
+                header: { display: 'none' },
+                mask: {
+                  backgroundColor: 'transparent',
+                },
+                content: {
+                  backgroundColor: 'white',
+                },
+                body: { backgroundColor: 'white', padding: 0 },
+              }}
+            >
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', height: '57px' }}>
+                  <div
+                    style={{ height: '57px', width: '16px', borderBottom: '1px solid #f0f0f0' }}
+                  ></div>
+                  <Tabs
+                    style={{ flex: 1 }}
+                    defaultActiveKey="1"
+                    items={items}
+                    activeKey={activeKey}
                     onChange={(v) => {
-                      setNodeSize(v);
+                      setActiveKey(v);
                     }}
-                    value={nodeSize}
-                    options={[
-                      { value: 32, label: '32' },
-                      { value: 40, label: '40' },
-                      { value: 48, label: '48' },
-                      { value: 56, label: '56' },
-                      { value: 64, label: '64' },
-                      { value: 80, label: '80' },
-                    ]}
+                    size="large"
                   />
-                  <Select
-                    prefix="颜色"
-                    defaultValue="#529BF8"
-                    style={{ width: 288, marginTop: 12, borderRadius: 2 }}
-                    labelRender={(props: any) => {
-                      return <ColorBlock color={props.value || '#529BF8'} />;
+                  <div
+                    style={{
+                      height: '57px',
+                      paddingRight: '16px',
+                      paddingTop: '20px',
+                      cursor: 'pointer',
+                      borderBottom: '1px solid #f0f0f0',
                     }}
-                    onChange={(v) => {
-                      setNodeColor(v);
-                    }}
-                    value={nodeColor}
-                    options={[
-                      { value: '#887AF2', label: <ColorBlock color="#887AF2" /> },
-                      { value: '#529BF8', label: <ColorBlock color="#529BF8" /> },
-                      { value: '#52D4F8', label: <ColorBlock color="#52D4F8" /> },
-                      { value: '#4CEDCA', label: <ColorBlock color="#4CEDCA" /> },
-                      { value: '#80E35D', label: <ColorBlock color="#80E35D" /> },
-                      { value: '#F8B852', label: <ColorBlock color="#F8B852" /> },
-                      { value: '#F87E52', label: <ColorBlock color="#F87E52" /> },
-                      { value: '#F85D52', label: <ColorBlock color="#F85D52" /> },
-                    ]}
-                  />
+                  >
+                    <CloseOutlined
+                      width={16}
+                      height={16}
+                      style={{ color: '#555555' }}
+                      onClick={() => closeDrawer()}
+                    />
+                  </div>
                 </div>
                 <div
                   style={{
-                    height: '64px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    borderTop: '1px solid #f0f0f0',
+                    padding: '16px',
+                    paddingTop: '16px',
+                    color: '#1a1a1a',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    height: 'calc(100% - 56px)',
+                    overflow: 'hidden',
+                    display: activeKey === '1' ? 'block' : 'none',
                   }}
                 >
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      closeDrawer();
-                    }}
+                  <div>{curData?.data?.name}</div>
+                  <div style={{ display: 'flex', marginTop: '12px', alignItems: 'center' }}>
+                    <div style={{ maxWidth: '132px', display: 'flex', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          width: '32px',
+                          color: '#888888',
+                          fontSize: '14px',
+                          fontWeight: 'normal',
+                          marginRight: '8px',
+                          flexShrink: 0,
+                        }}
+                      >
+                        类别:
+                      </div>
+                      <div
+                        style={{
+                          color: '#1a1a1a',
+                          fontSize: '14px',
+                          fontWeight: 'normal',
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {curData?.data?.category}
+                      </div>
+                    </div>
+                    <Divider type="vertical" style={{ borderColor: '#EEEEEE' }} />
+                    <div style={{ maxWidth: '132px', display: 'flex', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          color: '#888888',
+                          fontSize: '14px',
+                          fontWeight: 'normal',
+                          marginRight: '8px',
+                        }}
+                      >
+                        id:
+                      </div>
+                      <div
+                        style={{
+                          color: '#1a1a1a',
+                          fontSize: '14px',
+                          fontWeight: 'normal',
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {curData?.id}
+                      </div>
+                    </div>
+                  </div>
+                  <Divider style={{ borderColor: '#EEEEEE', margin: '12px 0' }} />
+                  <div
+                    style={{ overflowY: 'auto', overflowX: 'hidden', height: 'calc(100% - 170px)' }}
+                  >
+                    <Table columns={columns} dataSource={curData?.properties} pagination={false} />
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: '16px',
+                    paddingTop: '16px',
+                    color: '#1a1a1a',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    height: 'calc(100% - 56px)',
+                    overflow: 'hidden',
+                    display: activeKey === '2' ? 'block' : 'none',
+                  }}
+                >
+                  <div style={{ height: 'calc(100% - 50px)', overflowY: 'auto' }}>
+                    <div>点</div>
+                    <Select
+                      prefix="大小"
+                      defaultValue={80}
+                      style={{ width: 288, marginTop: 12 }}
+                      onChange={(v) => {
+                        setNodeSize(v);
+                      }}
+                      value={nodeSize}
+                      options={[
+                        { value: 32, label: '32' },
+                        { value: 40, label: '40' },
+                        { value: 48, label: '48' },
+                        { value: 56, label: '56' },
+                        { value: 64, label: '64' },
+                        { value: 80, label: '80' },
+                      ]}
+                    />
+                    <Select
+                      prefix="颜色"
+                      defaultValue="#529BF8"
+                      style={{ width: 288, marginTop: 12, borderRadius: 2 }}
+                      labelRender={(props: any) => {
+                        return <ColorBlock color={props.value || '#529BF8'} />;
+                      }}
+                      onChange={(v) => {
+                        setNodeColor(v);
+                      }}
+                      value={nodeColor}
+                      options={[
+                        { value: '#887AF2', label: <ColorBlock color="#887AF2" /> },
+                        { value: '#529BF8', label: <ColorBlock color="#529BF8" /> },
+                        { value: '#52D4F8', label: <ColorBlock color="#52D4F8" /> },
+                        { value: '#4CEDCA', label: <ColorBlock color="#4CEDCA" /> },
+                        { value: '#80E35D', label: <ColorBlock color="#80E35D" /> },
+                        { value: '#F8B852', label: <ColorBlock color="#F8B852" /> },
+                        { value: '#F87E52', label: <ColorBlock color="#F87E52" /> },
+                        { value: '#F85D52', label: <ColorBlock color="#F85D52" /> },
+                      ]}
+                    />
+                  </div>
+                  <div
                     style={{
-                      color: '#555555',
-                      backgroundColor: '#fff',
-                      borderRadius: '4px',
-                      border: '1px solid #dedede',
-                      width: '88px',
+                      height: '64px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      borderTop: '1px solid #f0f0f0',
                     }}
                   >
-                    取消
-                  </Button>
-                  <Button
-                    ghost
-                    style={{
-                      background: 'linear-gradient(#2867FF, #8789FF)',
-                      border: 'none',
-                      borderRadius: '4px',
-                      marginLeft: '10px',
-                      width: '88px',
-                    }}
-                    onClick={() => {
-                      if (!updateNodeById || !curData?.id) return;
-                      updateNodeById(curData.id, {
-                        fill: nodeColor,
-                        size: nodeSize,
-                      });
-                      closeDrawer();
-                    }}
-                  >
-                    确认
-                  </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        closeDrawer();
+                      }}
+                      style={{
+                        color: '#555555',
+                        backgroundColor: '#fff',
+                        borderRadius: '4px',
+                        border: '1px solid #dedede',
+                        width: '88px',
+                      }}
+                    >
+                      取消
+                    </Button>
+                    <Button
+                      ghost
+                      style={{
+                        background: 'linear-gradient(#2867FF, #8789FF)',
+                        border: 'none',
+                        borderRadius: '4px',
+                        marginLeft: '10px',
+                        width: '88px',
+                      }}
+                      onClick={() => {
+                        if (!updateNodeById || !curData?.id) return;
+                        updateNodeById(curData.id, {
+                          fill: nodeColor,
+                          size: nodeSize,
+                        });
+                        closeDrawer();
+                      }}
+                    >
+                      确认
+                    </Button>
+                  </div>
                 </div>
               </div>
+            </Drawer>
+          </ConfigProvider>
+          <Modal
+            destroyOnClose={true}
+            footer={null}
+            open={showExport}
+            width={520}
+            onCancel={() => {
+              setShowExport(false);
+            }}
+            title="导出图片"
+            getContainer={false}
+          >
+            <div className="create-folder-ipt my-5">
+              <Input
+                value={exportName}
+                placeholder="此处是图片名称，系统自动填充当前图谱的文件名，用户可修改"
+                style={{
+                  height: '40px',
+                }}
+                onChange={(e) => {
+                  const inputElement = e.target as HTMLInputElement;
+                  setExportName(inputElement.value.trim());
+                }}
+              />
             </div>
-          </Drawer>
-        </ConfigProvider>
-        <Modal
-          destroyOnClose={true}
-          footer={null}
-          open={showExport}
-          width={520}
-          onCancel={() => {
-            setShowExport(false);
-          }}
-          title="导出图片"
-        >
-          <div className="create-folder-ipt my-5">
-            <Input
-              value={exportName}
-              placeholder="此处是图片名称，系统自动填充当前图谱的文件名，用户可修改"
-              style={{
-                height: '40px',
-              }}
-              onChange={(e) => {
-                const inputElement = e.target as HTMLInputElement;
-                setExportName(inputElement.value.trim());
-              }}
-            />
-          </div>
-          <div className="flex mt-5 gap-4 flex-row-reverse">
-            <Button
-              type="primary"
-              onClick={async () => {
-                if (!graph) return;
-                const dataURL = await graph.toDataURL();
-                const [head, content] = dataURL.split(',');
-                const contentType = head.match(/:(.*?);/)![1];
+            <div className="flex mt-5 gap-4 flex-row-reverse">
+              <Button
+                type="primary"
+                onClick={async () => {
+                  if (!graph) return;
+                  const dataURL = await graph.toDataURL();
+                  const [head, content] = dataURL.split(',');
+                  const contentType = head.match(/:(.*?);/)![1];
 
-                const bstr = atob(content);
-                let length = bstr.length;
-                const u8arr = new Uint8Array(length);
+                  const bstr = atob(content);
+                  let length = bstr.length;
+                  const u8arr = new Uint8Array(length);
 
-                while (length--) {
-                  u8arr[length] = bstr.charCodeAt(length);
-                }
+                  while (length--) {
+                    u8arr[length] = bstr.charCodeAt(length);
+                  }
 
-                const blob = new Blob([u8arr], { type: contentType });
+                  const blob = new Blob([u8arr], { type: contentType });
 
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${exportName}.png`;
-                a.click();
-                setShowExport(false);
-              }}
-              style={{
-                background: `linear-gradient(99.9deg, #2B69FF -4.18%, #8F91FF 106.52%)`,
-                color: '#fff',
-                border: 'none',
-              }}
-            >
-              确认
-            </Button>
-            <Button
-              style={{
-                color: '#555',
-              }}
-              onClick={() => {
-                setShowExport(false);
-              }}
-            >
-              取消
-            </Button>
-          </div>
-        </Modal>
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${exportName}.png`;
+                  a.click();
+                  setShowExport(false);
+                }}
+                style={{
+                  background: `linear-gradient(99.9deg, #2B69FF -4.18%, #8F91FF 106.52%)`,
+                  color: '#fff',
+                  border: 'none',
+                }}
+              >
+                确认
+              </Button>
+              <Button
+                style={{
+                  color: '#555',
+                }}
+                onClick={() => {
+                  setShowExport(false);
+                }}
+              >
+                取消
+              </Button>
+            </div>
+          </Modal>
+        </div>
       </div>
     );
   }
@@ -727,7 +738,7 @@ const ColorBlock = ({ color }: any) => {
   );
 };
 const defaultCode = `//点击进入编辑模式\n//编辑模式中点击空白或者键盘‘esc'\n//退出编辑`;
-const ItemSearch = ({ visible, setVisible, add_items }: any) => {
+const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any) => {
   const { url, token } = useServerState();
   const { gientechSet } = useAppState();
   const [nodeForm] = Form.useForm();
@@ -863,10 +874,9 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
         const p1: any = {
           nodeType: nodeP.nodeType,
           spaceName: gientechSet.spaceName,
-          fileId: gientechSet.fileId,
           searchConditions,
         };
-        gientechSet.fileId && (p1.filedId = gientechSet.fileId);
+        graphModeType === 'subGraph' && (p1.fileId = gientechSet.fileId);
         queryNodes(p1);
         break;
       case '2':
@@ -886,6 +896,7 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
           spaceName: gientechSet.spaceName,
           edgePropertiesConditions,
         };
+
         const fromNodeP = fromNodeForm.getFieldsValue();
         const tailNodeP = tailNodeForm.getFieldsValue();
         if (fromNodeP.nodeType) {
@@ -908,7 +919,7 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
             searchConditions,
           };
         }
-        gientechSet.fileId && (param.filedId = gientechSet.fileId);
+        graphModeType === 'subGraph' && (param.fileId = gientechSet.fileId);
         queryEdges(param);
         break;
       case '3':
@@ -919,7 +930,7 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
           return message.warning('请输入语句');
         }
         const p3: any = { spaceName: gientechSet.spaceName, cypher: searchCode };
-        gientechSet.fileId && (p3.filedId = gientechSet.fileId);
+        graphModeType === 'subGraph' && (p3.fileId = gientechSet.fileId);
         queryCypher(p3);
         break;
     }
@@ -937,7 +948,7 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
         right: '15px',
         backgroundColor: 'white',
         borderRadius: '8px',
-        display: visible ? 'block' : 'none',
+        display: openSearch ? 'block' : 'none',
       }}
     >
       <div style={{ display: 'flex', height: '57px' }}>
@@ -964,7 +975,9 @@ const ItemSearch = ({ visible, setVisible, add_items }: any) => {
             width={16}
             height={16}
             style={{ color: '#555555' }}
-            onClick={() => setVisible(false)}
+            onClick={() => {
+              setOpenSearch(false);
+            }}
           />
         </div>
       </div>

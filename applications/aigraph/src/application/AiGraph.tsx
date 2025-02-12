@@ -141,7 +141,7 @@ const AiGraph = (props: {
         });
         getNodeInfoFn(url, token, gientechServer, graphModeType);
         getEdgeInfoFn(url, token, gientechServer, graphModeType);
-        getWholeGraphStatisticsFn(url, token, gientechServer, graphModeType);
+        //getWholeGraphStatisticsFn(url, token, gientechServer, graphModeType);
         if (graphModeType === 'subGraph') {
           if (gientechServer) {
             const gientechConfig = {

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { createPortal } from 'react-dom';
 import { Menu } from 'antd';
 import './style.css';
-import { useEffect } from 'react';
-
+import Arrowright from '../assets/img/Arrowright.png';
+import { relative } from 'path';
+import { useState } from 'react';
 export enum contextMenuType {
   'NODE:ONCE' = 'node:once',
   'NODE:SECOND_DEGREE' = 'node:second_degree',
@@ -63,18 +63,102 @@ const NodeMenu = ({ handleContextMenuEvent, targetInfo }: any) => {
       label: '节点详细信息',
     },
   ];
+  const [subMenu, setSubMenu] = useState([]);
   return (
-    <Menu
-      selectable={false}
-      mode="vertical"
-      style={{ width: 120, borderRadius: '4px 0 0 4px', padding: 0, fontSize: '12px' }}
-      items={items}
-      onClick={({ item, key, keyPath, domEvent }: any) => {
-        handleContextMenuEvent && handleContextMenuEvent(key, targetInfo);
-        console.log('====================================');
-        console.log(item, key, keyPath, domEvent);
-        console.log('====================================');
+    // <Menu
+    //   selectable={false}
+    //   mode="vertical"
+    //   style={{ width: 120, borderRadius: '4px 0 0 4px', padding: 0, fontSize: '12px' }}
+    //   items={items}
+    //   onClick={({ item, key, keyPath, domEvent }: any) => {
+    //     handleContextMenuEvent && handleContextMenuEvent(key, targetInfo);
+    //   }}
+    // />
+    <div
+      style={{
+        backgroundColor: '#fff',
+        width: '120px',
+        height: '156px',
+        boxShadow: '0 4px 12px 0 #eee',
+        borderTopLeftRadius: '4px',
+        borderBottomLeftRadius: '4px',
+        padding: '4px 0 0 0',
+        position: 'relative',
       }}
-    />
+    >
+      {items.map((item: any, index: number) => {
+        return (
+          <div
+            key={item.key}
+            style={{
+              height: '32px',
+              marginTop: '4px',
+              cursor: 'pointer',
+              lineHeight: '32px',
+              color: '#2a2a2a',
+              fontSize: '12px',
+              padding: '0 16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+            className="myContextMenuItem"
+            onClick={() => {
+              handleContextMenuEvent && handleContextMenuEvent(item.key, targetInfo);
+            }}
+            onMouseOver={() => {
+              setSubMenu(item.children || []);
+            }}
+          >
+            {item.label}
+            {item.children?.length && <img src={Arrowright} width={10} height={10} />}
+          </div>
+        );
+      })}
+      {!!subMenu.length && (
+        <div
+          style={{
+            backgroundColor: '#fff',
+            width: '86px',
+            height: '156px',
+            boxShadow: '0 4px 12px 0 #eee',
+            borderTopRightRadius: '4px',
+            borderBottomRightRadius: '4px',
+            padding: '4px 0 0 0',
+            position: 'absolute',
+            top: 0,
+            left: '120px',
+            borderLeft: '1px solid #eee',
+          }}
+        >
+          {subMenu.map((item: any, index: number) => {
+            return (
+              <div
+                key={item.key}
+                style={{
+                  height: '32px',
+                  marginTop: '4px',
+                  cursor: 'pointer',
+                  lineHeight: '32px',
+                  color: '#2a2a2a',
+                  fontSize: '12px',
+                  padding: '0 16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                className="myContextMenuItem"
+                onClick={() => {
+                  handleContextMenuEvent && handleContextMenuEvent(item.key, targetInfo);
+                }}
+              >
+                {item.label}
+                {item.children?.length && <img src={Arrowright} width={10} height={10} />}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 };
