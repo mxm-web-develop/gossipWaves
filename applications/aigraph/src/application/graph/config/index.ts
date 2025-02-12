@@ -69,7 +69,7 @@ export const edgeStyleConfig: any = {
       labelText: (d: any) => d.data?.name,
       labelFill: '#888888',
       labelFontSize: 12,
-      labelOffsetY: -12,
+      labelOffsetY: -8,
       cursor: 'pointer',
     },
     state: { selected: {} },
@@ -123,6 +123,7 @@ export const pluginsConfig = ({
       {
         type: 'fullscreen',
         key: 'fullscreen',
+        autoFit: true,
         onEnter: onScreenEnter,
         onExit: onScreenExit,
       },

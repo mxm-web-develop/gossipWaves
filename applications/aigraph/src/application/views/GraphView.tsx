@@ -319,6 +319,32 @@ const GraphView = forwardRef(
     const [showExport, setShowExport] = useState(false);
     const [exportName, setExportName] = useState('');
 
+    useEffect(() => {
+      const handleResize = () => {
+        if (!graph) return;
+        const container: any = containerRef.current;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        console.log('width', width, 'height', height, container);
+        if (width <= 0 || height <= 0) {
+          console.warn('Container has no dimensions:', width, height);
+          return;
+        }
+        console.log('====================================11111111');
+        console.log(width, height);
+        console.log('====================================');
+        setTimeout(() => {
+          graph.setSize(width, height);
+        }, 17);
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, [graph]);
+
     return (
       <div ref={ref} style={{ width: '100%', height: '100%', position: 'relative' }}>
         <div
