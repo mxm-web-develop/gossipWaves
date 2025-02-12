@@ -79,7 +79,10 @@ export const edgeStyleConfig: any = {
 export const behaviorsConfig = {
   default: [
     'drag-canvas',
-    'zoom-canvas',
+    {
+      key: 'zoom-canvas',
+      preventDefault: false,
+    },
     // {
     //   key: 'brush-select',
     //   type: 'brush-select',

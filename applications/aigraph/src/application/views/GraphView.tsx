@@ -981,6 +981,24 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
         break;
     }
   };
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    const handleWheel = (e: any) => {
+      // 标记事件来源为子组件
+      e.__isFromChild = true;
+    };
+
+    const scrollElement: any = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('wheel', handleWheel, { passive: false });
+    }
+
+    return () => {
+      if (scrollElement) {
+        scrollElement.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, []);
 
   return (
     <div
@@ -1030,9 +1048,7 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
       <div
         style={{ height: 'calc(100% - 121px)', overflowY: 'auto', overflowX: 'hidden' }}
         className="scrollView"
-        onWheel={(e) => {
-          e.stopPropagation();
-        }}
+        ref={scrollRef}
       >
         <NodeSearchBox
           ref={nodeSearchRef}
