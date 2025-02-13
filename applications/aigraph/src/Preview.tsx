@@ -1,7 +1,7 @@
 import AiGraph from './application/AiGraph';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5NDM2NTMwLCJpYXQiOjE3MzkzNTAxMzB9.5QrdcU8GxT02SnFH8ogzmHb6zNMV2akAWoHdeLAiGyI';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5NDkyMDc3LCJpYXQiOjE3Mzk0MDU2Nzd9.zehM2nNlvOncRLS-extsD2dgqVcUajKXICJqPqSwfME';
 
 function Preview() {
   return (

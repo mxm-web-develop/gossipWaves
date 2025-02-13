@@ -30,6 +30,7 @@ const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref
             style={{ marginTop: '20px', width: '363px' }}
             placeholder="请选择类型"
             options={options}
+            getPopupContainer={(triggerNode) => triggerNode.parentElement}
             onChange={(v, option: any) => {
               setProperties(
                 option.properties.map((item: any) => {
@@ -102,12 +103,22 @@ const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref
             <Row key={key} justify="space-between" align="middle" style={{ marginBottom: -14 }}>
               <Col>
                 <Form.Item {...restField} name={`propertyKey-${key}`}>
-                  <Select style={{ width: 123 }} placeholder="属性" options={properties} />
+                  <Select
+                    style={{ width: 123 }}
+                    placeholder="属性"
+                    options={properties}
+                    getPopupContainer={(triggerNode) => triggerNode.parentElement}
+                  />
                 </Form.Item>
               </Col>
               <Col>
                 <Form.Item {...restField} name={`operator-${key}`}>
-                  <Select style={{ width: 83 }} placeholder="操作符" options={stringOperator} />
+                  <Select
+                    style={{ width: 83 }}
+                    placeholder="操作符"
+                    options={stringOperator}
+                    getPopupContainer={(triggerNode) => triggerNode.parentElement}
+                  />
                 </Form.Item>
               </Col>
               <Col>
