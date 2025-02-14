@@ -38,6 +38,8 @@ interface AppState {
   setNodeInfo: (data: any[]) => void;
   edgeInfo: any[];
   setEdgeInfo: (data: any[]) => void;
+  wholeGraphStatistics: any;
+  setWholeGraphStatistics: (data: any) => void;
   //setAppStatus: (status: AppStatus) => void;
 }
 export const useAppState = create<AppState>((set) => ({
@@ -109,6 +111,13 @@ export const useAppState = create<AppState>((set) => ({
     set(
       produce((draft) => {
         draft.edgeInfo = data;
+      })
+    ),
+  wholeGraphStatistics: null,
+  setWholeGraphStatistics: (data) =>
+    set(
+      produce((draft) => {
+        draft.wholeGraphStatistics = data;
       })
     ),
 }));

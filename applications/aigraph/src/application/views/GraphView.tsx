@@ -99,7 +99,7 @@ const GraphView = forwardRef(
     ref: any
   ) => {
     const { createBy, handleCallBack, graphModeType } = props;
-    const { setGraph, graph, status, graphData, setGraphData, changeStatus, gientechSet } =
+    const { setGraph, graph, status, graphData, wholeGraphStatistics, changeStatus, gientechSet } =
       useAppState();
     const { url, token } = useServerState();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -154,7 +154,7 @@ const GraphView = forwardRef(
         case AI_GRAPH_TYPE.SAVE:
           break;
         case AI_GRAPH_TYPE.EXPORT:
-          setExportName(gientechSet?.fileName || '');
+          setExportName(gientechSet?.fileName ? gientechSet.fileName.split('.')[0] : '');
           setShowExport(true);
           break;
         case AI_GRAPH_TYPE.BACK:
@@ -188,6 +188,7 @@ const GraphView = forwardRef(
       {
         title: '属性名',
         dataIndex: 'key',
+        minWidth: 80,
         key: 'key',
         render: (text: string) => {
           return (
@@ -393,7 +394,12 @@ const GraphView = forwardRef(
                     }}
                   >
                     <span style={{ color: '#888888' }}>节点数:</span>
-                    <span style={{ color: '#555555' }}>{graphInfo?.nodeCount}</span>
+                    <span style={{ color: '#555555' }}>
+                      {graphInfo?.nodeCount || 0}/
+                      <span style={{ color: '#888888' }}>
+                        {wholeGraphStatistics?.nodeInstanceAmount || 0}
+                      </span>
+                    </span>
                   </div>
                   <Separator.Root
                     style={{ backgroundColor: '#EEEEEE', height: '20px', width: '1px' }}
@@ -407,7 +413,12 @@ const GraphView = forwardRef(
                     }}
                   >
                     <span style={{ color: '#888888' }}>关系数:</span>
-                    <span style={{ color: '#555555' }}>{graphInfo?.edgeCount}</span>
+                    <span style={{ color: '#555555' }}>
+                      {graphInfo?.edgeCount || 0}/
+                      <span style={{ color: '#888888' }}>
+                        {wholeGraphStatistics?.edgeInstanceAmount || 0}
+                      </span>
+                    </span>
                   </div>
                   {createBy && (
                     <>
@@ -567,7 +578,18 @@ const GraphView = forwardRef(
                   <div
                     style={{ overflowY: 'auto', overflowX: 'hidden', height: 'calc(100% - 170px)' }}
                   >
-                    <Table columns={columns} dataSource={curData?.properties} pagination={false} />
+                    <Table
+                      columns={columns}
+                      dataSource={curData?.properties}
+                      pagination={false}
+                      components={{
+                        header: {
+                          cell: (props: any) => (
+                            <th {...props} style={{ fontWeight: 400, fontSize: '#2A2A2A' }} />
+                          ),
+                        },
+                      }}
+                    />
                   </div>
                 </div>
                 <div
@@ -687,7 +709,7 @@ const GraphView = forwardRef(
             <div className="create-folder-ipt my-5">
               <Input
                 value={exportName}
-                placeholder="此处是图片名称，系统自动填充当前图谱的文件名，用户可修改"
+                placeholder="请输入图片名称"
                 style={{
                   height: '40px',
                 }}
@@ -789,7 +811,7 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
     },
     {
       key: '2',
-      label: '线查询',
+      label: '边查询',
     },
     {
       key: '3',

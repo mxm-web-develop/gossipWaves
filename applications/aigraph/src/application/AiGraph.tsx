@@ -36,7 +36,7 @@ const AiGraph = (props: {
     setAppConfig,
     changeStatus,
     status,
-    mode,
+    setWholeGraphStatistics,
     setGraphData,
     setGientechSet,
     setNodeInfo,
@@ -115,9 +115,7 @@ const AiGraph = (props: {
         },
         p
       );
-      console.log('====================================');
-      console.log('getWholeGraphStatisticsFn', gdata);
-      console.log('====================================');
+      setWholeGraphStatistics(gdata);
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -142,7 +140,7 @@ const AiGraph = (props: {
         });
         getNodeInfoFn(url, token, gientechServer, graphModeType);
         getEdgeInfoFn(url, token, gientechServer, graphModeType);
-        //getWholeGraphStatisticsFn(url, token, gientechServer, graphModeType);
+        getWholeGraphStatisticsFn(url, token, gientechServer, graphModeType);
         if (graphModeType === 'subGraph') {
           if (gientechServer) {
             const gientechConfig = {

@@ -128,7 +128,7 @@ export async function getWholeGraphStatistics(
   instance = instance || createAxiosInstance(network.baseURL, network.token);
   try {
     const response = await instance({
-      url: `${getWholeGraphStatisticsConfig.url}?spaceName=${data.spaceName}`,
+      url: `${getWholeGraphStatisticsConfig.url}?spaceName=${data.spaceName}&fileId=${data.fileId}`,
       method: getWholeGraphStatisticsConfig.method,
       data,
     });

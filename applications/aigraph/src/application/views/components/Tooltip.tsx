@@ -27,7 +27,7 @@ export const CustomTooltip: React.FC<TooltipProps> = ({ data }) => {
           textAlign: 'center',
         }}
       >
-        {d.category ? d.category.substr(0, 1) : ''}
+        {d.name ? d.name.substr(0, 1) : ''}
       </div>
       <div
         style={{

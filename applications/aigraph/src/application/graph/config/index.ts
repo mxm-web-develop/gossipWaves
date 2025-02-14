@@ -71,6 +71,7 @@ export const edgeStyleConfig: any = {
       labelFontSize: 12,
       labelOffsetY: -8,
       cursor: 'pointer',
+      endArrow: true,
     },
     state: { selected: {} },
   },
@@ -103,7 +104,14 @@ export const layoutConfig: any = {
   },
   force: { type: 'force-atlas2', preventOverlap: true, kr: 100 },
   circular: { type: 'circular', preventOverlap: true, nodeSpacing: 50 },
-  radial: { type: 'radial', preventOverlap: true, nodeSpacing: 50 },
+  radial: {
+    type: 'radial',
+    unitRadius: 160,
+    linkDistance: 200,
+    preventOverlap: true,
+    maxPreventOverlapIteration: 160,
+    nodeSize: 80,
+  },
   grid: { type: 'grid', preventOverlap: true, nodeSpacing: 50 },
 };
 

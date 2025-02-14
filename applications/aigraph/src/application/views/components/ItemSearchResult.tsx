@@ -1,7 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import CheckOutlined from '../../assets/img/CheckOutlined.png';
-import { Empty } from 'antd';
+import { Empty, Tooltip } from 'antd';
 import arrowLeft from '../../assets/img/arrowLeft.png';
 
 const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) => {
@@ -22,6 +22,10 @@ const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) =>
   const getName2 = (item: any) => {
     return item.dst.properties?.name || item.nodeType;
   };
+
+  const isEdge = (item: any) => {
+    return resultType === 'edge' || item.type === 'EDGE';
+  };
   return (
     <div style={{ padding: '12px 20px' }}>
       <div
@@ -32,7 +36,7 @@ const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) =>
       >
         <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
         <span style={{ color: '#2a2a2a', fontSize: '14px' }}>
-          {resultType === 'node' ? '点' : resultType === 'edge' ? '线' : '语句'}查询结果
+          {resultType === 'node' ? '点' : resultType === 'edge' ? '边' : '语句'}查询结果
         </span>
       </div>
       {(data || []).map((item: any, index: number) => {
@@ -71,19 +75,20 @@ const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) =>
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IconCom str={getName(item).substr(0, 1) || ''} />
-                <div
-                  style={{
-                    marginLeft: '12px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    color: '#2a2a2a',
-                    fontSize: '14px',
-                    width: resultType === 'edge' || item.type === 'EDGE' ? '60px' : '255px',
-                  }}
-                >
-                  {getName(item)}
-                </div>
+                {(isEdge(item) && getName(item).length > 4) ||
+                (!isEdge(item) && getName(item).length > 18) ? (
+                  <Tooltip
+                    placement="topLeft"
+                    title={getName(item)}
+                    getPopupContainer={(triggerNode) => triggerNode.parentElement || document.body}
+                  >
+                    <>
+                      <TextCom isEdge={isEdge} getName={getName} item={item} />
+                    </>
+                  </Tooltip>
+                ) : (
+                  <TextCom isEdge={isEdge} getName={getName} item={item} />
+                )}
               </div>
               {(resultType === 'edge' || item.type === 'EDGE') && (
                 <>
@@ -101,19 +106,22 @@ const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) =>
                     }}
                   >
                     <IconCom str={getName2(item).substr(0, 1) || ''} />
-                    <div
-                      style={{
-                        marginLeft: '12px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        color: '#2a2a2a',
-                        fontSize: '14px',
-                        width: resultType === 'edge' || item.type === 'EDGE' ? '60px' : '255px',
-                      }}
-                    >
-                      {getName2(item)}
-                    </div>
+                    {(isEdge(item) && getName2(item).length > 4) ||
+                    (!isEdge(item) && getName2(item).length > 18) ? (
+                      <Tooltip
+                        placement="topLeft"
+                        title={getName2(item)}
+                        getPopupContainer={(triggerNode) =>
+                          triggerNode.parentElement || document.body
+                        }
+                      >
+                        <>
+                          <TextCom isEdge={isEdge} getName={getName2} item={item} />
+                        </>
+                      </Tooltip>
+                    ) : (
+                      <TextCom isEdge={isEdge} getName={getName2} item={item} />
+                    )}
                   </div>
                 </>
               )}
@@ -144,6 +152,24 @@ const IconCom = ({ str }: { str: string }) => {
       }}
     >
       {str}
+    </div>
+  );
+};
+
+const TextCom = ({ isEdge, getName, item }: any) => {
+  return (
+    <div
+      style={{
+        marginLeft: '12px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        color: '#2a2a2a',
+        fontSize: '14px',
+        width: isEdge(item) ? '60px' : '255px',
+      }}
+    >
+      {getName(item)}
     </div>
   );
 };
