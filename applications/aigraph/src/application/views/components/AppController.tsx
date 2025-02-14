@@ -24,11 +24,10 @@ export default function AppController(props: {
           <div
             style={{ padding: '4px 16px' }}
             className="flex items-center justify-between hover:border-[#2468F2] bg-white cursor-pointer border border-solid border-[#EEEEEE] rounded-md"
+            onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.BACK)}
           >
             <ArrowLeft color="#2468F2" size={16} className="mr-[6px]" />
-            <div className="text-sm" onClick={() => handleEvent && handleEvent(AI_GRAPH_TYPE.BACK)}>
-              返回
-            </div>
+            <div className="text-sm">返回</div>
           </div>
         </div>
         <div className="tool-bar">
