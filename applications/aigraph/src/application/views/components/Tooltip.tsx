@@ -52,6 +52,7 @@ export const CustomTooltip: React.FC<TooltipProps> = ({ data }) => {
             borderRadius: '4px',
             marginTop: '4px',
             width: 'fit-content',
+            color: '#055AFF',
           }}
         >
           {d.category}
