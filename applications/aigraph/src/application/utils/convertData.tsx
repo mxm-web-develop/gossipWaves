@@ -61,9 +61,13 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
 
   // 转换节点
   g6Data.nodes = (data.nodeList || []).map((item) => ({
+    vid: item.vid,
     id: item.vid,
     nodeType: item.nodeType,
-    data: { name: item.properties?.name || item.nodeType, category: item.nodeType },
+    data: {
+      name: item.properties?.name || item.nodeType,
+      category: item.properties?.type || item.nodeType,
+    },
     properties: Object.entries(item.properties).map((prop: any) => {
       return {
         key: prop[0],
@@ -76,10 +80,11 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
   g6Data.edges = (data.edgeList || []).map((item) => {
     return {
       id: item.id,
+      vid: item.vid,
       edgeType: item.edgeType,
       data: {
         name: item.properties?.name || item.edgeType,
-        category: item.edgeType,
+        category: item.properties?.type || item.edgeType,
       },
       source: item.src.vid,
       target: item.dst.vid,
@@ -96,10 +101,11 @@ export const convertEdgeToNode = (edges: any[]) => {
   const es: any = [];
   edges.forEach((i) => {
     es.push({
+      vid: i.vid,
       id: i.id,
       data: {
         name: i.properties?.name || i.edgeType,
-        category: i.edgeType,
+        category: i.properties?.type || i.edgeType,
       },
       source: i.src.vid,
       target: i.dst.vid,
@@ -111,8 +117,12 @@ export const convertEdgeToNode = (edges: any[]) => {
       ...[
         {
           ...i.src,
+          vid: i.vid,
           id: i.src.vid,
-          data: { name: i.src.properties?.name || '', category: i.src.nodeType },
+          data: {
+            name: i.src.properties?.name || '',
+            category: i.src?.properties?.type || i.src.nodeType,
+          },
           properties: Object.entries(i.src.properties).map((prop: any) => {
             return {
               key: prop[0],
@@ -122,8 +132,12 @@ export const convertEdgeToNode = (edges: any[]) => {
         },
         {
           ...i.dst,
+          vid: i.vid,
           id: i.dst.vid,
-          data: { name: i.dst.properties?.name || '', category: i.dst.nodeType },
+          data: {
+            name: i.dst?.properties?.name || '',
+            category: i.dst?.properties?.type || i.dst.nodeType,
+          },
           properties: Object.entries(i.dst.properties).map((prop: any) => {
             return {
               key: prop[0],
@@ -138,32 +152,4 @@ export const convertEdgeToNode = (edges: any[]) => {
     nodes: ns,
     edges: es,
   };
-};
-
-export const convertNodeList = (data: any) => {
-  return data.map((item: any) => {
-    return {
-      id: item.vid,
-      data: { name: item.properties?.name || '', category: item.nodeType },
-      properties: Object.entries(item.properties).map((prop: any) => {
-        return {
-          key: prop[0],
-          value: prop[1],
-        };
-      }), //把数组对象的key和value转换成对象
-    };
-  });
-};
-export const convertEdgeList = (data: any) => {
-  return data.map((item: any) => {
-    return {
-      id: item.id,
-      data: {
-        name: item.properties?.name || item.edgeType,
-        category: item.edgeType,
-      },
-      source: item.src.vid,
-      target: item.dst.vid,
-    };
-  });
 };
