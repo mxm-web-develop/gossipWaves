@@ -1,15 +1,10 @@
 import { ArrowLeft } from 'lucide-react';
-import { useEffect } from 'react';
 import CheckOutlined from '../../assets/img/CheckOutlined.png';
 import { Empty, Tooltip } from 'antd';
 import arrowLeft from '../../assets/img/arrowLeft.png';
+import { useEffect } from 'react';
 
-const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) => {
-  useEffect(() => {
-    console.log('====================================');
-    console.log(data, 12112);
-    console.log('====================================');
-  }, [data]);
+const ItemSearchResult = ({ data, handleResult, setResult, resultType, chooseAll }: any) => {
   const getName = (item: any) => {
     return resultType === 'edge'
       ? item.src.properties?.name || item.nodeType
@@ -26,6 +21,22 @@ const ItemSearchResult = ({ data, handleResult, setResult, resultType }: any) =>
   const isEdge = (item: any) => {
     return resultType === 'edge' || item.type === 'EDGE';
   };
+
+  useEffect(() => {
+    if (chooseAll) {
+      setResult((pre: any) => {
+        return pre.map((i: any) => {
+          return { ...i, choosed: true };
+        });
+      });
+    } else {
+      setResult((pre: any) => {
+        return pre.map((i: any) => {
+          return { ...i, choosed: false };
+        });
+      });
+    }
+  }, [chooseAll]);
   return (
     <div style={{ padding: '12px 20px' }}>
       <div

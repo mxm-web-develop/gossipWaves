@@ -61,8 +61,8 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
 
   // 转换节点
   g6Data.nodes = (data.nodeList || []).map((item) => ({
-    ...item,
     id: item.vid,
+    nodeType: item.nodeType,
     data: { name: item.properties?.name || item.nodeType, category: item.nodeType },
     properties: Object.entries(item.properties).map((prop: any) => {
       return {
@@ -75,8 +75,8 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
   // 转换边
   g6Data.edges = (data.edgeList || []).map((item) => {
     return {
-      ...item,
       id: item.id,
+      edgeType: item.edgeType,
       data: {
         name: item.properties?.name || item.edgeType,
         category: item.edgeType,

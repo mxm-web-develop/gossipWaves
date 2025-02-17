@@ -19,6 +19,8 @@ import {
   Form,
   Modal,
   Input,
+  Radio,
+  Checkbox,
 } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import './style.css';
@@ -800,6 +802,9 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
   const [showNodeSearch, setShowNodeSearch] = useState(true);
   const [showEdgeSearch, setShowEdgeSearch] = useState(true);
   const [showCodeSearch, setShowCodeSearch] = useState(true);
+  const [chooseEdgeAll, setChooseEdgeAll] = useState(false);
+  const [chooseNodeAll, setChooseNodeAll] = useState(false);
+  const [chooseCodeAll, setChooseCodeAll] = useState(false);
   const [searchCode, setSearchCode] = useState(defaultCode);
   const [btnLoading, setBtnLoading] = useState(false);
   const nodeSearchRef: any = useRef(null);
@@ -1080,6 +1085,8 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
           setShowNodeSearch={setShowNodeSearch}
           showNodeSearch={showNodeSearch}
           setNodeResult={setNodeResult}
+          openSearch={openSearch}
+          chooseAll={chooseNodeAll}
         />
         <EdgeSearchBox
           ref={edgeSearchRef}
@@ -1091,6 +1098,8 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
           setEdgeResult={setEdgeResult}
           fromForm={fromNodeForm}
           tailForm={tailNodeForm}
+          openSearch={openSearch}
+          chooseAll={chooseEdgeAll}
         />
         <CodeSearchBox
           activeKey={activeKey}
@@ -1100,6 +1109,7 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
           setSearchCode={setSearchCode}
           codeResult={codeResult}
           setCodeResult={setCodeResult}
+          chooseAll={chooseCodeAll}
         />
       </div>
       <div
@@ -1107,45 +1117,82 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
           height: '64px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           borderTop: '1px solid #f0f0f0',
           paddingRight: '20px',
         }}
       >
-        {(activeKey === '1' && showNodeSearch) ||
-        (activeKey === '2' && showEdgeSearch) ||
-        (activeKey === '3' && showCodeSearch) ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
+        <div>
+          {((activeKey === '1' && !showNodeSearch) ||
+            (activeKey === '2' && !showEdgeSearch) ||
+            (activeKey === '3' && !showCodeSearch)) && (
+            <Checkbox
+              style={{ marginLeft: '20px' }}
+              onChange={() => {
                 if (activeKey === '1') {
-                  setNodeResult([]);
-                  nodeForm.resetFields();
-                  if (nodeSearchRef.current) {
-                    nodeSearchRef.current.clearField();
-                  }
+                  setChooseNodeAll(!chooseNodeAll);
                 } else if (activeKey === '2') {
-                  setEdgeResult([]);
-                  edgeForm.resetFields();
-                  if (edgeSearchRef.current) {
-                    edgeSearchRef.current.clearField();
-                  }
+                  setChooseEdgeAll(!chooseEdgeAll);
                 } else {
-                  setSearchCode(defaultCode);
-                  setCodeResult([]);
+                  setChooseCodeAll(!chooseCodeAll);
                 }
               }}
-              style={{
-                color: '#555555',
-                backgroundColor: '#fff',
-                borderRadius: '4px',
-                border: '1px solid #dedede',
-                width: '88px',
-              }}
             >
-              重置
-            </Button>
+              全选
+            </Checkbox>
+          )}
+        </div>
+        <div>
+          {(activeKey === '1' && showNodeSearch) ||
+          (activeKey === '2' && showEdgeSearch) ||
+          (activeKey === '3' && showCodeSearch) ? (
+            <>
+              <Button
+                type="primary"
+                onClick={() => {
+                  if (activeKey === '1') {
+                    setNodeResult([]);
+                    nodeForm.resetFields();
+                    if (nodeSearchRef.current) {
+                      nodeSearchRef.current.clearField();
+                    }
+                  } else if (activeKey === '2') {
+                    setEdgeResult([]);
+                    edgeForm.resetFields();
+                    if (edgeSearchRef.current) {
+                      edgeSearchRef.current.clearField();
+                    }
+                  } else {
+                    setSearchCode(defaultCode);
+                    setCodeResult([]);
+                  }
+                }}
+                style={{
+                  color: '#555555',
+                  backgroundColor: '#fff',
+                  borderRadius: '4px',
+                  border: '1px solid #dedede',
+                  width: '88px',
+                }}
+              >
+                重置
+              </Button>
+              <Button
+                ghost
+                style={{
+                  background: 'linear-gradient(#2867FF, #8789FF)',
+                  border: 'none',
+                  borderRadius: '4px',
+                  marginLeft: '10px',
+                  width: '88px',
+                }}
+                onClick={handleSearch}
+                loading={btnLoading}
+              >
+                查询
+              </Button>
+            </>
+          ) : (
             <Button
               ghost
               style={{
@@ -1155,44 +1202,31 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
                 marginLeft: '10px',
                 width: '88px',
               }}
-              onClick={handleSearch}
-              loading={btnLoading}
-            >
-              查询
-            </Button>
-          </>
-        ) : (
-          <Button
-            ghost
-            style={{
-              background: 'linear-gradient(#2867FF, #8789FF)',
-              border: 'none',
-              borderRadius: '4px',
-              marginLeft: '10px',
-              width: '88px',
-            }}
-            onClick={() => {
-              activeKey === '1' &&
-                add_items({ nodes: nodeResult.filter((item: any) => item.choosed) });
-              if (activeKey === '2') {
-                const res: any = convertEdgeToNode(edgeResult.filter((item: any) => item.choosed));
-                add_items(res);
-                return;
-              }
+              onClick={() => {
+                activeKey === '1' &&
+                  add_items({ nodes: nodeResult.filter((item: any) => item.choosed) });
+                if (activeKey === '2') {
+                  const res: any = convertEdgeToNode(
+                    edgeResult.filter((item: any) => item.choosed)
+                  );
+                  add_items(res);
+                  return;
+                }
 
-              if (activeKey === '3') {
-                const r = codeResult.filter((item: any) => item.choosed);
-                const nodeList = r.filter((item: any) => item.type === 'NODE');
-                const edgeList = r.filter((item: any) => item.type === 'EDGE');
-                const { nodes, edges } = convertEdgeToNode(edgeList);
-                const gData = transformGientechToG6({ nodeList, edgeList: [] });
-                add_items({ nodes: nodes.concat(gData.nodes), edges });
-              }
-            }}
-          >
-            添加
-          </Button>
-        )}
+                if (activeKey === '3') {
+                  const r = codeResult.filter((item: any) => item.choosed);
+                  const nodeList = r.filter((item: any) => item.type === 'NODE');
+                  const edgeList = r.filter((item: any) => item.type === 'EDGE');
+                  const { nodes, edges } = convertEdgeToNode(edgeList);
+                  const gData = transformGientechToG6({ nodeList, edgeList: [] });
+                  add_items({ nodes: nodes.concat(gData.nodes), edges });
+                }
+              }}
+            >
+              添加
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1206,6 +1240,7 @@ const CodeSearchBox = (props: {
   codeResult: string;
   setSearchCode: (arg: string) => void;
   setCodeResult: (arg: string) => void;
+  chooseAll: boolean;
 }) => {
   const {
     activeKey,
@@ -1267,10 +1302,20 @@ const NodeSearchBox = forwardRef(
       form: any;
       nodeResult: any;
       setNodeResult: (arg: any) => void;
+      openSearch: boolean;
+      chooseAll: boolean;
     },
     ref
   ) => {
-    const { activeKey, setShowNodeSearch, showNodeSearch, form, nodeResult, setNodeResult } = props;
+    const {
+      activeKey,
+      setShowNodeSearch,
+      showNodeSearch,
+      form,
+      nodeResult,
+      setNodeResult,
+      openSearch,
+    } = props;
 
     const nodeRef: any = useRef(null);
 
@@ -1309,6 +1354,7 @@ const NodeSearchBox = forwardRef(
             form={form}
             typeName="nodeType"
             type="head"
+            openSearch={openSearch}
           />
         </div>
         <div style={{ display: showNodeSearch ? 'none' : 'block' }}>
@@ -1336,6 +1382,8 @@ const EdgeSearchBox = forwardRef(
       setEdgeResult: (arg: any) => void;
       fromForm: any;
       tailForm: any;
+      openSearch: boolean;
+      chooseAll: boolean;
     },
     ref
   ) => {
@@ -1348,6 +1396,7 @@ const EdgeSearchBox = forwardRef(
       fromForm,
       tailForm,
       setEdgeResult,
+      openSearch,
     } = props;
 
     const edgeRef: any = useRef(null);
@@ -1400,6 +1449,7 @@ const EdgeSearchBox = forwardRef(
             form={form}
             typeName="edgeType"
             type="head"
+            openSearch={openSearch}
           />
           <Divider />
           <div
@@ -1412,7 +1462,13 @@ const EdgeSearchBox = forwardRef(
           >
             头节点
           </div>
-          <SearchCom ref={headRef} options={nodeInfoOptions} form={fromForm} typeName="nodeType" />
+          <SearchCom
+            ref={headRef}
+            options={nodeInfoOptions}
+            form={fromForm}
+            typeName="nodeType"
+            openSearch={openSearch}
+          />
           <Divider />
           <div
             style={{
@@ -1424,7 +1480,13 @@ const EdgeSearchBox = forwardRef(
           >
             尾节点
           </div>
-          <SearchCom ref={tailRef} options={nodeInfoOptions} form={tailForm} typeName="nodeType" />
+          <SearchCom
+            ref={tailRef}
+            options={nodeInfoOptions}
+            form={tailForm}
+            typeName="nodeType"
+            openSearch={openSearch}
+          />
         </div>
         <div style={{ display: showEdgeSearch ? 'none' : 'block' }}>
           <ItemSearchResult

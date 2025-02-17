@@ -100,8 +100,6 @@ export const useCommonFn = ({
         graph.setElementState(id, ['selected']);
       }
     });
-
-    graph.setElementState(selectedId, []);
   };
 
   const updateNodeById = (id: string, style: any) => {

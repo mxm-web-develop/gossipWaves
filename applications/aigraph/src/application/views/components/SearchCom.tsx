@@ -1,5 +1,5 @@
 import { Col, Form, Input, Radio, Row, Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import addSearch from '../../assets/img/addSearch.png';
 import { uid } from 'uid';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -10,9 +10,11 @@ interface ISearchCom {
   form: any;
   typeName: string;
   type?: string;
+  openSearch: boolean;
 }
-
-const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref) => {
+const O_H = 100;
+const O_H_MAX = 250;
+const SearchCom = forwardRef(({ options, form, typeName, type, openSearch }: ISearchCom, ref) => {
   const [properties, setProperties] = useState<any>([]);
   const [fields, setFields]: any = useState([]);
 
@@ -22,15 +24,41 @@ const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref
     },
   }));
 
+  const cF: any = useRef(null);
+  const [oh, setOh] = useState(O_H);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!cF.current && !openSearch) return;
+      const h = cF.current?.parentElement?.parentElement?.parentElement?.clientHeight;
+      if (h) {
+        const c = Math.round(h / 2);
+        let r = c < O_H ? O_H : c;
+        r = r > O_H_MAX ? O_H_MAX : r;
+        setOh(r);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [openSearch]);
+
   return (
-    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+    <div style={{ paddingLeft: '20px', paddingRight: '20px' }} ref={cF}>
       <Form form={form} initialValues={{ logicalOperator: 'and' }}>
         <Form.Item name={typeName} rules={[{ required: true }]}>
           <Select
             style={{ marginTop: '20px', width: '363px' }}
             placeholder="请选择类型"
             options={options}
-            getPopupContainer={(triggerNode) => triggerNode.parentElement}
+            listHeight={oh}
+            getPopupContainer={(triggerNode) =>
+              triggerNode.parentElement.parentElement.parentElement.parentElement.parentElement
+                .parentElement
+            }
             onChange={(v, option: any) => {
               setProperties(
                 option.properties.map((item: any) => {
@@ -107,7 +135,11 @@ const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref
                     style={{ width: 123 }}
                     placeholder="属性"
                     options={properties}
-                    getPopupContainer={(triggerNode) => triggerNode.parentElement}
+                    listHeight={oh}
+                    getPopupContainer={(triggerNode) =>
+                      triggerNode.parentElement.parentElement.parentElement.parentElement
+                        .parentElement
+                    }
                   />
                 </Form.Item>
               </Col>
@@ -117,7 +149,11 @@ const SearchCom = forwardRef(({ options, form, typeName, type }: ISearchCom, ref
                     style={{ width: 83 }}
                     placeholder="操作符"
                     options={stringOperator}
-                    getPopupContainer={(triggerNode) => triggerNode.parentElement}
+                    listHeight={oh}
+                    getPopupContainer={(triggerNode) =>
+                      triggerNode.parentElement.parentElement.parentElement.parentElement
+                        .parentElement
+                    }
                   />
                 </Form.Item>
               </Col>

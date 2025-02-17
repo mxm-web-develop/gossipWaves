@@ -1,7 +1,7 @@
 import AiGraph from './application/AiGraph';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5NjAwODIxLCJpYXQiOjE3Mzk1MTQ0MjF9.MsQEKADmpit07nchgWKbphXdDTbvHYw7LNmUm95Bcp0';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6ImFkbWluIiwidXNlcklkIjoxMDAwLCJ1c2VyTmFtZSI6ImFkbWluIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzM5ODU5Mjk2LCJpYXQiOjE3Mzk3NzI4OTZ9.4d0xfB88s72kKCW5k71mT91w-50Be0Q_9HioewN9Dc0';
 
 function Preview() {
   return (
@@ -13,9 +13,9 @@ function Preview() {
           gientechServer={{
             url: `api_proxy`,
             token: token,
-            spaceName: '图解析20250211_2',
+            spaceName: '图解析20250208_3',
             fileName: '一个文件.doc',
-            fileId: 53805,
+            fileId: 53591,
           }}
           initData={null}
           createBy={'admin'}
