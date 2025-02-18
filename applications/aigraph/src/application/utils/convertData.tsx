@@ -86,8 +86,8 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
         name: item.properties?.name || item.edgeType,
         category: item.properties?.type || item.edgeType,
       },
-      source: item.src.vid,
-      target: item.dst.vid,
+      source: item.src?.vid,
+      target: item.dst?.vid,
       src: item.src,
       dst: item.dst,
     };
@@ -107,8 +107,8 @@ export const convertEdgeToNode = (edges: any[]) => {
         name: i.properties?.name || i.edgeType,
         category: i.properties?.type || i.edgeType,
       },
-      source: i.src.vid,
-      target: i.dst.vid,
+      source: i.src?.vid,
+      target: i.dst?.vid,
       src: i.src,
       dst: i.dst,
       properties: i.properties,
@@ -118,12 +118,12 @@ export const convertEdgeToNode = (edges: any[]) => {
         {
           ...i.src,
           vid: i.vid,
-          id: i.src.vid,
+          id: i.src?.vid,
           data: {
-            name: i.src.properties?.name || '',
-            category: i.src?.properties?.type || i.src.nodeType,
+            name: i.src?.properties?.name || '',
+            category: i.src?.properties?.type || i.src?.nodeType,
           },
-          properties: Object.entries(i.src.properties).map((prop: any) => {
+          properties: Object.entries(i.src?.properties).map((prop: any) => {
             return {
               key: prop[0],
               value: prop[1],
@@ -133,12 +133,12 @@ export const convertEdgeToNode = (edges: any[]) => {
         {
           ...i.dst,
           vid: i.vid,
-          id: i.dst.vid,
+          id: i.dst?.vid,
           data: {
             name: i.dst?.properties?.name || '',
-            category: i.dst?.properties?.type || i.dst.nodeType,
+            category: i.dst?.properties?.type || i.dst?.nodeType,
           },
-          properties: Object.entries(i.dst.properties).map((prop: any) => {
+          properties: Object.entries(i.dst?.properties).map((prop: any) => {
             return {
               key: prop[0],
               value: prop[1],
