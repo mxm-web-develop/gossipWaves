@@ -5,7 +5,11 @@ import { highlightAll } from 'prismjs';
 import './CodeSearchTemplate.css';
 import 'prismjs/themes/prism-tomorrow.css';
 import 'prismjs/components/prism-cypher';
-
+loader.config({
+  paths: {
+    vs: '/vs',
+  },
+});
 interface ICodeSearchTemplate {
   searchCode?: string;
   eventsEmitter: (t: string, d?: any) => void;
@@ -13,14 +17,6 @@ interface ICodeSearchTemplate {
 const CodeSearchTemplate = (props: ICodeSearchTemplate) => {
   const { searchCode, eventsEmitter } = props;
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    loader.config({
-      paths: {
-        vs: '/vs',
-      },
-    });
-  }, []);
 
   // 使用 Monaco API
   useEffect(() => {
