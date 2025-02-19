@@ -1154,6 +1154,8 @@ const ItemSearch = ({ add_items, graphModeType, openSearch, setOpenSearch }: any
                   } else if (activeKey === '2') {
                     setEdgeResult([]);
                     edgeForm.resetFields();
+                    fromNodeForm.resetFields();
+                    tailNodeForm.resetFields();
                     if (edgeSearchRef.current) {
                       edgeSearchRef.current.clearField();
                     }
