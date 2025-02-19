@@ -96,11 +96,10 @@ const GraphView = forwardRef(
       handleCallBack?: (type: string, data?: any) => any;
       initData?: null | GraphData;
       handleEvent?: (type: string, data?: any) => any;
-      createBy?: string;
     },
     ref: any
   ) => {
-    const { createBy, handleCallBack, graphModeType } = props;
+    const { handleCallBack, graphModeType } = props;
     const { setGraph, graph, status, graphData, wholeGraphStatistics, changeStatus, gientechSet } =
       useAppState();
     const { url, token } = useServerState();
@@ -422,24 +421,20 @@ const GraphView = forwardRef(
                       </span>
                     </span>
                   </div>
-                  {createBy && (
-                    <>
-                      <Separator.Root
-                        style={{ backgroundColor: '#EEEEEE', height: '20px', width: '1px' }}
-                      />
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          columnGap: '5px',
-                        }}
-                      >
-                        <span style={{ color: '#888888' }}>创建人:</span>
-                        <span style={{ color: '#555555' }}>{createBy}</span>
-                      </div>
-                    </>
-                  )}
+                  <Separator.Root
+                    style={{ backgroundColor: '#EEEEEE', height: '20px', width: '1px' }}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      columnGap: '5px',
+                    }}
+                  >
+                    <span style={{ color: '#888888' }}>创建人:</span>
+                    <span style={{ color: '#555555' }}>{wholeGraphStatistics?.creator}</span>
+                  </div>
                 </div>
               </>
             )
