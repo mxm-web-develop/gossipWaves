@@ -131,6 +131,10 @@ export const useCommonFn = ({
       console.log('step------>', res);
       console.log('====================================');
       const gData = transformGientechToG6(res);
+      const { nodes, edges } = gData;
+      if (!nodes?.length && !edges?.length) {
+        return message.warning('无关联数据');
+      }
       add_items(gData);
     } catch (error) {
       console.log(error);
