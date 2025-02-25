@@ -46,10 +46,14 @@ interface G6Data {
     id: string;
     source: string;
     target: string;
+    edgeType: string;
     label?: string;
     type?: string;
     style?: any;
     properties?: any;
+    data: any;
+    src: any;
+    dst: any;
   }[];
 }
 
@@ -77,20 +81,21 @@ export function transformGientechToG6(data: { nodeList: any[]; edgeList: any[] }
   }));
 
   // 转换边
-  g6Data.edges = (data.edgeList || []).map((item) => {
-    return {
-      id: item.id,
-      vid: item.vid,
-      edgeType: item.edgeType,
-      data: {
-        name: item.properties?.name || item.edgeType,
-        category: item.properties?.type || item.edgeType,
-      },
-      source: item.src?.vid,
-      target: item.dst?.vid,
-      src: item.src,
-      dst: item.dst,
-    };
+  (data.edgeList || []).forEach((item: any) => {
+    if (item.src && item.dst) {
+      g6Data.edges.push({
+        id: item.id,
+        edgeType: item.edgeType,
+        data: {
+          name: item.properties?.name || item.edgeType,
+          category: item.properties?.type || item.edgeType,
+        },
+        source: item.src?.vid,
+        target: item.dst?.vid,
+        src: item.src,
+        dst: item.dst,
+      });
+    }
   });
 
   return g6Data;
@@ -100,19 +105,21 @@ export const convertEdgeToNode = (edges: any[]) => {
   const ns: any = [];
   const es: any = [];
   edges.forEach((i) => {
-    es.push({
-      vid: i.vid,
-      id: i.id,
-      data: {
-        name: i.properties?.name || i.edgeType,
-        category: i.properties?.type || i.edgeType,
-      },
-      source: i.src?.vid,
-      target: i.dst?.vid,
-      src: i.src,
-      dst: i.dst,
-      properties: i.properties,
-    });
+    if (i.src && i.dst) {
+      es.push({
+        vid: i.vid,
+        id: i.id,
+        data: {
+          name: i.properties?.name || i.edgeType,
+          category: i.properties?.type || i.edgeType,
+        },
+        source: i.src?.vid,
+        target: i.dst?.vid,
+        src: i.src,
+        dst: i.dst,
+        properties: i.properties,
+      });
+    }
     ns.push(
       ...[
         {

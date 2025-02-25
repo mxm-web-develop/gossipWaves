@@ -1,7 +1,7 @@
 import AiGraph from './application/AiGraph';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6IkpJQUJJTkJJTjAwIiwidXNlcklkIjoxMjQzLCJ1c2VyTmFtZSI6IkpJQUJJTkJJTjAwIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzQwMDI5ODEwLCJpYXQiOjE3Mzk5NDM0MTB9.toBFTfDfoUZ87_pUwgRDZ4xSrnsb7dyNjRC0XEr-dWw';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHSUVOLVJBRyIsImF1ZCI6IkpJQUJJTkJJTjAwIiwidXNlcklkIjoxMjQzLCJ1c2VyTmFtZSI6IkpJQUJJTkJJTjAwIiwic3ViIjoibWl4ZWRRdWFudHVtIiwiZXhwIjoxNzQwMDk5MjYwLCJpYXQiOjE3NDAwMTI4NjB9.hCpNKGjIC_t5eV3GyzxiHsIo6wtarTPIs4jQhTuVT9Q';
 
 function Preview() {
   return (
@@ -13,13 +13,13 @@ function Preview() {
           gientechServer={{
             url: `api_proxy`,
             token: token,
-            spaceName: '图解析20250208_3',
+            spaceName: '图谱测试test4',
             fileName: '一个文件.doc',
-            fileId: 53591,
+            //fileId: 53591,
           }}
           initData={null}
           createBy={'admin'}
-          graphModeType="subGraph"
+          graphModeType="allGraph"
           handleCallBack={(type: string, data?: any) => {
             console.log(type, 'sdgjaklsg');
 
