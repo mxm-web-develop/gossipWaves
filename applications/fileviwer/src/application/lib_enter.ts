@@ -2,19 +2,27 @@ import { useFileViewer } from './Fileviewer';
 import { registerPDFWorker } from './views/PdfDisplay';
 import type { 
   IUseFileViewer,
+  FileViewerInstance,
   PDFDisplayRef,
   MarkdownDisplayRef,
-  FileViewerInstance
+  AnotationType,
+  PDFConfig
 } from './types/system';
-import type { AppStatus } from './store/system.type';
+import { AppStatus } from './store/system.type';
 
+// 明确导出所有需要的类型和函数
 export { 
   useFileViewer, 
   registerPDFWorker,
-  // 统一从system.ts导出类型
-  type IUseFileViewer,
-  type AppStatus,
-  type FileViewerInstance,
-  type PDFDisplayRef,
-  type MarkdownDisplayRef
+  AppStatus
+};
+
+// 导出所有类型
+export type {
+  IUseFileViewer,
+  FileViewerInstance,
+  PDFDisplayRef,
+  MarkdownDisplayRef,
+  AnotationType,
+  PDFConfig
 };

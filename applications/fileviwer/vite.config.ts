@@ -95,7 +95,10 @@ export default ({ mode }: { mode: string }) => {
         },
       }),
       copy({
-        targets: [{ src: 'NPMREADME.md', dest: 'dist', rename: 'README.md' }],
+        targets: [
+          { src: 'NPMREADME.md', dest: 'dist', rename: 'README.md' },
+          { src: 'index.d.ts', dest: 'dist', rename: 'index.d.ts' } // 复制类型定义文件
+        ],
         hook: 'writeBundle',
       }),
       shiftStaticFiles(['files']),

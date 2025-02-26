@@ -34,6 +34,6 @@
     "forceConsistentCasingInFileNames": true,
 
   },
-  "include": ["src","src/application/types/**/*"],
+  "include": ["src","src/application/types/**/*", "index.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
