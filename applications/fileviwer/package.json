@@ -2,11 +2,11 @@
   "name": "@mxmweb/fv",
   "private": false,
   "author": "hanfeng_Zhang",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode production",
+    "build": "./version.sh &&vite build --mode production",
     "publish:lib": "cd dist && npm publish --access public --registry=https://registry.npmjs.org"
   },
   "include": [
