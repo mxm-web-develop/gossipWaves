@@ -124,7 +124,7 @@ export const convertEdgeToNode = (edges: any[]) => {
       ...[
         {
           ...i.src,
-          vid: i.vid,
+          vid: i.src.vid,
           id: i.src?.vid,
           data: {
             name: i.src?.properties?.name || '',
@@ -139,7 +139,7 @@ export const convertEdgeToNode = (edges: any[]) => {
         },
         {
           ...i.dst,
-          vid: i.vid,
+          vid: i.dst.vid,
           id: i.dst?.vid,
           data: {
             name: i.dst?.properties?.name || '',
