@@ -42,14 +42,7 @@ export default ({ mode }: { mode: string }) => {
     base: './',
     publicDir: false,
     plugins: [
-      // viteStaticCopy({
-      //   targets: [
-      //     {
-      //       src: cMapsDir,
-      //       dest: '',
-      //     },
-      //   ],
-      // }),
+      
       resolve(),
       commonjs(),
       svgr(),
@@ -103,6 +96,20 @@ export default ({ mode }: { mode: string }) => {
         hook: 'writeBundle',
       }),
       shiftStaticFiles(['files']),
+      {
+        name: 'replace-browser-externals',
+        transform(code, id) {
+          if (!/\.(js|ts|jsx|tsx)$/.test(id)) return null;
+          
+          if (code.includes('__vite-browser-external')) {
+            return code.replace(
+              /await\s+import\(\s*['"]\.\/\__vite-browser-external[^'"]+['"]\s*\)/g,
+              '({ default: typeof window !== "undefined" ? window : {} })'
+            );
+          }
+          return null;
+        }
+      },
     ],
     resolve: {
       alias: {
@@ -117,11 +124,12 @@ export default ({ mode }: { mode: string }) => {
       outDir: 'dist',
       lib: {
         entry: path.resolve(__dirname, 'src/application/lib_enter.ts'),
-        formats: ['es'],
-        fileName: (format) => `index.${format === 'es' ? 'js' : 'umd.js'}`,
+        name: 'fileviewer',
+        formats: ['es'], // 只使用ES模块格式
+        fileName: () => 'index.js'
       },
       rollupOptions: {
-        external: ['react', 'react-dom','pdfjs-dist/build/pdf.worker.js', '/worker/pdf.worker.min.js', '/worker/pdf.worder.min.js'],
+        external: ['react', 'react-dom'],
         input: {
           main: path.resolve(__dirname, 'src/application/lib_enter.ts'),
         },
@@ -135,25 +143,27 @@ export default ({ mode }: { mode: string }) => {
           },
         },
         treeshake: true, // 启用 tree-shaking，减少无用代码
+        
       },
+      
     },
 
-    server: {
-      cors: true,
-      host: '0.0.0.0',
-      port: 8888,
-      proxy: {
-        '/local': {
-          target: 'http://172.17.163.107:8888',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/local/, ''),
-        },
-        '/api': {
-          target: 'https://www.pdf995.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
+    // server: {
+    //   cors: true,
+    //   host: '0.0.0.0',
+    //   port: 8888,
+    //   proxy: {
+    //     '/local': {
+    //       target: 'http://172.17.163.107:8888',
+    //       changeOrigin: true,
+    //       rewrite: (path) => path.replace(/^\/local/, ''),
+    //     },
+    //     '/api': {
+    //       target: 'https://www.pdf995.com',
+    //       changeOrigin: true,
+    //       rewrite: (path) => path.replace(/^\/api/, ''),
+    //     },
+    //   },
+    // },
   });
 };
