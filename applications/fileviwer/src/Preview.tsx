@@ -35,10 +35,10 @@ registerPDFWorker(`../public/worker/pdf.worker.js`);
 // const annotationList = convertData(positions, n);
 
 function Preview() {
-  const [curPositions, setCurPositions]: any = useState([]);
-  const [origin_paper_size, setOriginPaperSize]: any = useState(null);
-  const [render_width, setrender_width]: any = useState(null);
-  const [fileUrl, setFileUrl] = useState<any>(test_urls);
+  // const [curPositions, setCurPositions]: any = useState([]);
+  // const [origin_paper_size, setOriginPaperSize]: any = useState(null);
+  // const [render_width, setrender_width]: any = useState(null);
+  // const [fileUrl, setFileUrl] = useState<any>(test_urls);
   const [pdfInfo, setPdfInfo] = useState(null);
 
   const { Element, pdfRef, mdRef } = useFileViewer({

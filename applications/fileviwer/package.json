@@ -2,7 +2,7 @@
   "name": "@mxmweb/fv",
   "private": false,
   "author": "hanfeng_Zhang",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "type": "module",
   "scripts": {
     "dev": "vite",

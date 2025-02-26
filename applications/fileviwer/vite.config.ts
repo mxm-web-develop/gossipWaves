@@ -42,14 +42,14 @@ export default ({ mode }: { mode: string }) => {
     base: './',
     publicDir: false,
     plugins: [
-      viteStaticCopy({
-        targets: [
-          {
-            src: cMapsDir,
-            dest: '',
-          },
-        ],
-      }),
+      // viteStaticCopy({
+      //   targets: [
+      //     {
+      //       src: cMapsDir,
+      //       dest: '',
+      //     },
+      //   ],
+      // }),
       resolve(),
       commonjs(),
       svgr(),
@@ -97,7 +97,8 @@ export default ({ mode }: { mode: string }) => {
       copy({
         targets: [
           { src: 'NPMREADME.md', dest: 'dist', rename: 'README.md' },
-          { src: 'index.d.ts', dest: 'dist', rename: 'index.d.ts' } // 复制类型定义文件
+          // { src: 'index.d.ts', dest: 'dist', rename: 'index.d.ts' },
+          { src: cMapsDir, dest: 'dist/assets' }
         ],
         hook: 'writeBundle',
       }),
