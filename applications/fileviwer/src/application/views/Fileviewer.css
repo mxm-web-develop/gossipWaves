@@ -1,0 +1,30 @@
+/* 自定义 PDF 文档样式 */
+.pdf-document {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 自定义 PDF 页面样式 */
+.pdf-page {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 自定义文本层样式 */
+.textLayer {
+  font-size: 16px; /* 设置字体大小 */
+  line-height: 1.5; /* 设置行高 */
+  color: #000; /* 设置字体颜色 */
+}
+
+/* 自定义注释层样式 */
+.annotationLayer {
+  display: none; /* 隐藏注释层 */
+}
